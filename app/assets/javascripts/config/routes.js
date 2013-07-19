@@ -2,7 +2,6 @@ var App = require('./app');
 
 App.Router.map(function() {
   this.resource('maps', function() {
-    this.resource('map');
+    this.resource('map', { path: '/:map_id' });
   });
 });
-

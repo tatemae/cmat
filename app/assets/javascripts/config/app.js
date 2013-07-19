@@ -9,5 +9,7 @@ require('../vendor/ember-data'); // delete if you don't want ember-data
 var App = Ember.Application.create();
 App.Store = require('./store'); // delete if you don't want ember-data
 
-module.exports = App;
+App.Flash = require('../components/flash/flash');
+App.FlashView = require('../views/flash_view');
 
+module.exports = App;

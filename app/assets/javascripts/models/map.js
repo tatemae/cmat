@@ -7,13 +7,13 @@ var Map = ModelBase.extend({
 
 Map.reopenClass({
 
-  maps: {},
-
-  all: function(){
-  },
-
   find: function(map_id){
-  },
+    if(map_id){
+      // Find map
+    } else {
+      // Find all
+    }
+  }
 
 });
 

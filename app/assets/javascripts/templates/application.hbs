@@ -1,1 +1,21 @@
-{{outlet}}
+{{#view App.FlashView id="flash-view"}}
+  <div id="message">
+    {{view.content.message}}
+  </div>
+{{/view}}
+
+<div id="header">
+  <header>
+    <div class="container">
+      <div class="navbar">
+        <div class="navbar-inner">
+          Toolbar here
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div id="content">
+  {{outlet}}
+</div>

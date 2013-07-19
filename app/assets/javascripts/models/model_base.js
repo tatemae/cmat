@@ -1,4 +1,4 @@
-var ModelBase = Ember.Object.extend({
+var ModelBase = DS.Model.extend({
 });
 
 ModelBase.reopenClass({
