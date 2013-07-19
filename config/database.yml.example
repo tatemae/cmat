@@ -19,7 +19,7 @@ development:
   encoding: unicode
   database: cmat_development
   pool: 5
-  username: cmat
+  username: YOUR_USERNAME
   password:
 
   # Connect on a TCP socket. Omitted by default since the client uses a
@@ -48,7 +48,7 @@ test:
   encoding: unicode
   database: cmat_test
   pool: 5
-  username: cmat
+  username: YOUR_USERNAME
   password:
 
 production:
@@ -56,5 +56,5 @@ production:
   encoding: unicode
   database: cmat_production
   pool: 5
-  username: cmat
+  username: YOUR_USERNAME
   password:
