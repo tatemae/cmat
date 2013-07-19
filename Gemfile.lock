@@ -33,6 +33,11 @@ GEM
       ember-source
       execjs
       handlebars-source
+    bootstrap-sass (2.2.2.0)
+      sass (~> 3.2)
+    bootstrap-sass-rails (2.3.2.0)
+      railties (>= 3.1.0)
+      sass-rails (>= 3.1.0)
     builder (3.1.4)
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
@@ -56,6 +61,13 @@ GEM
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
+    flatui-rails (0.0.4)
+      bootstrap-sass (= 2.2.2)
+      railties (>= 3.1)
+      sass-rails (>= 3.2.0)
+    font-awesome-sass-rails (3.0.2.2)
+      railties (>= 3.1.1)
+      sass-rails (>= 3.1.1)
     handlebars-source (1.0.12)
     hike (1.2.3)
     i18n (0.6.4)
@@ -129,9 +141,12 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  bootstrap-sass-rails (>= 2.3.1.2)
   coffee-rails (~> 4.0.0)
   ember-rails
   ember-source (= 1.0.0.rc6.2)
+  flatui-rails
+  font-awesome-sass-rails
   jbuilder (~> 1.2)
   jquery-rails
   pg

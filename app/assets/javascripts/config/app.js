@@ -5,6 +5,7 @@ require('../vendor/jquery');
 require('../vendor/handlebars');
 require('../vendor/ember');
 require('../vendor/ember-data'); // delete if you don't want ember-data
+require('../vendor/bootstrap');
 
 var App = Ember.Application.create();
 App.Store = require('./store'); // delete if you don't want ember-data
