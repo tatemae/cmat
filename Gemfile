@@ -32,6 +32,13 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+# Ember stuff
+gem 'ember-rails'
+gem 'ember-source', '1.0.0.rc6.2'
+
+gem 'active_model_serializers' # Make Rails generate json that ember likes.
+
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
