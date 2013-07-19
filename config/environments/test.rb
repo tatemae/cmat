@@ -33,4 +33,7 @@ Cmat::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
+
+  # Ember variant
+  config.ember.variant = :test
 end
