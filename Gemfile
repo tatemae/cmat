@@ -32,3 +32,7 @@ gem 'active_model_serializers' # Make Rails generate json that ember likes.
 gem 'bootstrap-sass-rails', '>= 2.3.1.2'
 gem 'font-awesome-sass-rails'
 gem 'flatui-rails'
+
+group :development, :test do
+  gem 'rspec-rails', '~> 2.0'
+end
