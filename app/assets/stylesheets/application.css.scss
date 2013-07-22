@@ -1,5 +1,30 @@
 @import 'defines';
 @import 'twitter/bootstrap-no-sprites';
+body{padding-top: 40px;}
 @import 'twitter/bootstrap/responsive';
+@import 'bootstrap-switch';
 @import 'font-awesome';
 //@import 'flat-ui';
+
+#add_map{
+  $add_map_width: 70%;
+  $add_map_text_height: 500px;
+  .map_adder{
+    width: 99%;
+    height: $add_map_text_height;
+  }
+  .modal-body{
+     max-height:$add_map_text_height + 188;
+  }
+  .modal{
+     height:$add_map_text_height + 188;
+     width:$add_map_width;
+     margin-left: -$add_map_width/2;
+  }
+  @media (max-width: 768px) {
+     .modal{
+        width:90%;
+        margin-left: 2%;
+     }
+  }
+}

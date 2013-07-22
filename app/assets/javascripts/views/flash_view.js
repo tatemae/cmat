@@ -30,5 +30,7 @@ var FlashView = Ember.View.extend({
   }
 });
 
+Ember.Handlebars.helper('flash', FlashView);
+
 module.exports = FlashView;
 
