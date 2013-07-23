@@ -20,6 +20,7 @@ require('../classes/common/util/DPI');
 require('../classes/common/math/Random');
 require('../classes/common/math/geom/Line');
 require('../classes/common/math/geom/Point');
+require('../classes/app/ui/object/util/ProportionalImage');
 require('../classes/app/ui/anim/ExtraEasings');
 require('../classes/app/ui/anim/StepAnimation');
 require('../classes/app/ui/anim/LayoutManager');
