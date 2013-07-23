@@ -12,7 +12,7 @@ Config = {
             text: [ 'dot', 'loading' ]
           }
         },
-        
+
         common: {
           png: {
             digit: {
@@ -64,14 +64,14 @@ Config = {
 
             bg: [ 'trans' ]
           },
-          
+
           jpg: {
             bg: [ 'normal', 'gs' ]
           }
         }
       }
     },
-  
+
     audio: {
       path: 'resources/aud',
       files: {

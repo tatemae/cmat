@@ -97,6 +97,25 @@ UI = (function() {
   var container;
   var toolbar_height;
 
+  function showLoading(params) {
+    container = params.container;
+    toolbar_height = $('#'+params.toolbar).innerHeight();
+
+    if (stage)
+      return;
+
+    initStage(params);
+
+    canvas.add(loading = new Kinetic.Loading($$$.clone(dims))).draw();
+  }
+
+  function trackLoading(p) {
+    if (!loading)
+      return;
+
+    loading.setPercent(p);
+  }
+
   function build(params) {
     container = params.container;
     toolbar_height = $('#'+params.toolbar).innerHeight();
@@ -108,7 +127,7 @@ UI = (function() {
 
       loading = null;
     } else {
-      initStage();
+      initStage(params);
     }
 
     buildGroupLayers();
@@ -197,6 +216,8 @@ UI = (function() {
   }
 
   publicAPI.build = build;
+  publicAPI.showLoading = showLoading;
+  publicAPI.trackLoading = trackLoading;
 
   return publicAPI;
 })();
@@ -469,13 +490,132 @@ Kinetic.StepAnimation = (function() {
   return Class;
 })();
 },{}],7:[function(require,module,exports){
-(function() {
-  Event.allFired({
-    events: [ Event.pageLoaded ],
-    callback: Controller.initAll
+// Copyright (c) 2013, Mihhail Lapuškin
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met: 
+
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer. 
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution. 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// The views and conclusions contained in the software and documentation are those
+// of the authors and should not be interpreted as representing official policies, 
+// either expressed or implied, of the FreeBSD Project.
+//
+//
+// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/layer/Loading.js
+Kinetic.Loading = (function() {
+  var TEXT_HEIGHT = 6;
+  var BAR_Y = 0.8;
+  var BAR_WIDTH = 0.7;
+  var BAR_HEIGHT = 2.2;
+
+  var Class = $$$.Class({
+    _init: function(config) {
+      config.listening = false;
+
+      Kinetic.Group.call(this, config);
+
+      this._build();
+      this.on('percentChange', this._percentChanged);
+    },
+
+    _build: function() {
+      var w = this.getWidth();
+      var h = this.getHeight();
+      var unit = this.attrs.unit;
+
+      this.add(this.bg = new Kinetic.Rect({
+        width: w,
+        height: h,
+        fill: 'black'
+      }));
+
+      this.add(this.text = new Kinetic.ProportionalImage({
+        height: unit * TEXT_HEIGHT,
+        image: Image.text.loading
+      }));
+
+      this.add(this.bar = new Kinetic.ProgressBar({
+        y: h * BAR_Y,
+        width: w * BAR_WIDTH,
+        height: unit * BAR_HEIGHT,
+        reversed: true
+      }));
+
+      this.center(this.text);
+      this.centerHorizontally(this.bar);
+    },
+
+    _percentChanged: function(evt) {
+      this.text.setOpacity(1 - evt.newVal);
+      this.bar.setPercent(1 - evt.newVal);
+      this.getParent().draw();
+    },
+
+    destroy: function() {
+      Kinetic.Group.prototype.destroy.call(this);
+      delete Image.text.loading;
+    }
   });
+
+  Kinetic.Util.extend(Class, Kinetic.Group);
+  Kinetic.Node.addGetterSetter(Class, 'percent');
+
+  return Class;
 })();
 },{}],8:[function(require,module,exports){
+var Cmat = {
+
+  boot: function(){
+
+    ImageLoader.isXDPI(function() {
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+
+      return w > DPI.H.width && h > DPI.H.height;
+    });
+
+    var loaders = {
+      splash: new ImageLoader(Config.resources.images.path, Config.resources.images.files.splash),
+      image: new ImageLoader(Config.resources.images.path, Config.resources.images.files.common)
+    };
+
+    loaders.image.progress(UI.trackLoading);
+
+    Event.allFired({
+      events: [ Event.pageLoaded, loaders.splash.loaded ],
+      callback: UI.showLoading({
+        container: Config.settings.canvas_element,
+        toolbar: Config.settings.toolbar_element
+      })
+    });
+
+    Event.allFired({
+      events: [ Event.pageLoaded ],
+      callback: Controller.initAll
+    });
+  }
+
+};
+
+module.exports = Cmat;
+},{}],9:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -607,6 +747,10 @@ Event = (function() {
       bind(document, 'DOMContentLoaded', fn);
     },
 
+    kineticJsDefined: function(fn) {
+      bind(document, 'Kinetic', fn);
+    },
+
     allFired: function(config) {
       var left = config.events.length;
 
@@ -622,7 +766,7 @@ Event = (function() {
     }
   };
 })();
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -736,7 +880,7 @@ Array.prototype.remove = function(el) {
 Array.prototype.clone = function() {
   return this.slice();
 };
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -833,7 +977,7 @@ Random = (function() {
 
   return randomObject;
 })();
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -917,7 +1061,7 @@ Line = $$$.Class({
     }
   }
 });
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -956,7 +1100,7 @@ Point = $$$.Class({
     return Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
   }
 });
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1086,7 +1230,7 @@ AbstractLoader = (function() {
     }
   });
 })();
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1158,7 +1302,7 @@ AudioLoader = (function() {
     }
   });
 })();
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1216,7 +1360,26 @@ ImageLoader = (function() {
 
   return Class;
 })();
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
+DPI = {
+  X: {
+    width: 1280,
+    height: 720
+  },
+  H: {
+    width: 800,
+    height: 480
+  },
+  M: {
+    width: 480,
+    height: 320
+  },
+  S: {
+    width: 320,
+    height: 200
+  }
+};
+},{}],18:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1296,7 +1459,7 @@ Utils = $$$ = (function() {
     }
   };
 })();
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 Config = {
   settings: {
     canvas_element: 'map_canvas',
@@ -1304,14 +1467,14 @@ Config = {
   },
   resources: {
     images: {
-      path: 'resources/img',
+      path: 'assets/',
       files: {
         splash: {
           png: {
             text: [ 'dot', 'loading' ]
           }
         },
-        
+
         common: {
           png: {
             digit: {
@@ -1363,14 +1526,14 @@ Config = {
 
             bg: [ 'trans' ]
           },
-          
+
           jpg: {
             bg: [ 'normal', 'gs' ]
           }
         }
       }
     },
-  
+
     audio: {
       path: 'resources/aud',
       files: {
@@ -1383,7 +1546,7 @@ Config = {
     }
   }
 };
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var FlashMessage = Ember.Object.extend({
   type: "notice",
   message: null,
@@ -1491,7 +1654,7 @@ module.exports = FlashMessages;
 // App.FlashQueue.addObserver('length', function() {
 //   return this.contentChanged();
 // });
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 // require other, dependencies here, ie:
 // require('./vendor/moment');
 
@@ -1510,12 +1673,14 @@ require('../classes/common/evt/Event');
 require('../classes/common/resource/loader/AbstractLoader');
 require('../classes/common/resource/loader/ImageLoader');
 require('../classes/common/resource/loader/AudioLoader');
+require('../classes/common/util/DPI');
 require('../classes/common/math/Random');
 require('../classes/common/math/geom/Line');
 require('../classes/common/math/geom/Point');
 require('../classes/app/ui/anim/ExtraEasings');
 require('../classes/app/ui/anim/StepAnimation');
 require('../classes/app/ui/anim/LayoutManager');
+require('../classes/app/ui/layer/Loading');
 require('../classes/app/ui/UI');
 require('../classes/app/logic/Controller');
 require('../classes/app/logic/InitController');
@@ -1531,7 +1696,7 @@ App.Flash = require('../components/flash-messages');
 
 module.exports = App;
 
-},{"../classes/app/logic/Controller":1,"../classes/app/logic/InitController":2,"../classes/app/ui/UI":3,"../classes/app/ui/anim/ExtraEasings":4,"../classes/app/ui/anim/LayoutManager":5,"../classes/app/ui/anim/StepAnimation":6,"../classes/cmat":7,"../classes/common/evt/Event":8,"../classes/common/jslang/Array":9,"../classes/common/math/Random":10,"../classes/common/math/geom/Line":11,"../classes/common/math/geom/Point":12,"../classes/common/resource/loader/AbstractLoader":13,"../classes/common/resource/loader/AudioLoader":14,"../classes/common/resource/loader/ImageLoader":15,"../classes/common/util/Utils":16,"../classes/conf/conf":17,"../components/flash-messages":18,"../vendor/bootstrap":32,"../vendor/bootstrap-switch":31,"../vendor/ember":34,"../vendor/ember-data":33,"../vendor/handlebars":35,"../vendor/jquery":36,"../vendor/kinetic-v4.5.4":37,"./store":21}],20:[function(require,module,exports){
+},{"../classes/app/logic/Controller":1,"../classes/app/logic/InitController":2,"../classes/app/ui/UI":3,"../classes/app/ui/anim/ExtraEasings":4,"../classes/app/ui/anim/LayoutManager":5,"../classes/app/ui/anim/StepAnimation":6,"../classes/app/ui/layer/Loading":7,"../classes/cmat":8,"../classes/common/evt/Event":9,"../classes/common/jslang/Array":10,"../classes/common/math/Random":11,"../classes/common/math/geom/Line":12,"../classes/common/math/geom/Point":13,"../classes/common/resource/loader/AbstractLoader":14,"../classes/common/resource/loader/AudioLoader":15,"../classes/common/resource/loader/ImageLoader":16,"../classes/common/util/DPI":17,"../classes/common/util/Utils":18,"../classes/conf/conf":19,"../components/flash-messages":20,"../vendor/bootstrap":34,"../vendor/bootstrap-switch":33,"../vendor/ember":36,"../vendor/ember-data":35,"../vendor/handlebars":37,"../vendor/jquery":38,"../vendor/kinetic-v4.5.4":39,"./store":23}],22:[function(require,module,exports){
 var App = require('./app');
 
 App.Router.map(function() {
@@ -1542,7 +1707,7 @@ App.Router.map(function() {
   });
 });
 
-},{"./app":19}],21:[function(require,module,exports){
+},{"./app":21}],23:[function(require,module,exports){
 // by default, persist application data to localStorage.
 require('../vendor/localstorage_adapter');
 
@@ -1553,7 +1718,7 @@ module.exports = DS.Store.extend({
   // })
   adapter: DS.LSAdapter.create()
 });
-},{"../vendor/localstorage_adapter":38}],22:[function(require,module,exports){
+},{"../vendor/localstorage_adapter":40}],24:[function(require,module,exports){
 // This file is auto-generated by `ember build`.
 // You should not modify it.
 
@@ -1577,7 +1742,7 @@ require('./config/routes');
 module.exports = App;
 
 
-},{"./config/app":19,"./config/routes":20,"./models/map":23,"./models/model_base":24,"./routes/application_route":25,"./routes/index_route":26,"./routes/map/add_route":27,"./routes/map_route":28,"./routes/maps_route":29,"./templates":30,"./views/map_view":39,"./views/modal_view":40,"./views/switch_view":41}],23:[function(require,module,exports){
+},{"./config/app":21,"./config/routes":22,"./models/map":25,"./models/model_base":26,"./routes/application_route":27,"./routes/index_route":28,"./routes/map/add_route":29,"./routes/map_route":30,"./routes/maps_route":31,"./templates":32,"./views/map_view":41,"./views/modal_view":42,"./views/switch_view":43}],25:[function(require,module,exports){
 var ModelBase = require('./model_base');
 
 var Map = ModelBase.extend({
@@ -1599,7 +1764,7 @@ Map.reopenClass({
 
 module.exports = Map;
 
-},{"./model_base":24}],24:[function(require,module,exports){
+},{"./model_base":26}],26:[function(require,module,exports){
 var ModelBase = DS.Model.extend({
 });
 
@@ -1608,7 +1773,7 @@ ModelBase.reopenClass({
 });
 
 module.exports = ModelBase;
-},{}],25:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 var ApplicationRoute = Ember.Route.extend({
   events: {
     addToMap: function(){
@@ -1621,7 +1786,7 @@ var ApplicationRoute = Ember.Route.extend({
 module.exports = ApplicationRoute;
 
 
-},{}],26:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 var IndexRoute = Ember.Route.extend({
   beforeModel: function(){
     this.transitionTo('maps');
@@ -1629,7 +1794,7 @@ var IndexRoute = Ember.Route.extend({
 });
 
 module.exports = IndexRoute;
-},{}],27:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var MapModel = require('../../models/map');
 var MapsAddRoute = Ember.Route.extend({
 
@@ -1656,7 +1821,7 @@ var MapsAddRoute = Ember.Route.extend({
 });
 
 module.exports = MapsAddRoute;
-},{"../../models/map":23}],28:[function(require,module,exports){
+},{"../../models/map":25}],30:[function(require,module,exports){
 var MapModel = require('../models/map');
 var MapRoute = Ember.Route.extend({
 
@@ -1674,7 +1839,7 @@ var MapRoute = Ember.Route.extend({
 module.exports = MapRoute;
 
 
-},{"../models/map":23}],29:[function(require,module,exports){
+},{"../models/map":25}],31:[function(require,module,exports){
 var MapModel = require('../models/map');
 
 MapsRoute = Ember.Route.extend({
@@ -1694,7 +1859,7 @@ MapsRoute = Ember.Route.extend({
 
 module.exports = MapsRoute;
 
-},{"../models/map":23}],30:[function(require,module,exports){
+},{"../models/map":25}],32:[function(require,module,exports){
 
 Ember.TEMPLATES['application'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [3,'>= 1.0.0-rc.4'];
@@ -1755,7 +1920,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   
 
 
-  data.buffer.push("<div>The map is here</div>");
+  data.buffer.push("<div id=\"map_canvas\"></div>");
   
 });
 
@@ -1862,7 +2027,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 
 
 
-},{}],31:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 /* ============================================================
  * bootstrapSwitch v1.6 by Larentis Mattia @SpiritualGuru
  * http://www.larentis.eu/
@@ -2172,7 +2337,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
         $('.switch')['bootstrapSwitch'](); // attach bootstrapswitch
     });
 })(jQuery);
-},{}],32:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 (function(){/* ===================================================
  * bootstrap-transition.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#transitions
@@ -4466,7 +4631,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 }(window.jQuery);
 
 })()
-},{}],33:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 // Version: v0.13-59-ge999edb
 // Last commit: e999edb (2013-07-06 06:03:59 -0700)
 
@@ -13375,7 +13540,7 @@ DS.RESTAdapter = DS.Adapter.extend({
 
 })();
 
-},{}],34:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 // Version: v1.0.0-rc.6-167-g1af8166
 // Last commit: 1af8166 (2013-07-22 01:22:37 +0000)
 
@@ -45534,7 +45699,7 @@ Ember
 
 })();
 
-},{}],35:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 /*
 
 Copyright (C) 2011 by Yehuda Katz
@@ -45881,7 +46046,7 @@ Handlebars.template = Handlebars.VM.template;
 })(Handlebars);
 ;
 
-},{}],36:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v1.9.1
  * http://jquery.com/
@@ -55479,7 +55644,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 }
 
 })( window );
-},{}],37:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 (function(){/*
  * KineticJS JavaScript Framework v4.5.4
  * http://www.kineticjs.com/
@@ -67352,7 +67517,7 @@ var Kinetic = {};
 })();
 
 })()
-},{}],38:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 DS.LSSerializer = DS.JSONSerializer.extend({
 
   addBelongsTo: function(data, record, key, association) {
@@ -67569,12 +67734,14 @@ DS.LSAdapter = DS.Adapter.extend(Ember.Evented, {
 });
 
 
-},{}],39:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
+var Cmat = require('../classes/cmat');
 var MapView = Ember.View.extend({
   tagName: 'div',
   templateName: 'map_view',
 
   didInsertElement: function(){
+    Cmat.boot(this.get('controller').get('model'));
   }
 
 });
@@ -67583,7 +67750,7 @@ Ember.Handlebars.helper('map', MapView);
 
 module.exports = MapView;
 
-},{}],40:[function(require,module,exports){
+},{"../classes/cmat":8}],42:[function(require,module,exports){
 var ModalView = Ember.View.extend({
   layoutName: 'modal_layout',
 
@@ -67613,7 +67780,7 @@ var ModalView = Ember.View.extend({
 Ember.Handlebars.helper('modal', ModalView);
 
 module.exports = ModalView;
-},{}],41:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 var SwitchView = Ember.View.extend({
   tagName: 'div',
   classNames: ['switch', 'btn-group'],
@@ -67630,5 +67797,5 @@ Ember.Handlebars.helper('switch', SwitchView);
 
 module.exports = SwitchView;
 
-},{}]},{},[22])
+},{}]},{},[24])
 ;

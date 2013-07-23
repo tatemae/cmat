@@ -1,6 +1,6 @@
-Booter = (function() {
+var Cmat = {
 
-  function bootIt(){
+  boot: function(map){
 
     ImageLoader.isXDPI(function() {
       var w = window.innerWidth;
@@ -29,4 +29,7 @@ Booter = (function() {
       callback: Controller.initAll
     });
   }
-})();
+
+};
+
+module.exports = Cmat;
