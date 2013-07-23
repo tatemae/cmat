@@ -1568,6 +1568,7 @@ App.IndexRoute = require('./routes/index_route');
 App.MapRoute = require('./routes/map_route');
 App.MapsRoute = require('./routes/maps_route');
 App.MapAddRoute = require('./routes/map/add_route');
+App.MapView = require('./views/map_view');
 App.ModalView = require('./views/modal_view');
 App.SwitchView = require('./views/switch_view');
 
@@ -1576,7 +1577,7 @@ require('./config/routes');
 module.exports = App;
 
 
-},{"./config/app":19,"./config/routes":20,"./models/map":23,"./models/model_base":24,"./routes/application_route":25,"./routes/index_route":26,"./routes/map/add_route":27,"./routes/map_route":28,"./routes/maps_route":29,"./templates":30,"./views/modal_view":39,"./views/switch_view":40}],23:[function(require,module,exports){
+},{"./config/app":19,"./config/routes":20,"./models/map":23,"./models/model_base":24,"./routes/application_route":25,"./routes/index_route":26,"./routes/map/add_route":27,"./routes/map_route":28,"./routes/maps_route":29,"./templates":30,"./views/map_view":39,"./views/modal_view":40,"./views/switch_view":41}],23:[function(require,module,exports){
 var ModelBase = require('./model_base');
 
 var Map = ModelBase.extend({
@@ -1739,14 +1740,22 @@ function program1(depth0,data) {
 Ember.TEMPLATES['map'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Ember.Handlebars.helpers; data = data || {};
-  var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
+  var hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div id='map_canvas'></div>\n");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  return buffer;
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "map", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  
+});
+
+Ember.TEMPLATES['map_view'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Ember.Handlebars.helpers; data = data || {};
+  
+
+
+  data.buffer.push("<div>The map is here</div>");
   
 });
 
@@ -67561,6 +67570,20 @@ DS.LSAdapter = DS.Adapter.extend(Ember.Evented, {
 
 
 },{}],39:[function(require,module,exports){
+var MapView = Ember.View.extend({
+  tagName: 'div',
+  templateName: 'map_view',
+
+  didInsertElement: function(){
+  }
+
+});
+
+Ember.Handlebars.helper('map', MapView);
+
+module.exports = MapView;
+
+},{}],40:[function(require,module,exports){
 var ModalView = Ember.View.extend({
   layoutName: 'modal_layout',
 
@@ -67590,7 +67613,7 @@ var ModalView = Ember.View.extend({
 Ember.Handlebars.helper('modal', ModalView);
 
 module.exports = ModalView;
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 var SwitchView = Ember.View.extend({
   tagName: 'div',
   classNames: ['switch', 'btn-group'],
