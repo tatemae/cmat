@@ -1,19 +1,27 @@
 var ModalView = Ember.View.extend({
-  didInsertElement: function(){
-    this.$('.modal, .modal-backdrop').addClass('in');
-  },
-
   layoutName: 'modal_layout',
 
+  didInsertElement: function(){
+    this.$('.modal').modal('show');
+  },
+
   close: function(){
+    this.do_close('modal_close');
+  },
+
+  save: function(){
+    this.do_close('modal_save');
+  },
+
+  do_close: function(event){
     var view = this;
-    // use one of: transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd
-    // events so the handler is only fired once in your browser
-    this.$('.modal').one("transitionend", function(ev){
-      view.get('controller').send('modal_closed');
+    this.$('.modal').one("hidden", function(ev){
+      view.get('controller').send(event);
+      // TODO the modal works, but it still leaves junk in the DOM. Would like to find a way to clean it up
     });
-    this.$('.modal, .modal-backdrop').removeClass('in');
+    this.$('.modal').modal('hide');
   }
+
 });
 
 Ember.Handlebars.helper('modal', ModalView);

@@ -2,12 +2,13 @@ var MapModel = require('../../models/map');
 var MapsAddRoute = Ember.Route.extend({
 
   events: {
-    modal_closed: function(){
+    modal_close: function(){
       this.unrender();
     },
 
-    save: function(){
-      alert('actions work like normal!');
+    modal_save: function(){
+      var content = this.get('controller').get('content');
+      // TODO do stuff with content
       this.unrender();
     }
   },
@@ -17,7 +18,6 @@ var MapsAddRoute = Ember.Route.extend({
   },
 
   unrender: function(){
-    this.render('nothing', { into: 'application', outlet: 'modal' });
     this.transitionTo('map', this.modelFor('map'));
   }
 
