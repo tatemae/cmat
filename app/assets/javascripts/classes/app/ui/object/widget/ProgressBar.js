@@ -25,47 +25,59 @@
 // of the authors and should not be interpreted as representing official policies, 
 // either expressed or implied, of the FreeBSD Project.
 //
-//
-// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/util/ProportionalImage.js
-Kinetic.ProportionalImage = (function() {
+// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/widget/ProgressBar.js
+Kinetic.ProgressBar = (function() {
+  var DOTS = 15;
+  var FADE_DISTANCE = 0.3;
+
   var Class = $$$.Class({
     _init: function(config) {
-      Kinetic.Image.call(this, config);
+      Kinetic.Group.call(this, config);
 
-      this.on('widthChange', this._syncHeight);
-      this.on('heightChange', this._syncWidth);
+      this._build();
+      this.on('percentChange', this._percentChanged);
+    },
 
-      if (config.width !== undefined) {
-        this.setWidth(config.width);
-      } else if (config.height !== undefined) {
-        this.setHeight(config.height);
+    _build: function() {
+      var w = this.getWidth();
+      var h = this.getHeight();
+      var gap = (w - h * DOTS) / (DOTS - 1);
+
+      for (var i = 0; i < DOTS; i++) {
+        this.add(new Kinetic.ProportionalImage({
+          x: i * (h + gap),
+          height: h,
+          image: Image.text.dot,
+          opacity: 0
+        }));
       }
     },
 
-    _syncDim: function(from, to, evt) {
-      var img = this.getImage();
+    _percentChanged: function(evt) {
+      evt.cancelBubble = true;
 
-      this.attrs[to] = img[to] * evt.newVal / img[from];
-    },
+      var w = this.getWidth();
+      var fadeDist = FADE_DISTANCE * w;
+      var isRev = this.getReversed();
+      var pos = Math.abs(evt.newVal - (isRev ? 1 : 0)) * (w + fadeDist) - fadeDist;
 
-    _syncWidth: function(evt) {
-      this._syncDim('height', 'width', evt);
-    },
+      this.each(function(n) {
+        var npos = n.getX() + n.getWidth() / 2;
 
-    _syncHeight: function(evt) {
-      this._syncDim('width', 'height', evt);
-    },
+        if (isRev) {
+          n.setOpacity(pos > npos ? 0 : Math.min(npos - pos, fadeDist) / fadeDist);
+        } else {
+          n.setOpacity(1 - (pos > npos ? 0 : Math.min(npos - pos, fadeDist) / fadeDist));
+        }
+      });
 
-    refreshWidth: function() {
-      this._syncWidth({ newVal: this.getHeight() });
-    },
-
-    refreshHeight: function() {
-      this._syncHeight({ newVal: this.getWidth() });
+      this.getLayer().draw();
     }
   });
 
-  Kinetic.Util.extend(Class, Kinetic.Image);
+  Kinetic.Util.extend(Class, Kinetic.Group);
+  Kinetic.Node.addGetterSetter(Class, 'percent', 0);
+  Kinetic.Node.addGetterSetter(Class, 'reversed', false);
 
   return Class;
 })();
