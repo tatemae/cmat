@@ -1384,55 +1384,6 @@ Config = {
   }
 };
 },{}],18:[function(require,module,exports){
-var FlashMessage = require('./flash_message');
-var FlashController = require('./flash_controller');
-var Flash = Ember.ArrayProxy.create({
-  content: [],
-  contentChanged: function() {
-    var current;
-    current = FlashController.get("content");
-    if (current !== this.objectAt(0)) {
-      return FlashController.set("content", this.objectAt(0));
-    }
-  },
-  pushFlash: function(type, message) {
-    return this.pushObject(FlashMessage.create({
-      message: message,
-      type: type
-    }));
-  }
-});
-
-Flash.addObserver('length', function() {
-  return this.contentChanged();
-});
-
-module.exports = Flash;
-},{"./flash_controller":19,"./flash_message":20}],19:[function(require,module,exports){
-var Flash = require('./flash');
-
-var FlashController = Ember.Object.create({
-  content: null,
-  clearContent: function(content, view) {
-    return view.hide(function() {
-      return Flash.removeObject(content);
-    });
-  }
-});
-
-FlashController.addObserver('content', function() {
-  if (this.get("content")) {
-    if (this.get("view")) {
-      this.get("view").show();
-      return setTimeout(this.clearContent, 2500, this.get("content"), this.get("view"));
-    }
-  } else {
-    return Flash.contentChanged();
-  }
-});
-
-module.exports = FlashController;
-},{"./flash":18}],20:[function(require,module,exports){
 var FlashMessage = Ember.Object.extend({
   type: "notice",
   message: null,
@@ -1447,8 +1398,100 @@ var FlashMessage = Ember.Object.extend({
   }).property("type").cacheable()
 });
 
-module.exports = FlashMessage;
-},{}],21:[function(require,module,exports){
+var FlashQueue = Ember.ArrayProxy.create({
+  content: [],
+  contentChanged: function() {
+    var current;
+    current = App.FlashController.get("content");
+    if (current !== this.objectAt(0)) {
+      return App.FlashController.set("content", this.objectAt(0));
+    }
+  },
+  pushFlash: function(type, message) {
+    return this.pushObject(App.FlashMessage.create({
+      message: message,
+      type: type
+    }));
+  }
+});
+
+var FlashMessages = Ember.Component.extend({
+
+  // contentBinding: "App.FlashController.content",
+  // classNameBindings: ["isNotice", "isWarning", "isError"],
+  // isNoticeBinding: "content.isNotice",
+  // isWarningBinding: "content.isWarning",
+  // isErrorBinding: "content.isError",
+
+  didInsertElement: function() {
+    this.$("#message").hide();
+  },
+
+  show: function(callback) {
+    return this.$("#message").css({
+      top: "-40px"
+    }).animate({
+      top: "+=40",
+      opacity: "toggle"
+    }, 500, callback);
+  },
+
+  hide: function(callback) {
+    return this.$("#message").css({
+      top: "0px"
+    }).animate({
+      top: "-39px",
+      opacity: "toggle"
+    }, 500, callback);
+  }
+
+});
+
+module.exports = FlashMessages;
+
+
+
+// App.FlashController = Ember.Object.create({
+//   content: null,
+//   clearContent: function(content, view) {
+//     return view.hide(function() {
+//       return App.FlashQueue.removeObject(content);
+//     });
+//   }
+// });
+
+// App.FlashController.addObserver('content', function() {
+//   if (this.get("content")) {
+//     if (this.get("view")) {
+//       this.get("view").show();
+//       return setTimeout(this.clearContent, 2500, this.get("content"), this.get("view"));
+//     }
+//   } else {
+//     return App.FlashQueue.contentChanged();
+//   }
+// });
+
+// App.FlashQueue = Ember.ArrayProxy.create({
+//   content: [],
+//   contentChanged: function() {
+//     var current;
+//     current = App.FlashController.get("content");
+//     if (current !== this.objectAt(0)) {
+//       return App.FlashController.set("content", this.objectAt(0));
+//     }
+//   },
+//   pushFlash: function(type, message) {
+//     return this.pushObject(App.FlashMessage.create({
+//       message: message,
+//       type: type
+//     }));
+//   }
+// });
+
+// App.FlashQueue.addObserver('length', function() {
+//   return this.contentChanged();
+// });
+},{}],19:[function(require,module,exports){
 // require other, dependencies here, ie:
 // require('./vendor/moment');
 
@@ -1460,7 +1503,7 @@ require('../vendor/bootstrap');
 require('../vendor/bootstrap-switch');
 
 window.Kinetic = require('../vendor/kinetic-v4.5.4');
-require('../classes/conf/conf')
+require('../classes/conf/conf');
 require('../classes/common/jslang/Array');
 require('../classes/common/util/Utils');
 require('../classes/common/evt/Event');
@@ -1484,11 +1527,11 @@ var App = Ember.Application.create({
 });
 
 App.Store = require('./store'); // delete if you don't want ember-data
+App.Flash = require('../components/flash-messages');
 
-App.Flash = require('../components/flash/flash');
 module.exports = App;
 
-},{"../classes/app/logic/Controller":1,"../classes/app/logic/InitController":2,"../classes/app/ui/UI":3,"../classes/app/ui/anim/ExtraEasings":4,"../classes/app/ui/anim/LayoutManager":5,"../classes/app/ui/anim/StepAnimation":6,"../classes/cmat":7,"../classes/common/evt/Event":8,"../classes/common/jslang/Array":9,"../classes/common/math/Random":10,"../classes/common/math/geom/Line":11,"../classes/common/math/geom/Point":12,"../classes/common/resource/loader/AbstractLoader":13,"../classes/common/resource/loader/AudioLoader":14,"../classes/common/resource/loader/ImageLoader":15,"../classes/common/util/Utils":16,"../classes/conf/conf":17,"../components/flash/flash":18,"../vendor/bootstrap":34,"../vendor/bootstrap-switch":33,"../vendor/ember":36,"../vendor/ember-data":35,"../vendor/handlebars":37,"../vendor/jquery":38,"../vendor/kinetic-v4.5.4":39,"./store":23}],22:[function(require,module,exports){
+},{"../classes/app/logic/Controller":1,"../classes/app/logic/InitController":2,"../classes/app/ui/UI":3,"../classes/app/ui/anim/ExtraEasings":4,"../classes/app/ui/anim/LayoutManager":5,"../classes/app/ui/anim/StepAnimation":6,"../classes/cmat":7,"../classes/common/evt/Event":8,"../classes/common/jslang/Array":9,"../classes/common/math/Random":10,"../classes/common/math/geom/Line":11,"../classes/common/math/geom/Point":12,"../classes/common/resource/loader/AbstractLoader":13,"../classes/common/resource/loader/AudioLoader":14,"../classes/common/resource/loader/ImageLoader":15,"../classes/common/util/Utils":16,"../classes/conf/conf":17,"../components/flash-messages":18,"../vendor/bootstrap":32,"../vendor/bootstrap-switch":31,"../vendor/ember":34,"../vendor/ember-data":33,"../vendor/handlebars":35,"../vendor/jquery":36,"../vendor/kinetic-v4.5.4":37,"./store":21}],20:[function(require,module,exports){
 var App = require('./app');
 
 App.Router.map(function() {
@@ -1499,7 +1542,7 @@ App.Router.map(function() {
   });
 });
 
-},{"./app":21}],23:[function(require,module,exports){
+},{"./app":19}],21:[function(require,module,exports){
 // by default, persist application data to localStorage.
 require('../vendor/localstorage_adapter');
 
@@ -1510,7 +1553,7 @@ module.exports = DS.Store.extend({
   // })
   adapter: DS.LSAdapter.create()
 });
-},{"../vendor/localstorage_adapter":40}],24:[function(require,module,exports){
+},{"../vendor/localstorage_adapter":38}],22:[function(require,module,exports){
 // This file is auto-generated by `ember build`.
 // You should not modify it.
 
@@ -1525,15 +1568,15 @@ App.IndexRoute = require('./routes/index_route');
 App.MapRoute = require('./routes/map_route');
 App.MapsRoute = require('./routes/maps_route');
 App.MapAddRoute = require('./routes/map/add_route');
-App.FlashView = require('./views/flash_view');
 App.ModalView = require('./views/modal_view');
+App.SwitchView = require('./views/switch_view');
 
 require('./config/routes');
 
 module.exports = App;
 
 
-},{"./config/app":21,"./config/routes":22,"./models/map":25,"./models/model_base":26,"./routes/application_route":27,"./routes/index_route":28,"./routes/map/add_route":29,"./routes/map_route":30,"./routes/maps_route":31,"./templates":32,"./views/flash_view":41,"./views/modal_view":42}],25:[function(require,module,exports){
+},{"./config/app":19,"./config/routes":20,"./models/map":23,"./models/model_base":24,"./routes/application_route":25,"./routes/index_route":26,"./routes/map/add_route":27,"./routes/map_route":28,"./routes/maps_route":29,"./templates":30,"./views/modal_view":39,"./views/switch_view":40}],23:[function(require,module,exports){
 var ModelBase = require('./model_base');
 
 var Map = ModelBase.extend({
@@ -1555,7 +1598,7 @@ Map.reopenClass({
 
 module.exports = Map;
 
-},{"./model_base":26}],26:[function(require,module,exports){
+},{"./model_base":24}],24:[function(require,module,exports){
 var ModelBase = DS.Model.extend({
 });
 
@@ -1564,17 +1607,12 @@ ModelBase.reopenClass({
 });
 
 module.exports = ModelBase;
-},{}],27:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var ApplicationRoute = Ember.Route.extend({
   events: {
     addToMap: function(){
       this.transitionTo('map.add');
     }
-  },
-
-  renderTemplate: function(){
-    this._super();
-    $('.switch')['bootstrapSwitch'](); // attach bootstrapswitch
   }
 
 });
@@ -1582,7 +1620,7 @@ var ApplicationRoute = Ember.Route.extend({
 module.exports = ApplicationRoute;
 
 
-},{}],28:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 var IndexRoute = Ember.Route.extend({
   beforeModel: function(){
     this.transitionTo('maps');
@@ -1590,7 +1628,7 @@ var IndexRoute = Ember.Route.extend({
 });
 
 module.exports = IndexRoute;
-},{}],29:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 var MapModel = require('../../models/map');
 var MapsAddRoute = Ember.Route.extend({
 
@@ -1617,13 +1655,14 @@ var MapsAddRoute = Ember.Route.extend({
 });
 
 module.exports = MapsAddRoute;
-},{"../../models/map":25}],30:[function(require,module,exports){
+},{"../../models/map":23}],28:[function(require,module,exports){
 var MapModel = require('../models/map');
 var MapRoute = Ember.Route.extend({
 
   model: function(params){
     //return MapModel.find(params.map_id);
     // Temp HACK until we get API in place
+    //App.Flash.pushFlash('notice', 'The flash works!.');
     return MapModel.createRecord({
       name: 'Map'
     });
@@ -1634,13 +1673,12 @@ var MapRoute = Ember.Route.extend({
 module.exports = MapRoute;
 
 
-},{"../models/map":25}],31:[function(require,module,exports){
+},{"../models/map":23}],29:[function(require,module,exports){
 var MapModel = require('../models/map');
 
 MapsRoute = Ember.Route.extend({
 
   afterModel: function(model, transition){
-    App.Flash.pushFlash('notice', 'The flash works!.');
     if(transition.targetName == "maps.index"){
       var map = MapModel.createRecord({
         name: 'Map'
@@ -1655,36 +1693,37 @@ MapsRoute = Ember.Route.extend({
 
 module.exports = MapsRoute;
 
-},{"../models/map":25}],32:[function(require,module,exports){
+},{"../models/map":23}],30:[function(require,module,exports){
 
 Ember.TEMPLATES['application'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [3,'>= 1.0.0-rc.4'];
 helpers = helpers || Ember.Handlebars.helpers; data = data || {};
-  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
-  var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n  <div id=\"message\">\n    ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "view.content.message", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n  </div>\n");
-  return buffer;
+  
+  data.buffer.push("\n            <input type=\"checkbox\" />\n          ");
   }
 
-  hashContexts = {'id': depth0};
-  hashTypes = {'id': "STRING"};
-  options = {hash:{
-    'id': ("flash-view")
-  },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers.flash),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "flash", options));
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n\n<div id=\"toolbar\" class=\"navbar navbar-fixed-top\">\n  <div class=\"navbar-inner\">\n    <div class=\"container\">\n      <a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".navbar-inverse-collapse\">\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </a>\n      <form class=\"navbar-form form-inline pull-left\">\n        <label class=\"control-label\" for=\"title\">Title:</label>\n        <div class=\"input-append\">\n          <input class=\"span2\" id=\"title\" type=\"text\">\n          <div class=\"btn-group\">\n            <button class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">\n              <span class=\"caret\"></span>\n            </button>\n            <ul class=\"dropdown-menu\">\n              <li>Hydrodynamics</li>\n              <li>Micro-nano things</li>\n              <li class=\"divider\"></li>\n              <li><i class=\"icon-file\"></i> New</li>\n              <li><i class=\"icon-copy\"></i> Duplicate</li>\n              <li><i class=\"icon-trash\"></i> Delete</li>\n            </ul>\n          </div>\n        </div>\n      </form>\n      <div class=\"nav-collapse collapse navbar-inverse-collapse\">\n\n        <div class=\"btn-group\">\n          <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n            <i class=\"icon-download-alt\"></i>\n            <span class=\"caret\"></span>\n          </a>\n          <ul class=\"dropdown-menu\">\n            <li class=\"nav-header\">Import MC3 Collection</li>\n            <li class=\"divider\"></li>\n            <li>\n              <form class=\"form-search form-inline\">\n                <div class=\"input-append search-container\">\n                  <input id=\"map_search\" type=\"text\" class=\"search-query\" placeholder=\"Search Maps\">\n                  <button id=\"map_search_btn\" type=\"submit\" class=\"btn\"><i class=\"icon-search\"></i></button>\n                </div>\n              </form>\n            </li>\n            <li class=\"divider\"></li>\n            <li></li>\n          </ul>\n        </div>\n\n        <div class=\"btn-group\">\n          <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n            <i class=\"icon-th\"></i>\n            <span class=\"caret\"></span>\n          </a>\n          <ul class=\"dropdown-menu\">\n            <li class=\"nav-header\">Map Library</li>\n            <li class=\"divider\"></li>\n            <li></li>\n          </ul>\n        </div>\n\n        <div class=\"btn-group\">\n          <a class=\"btn\" href=\"#\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "flash-messages", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n<div id=\"toolbar\" class=\"navbar navbar-fixed-top\">\n  <div class=\"navbar-inner\">\n    <div class=\"container\">\n      <a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".navbar-inverse-collapse\">\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </a>\n      <form class=\"navbar-form form-inline pull-left\">\n        <label class=\"control-label\" for=\"title\">Title:</label>\n        <div class=\"input-append\">\n          <input class=\"span2\" id=\"title\" type=\"text\">\n          <div class=\"btn-group\">\n            <button class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">\n              <span class=\"caret\"></span>\n            </button>\n            <ul class=\"dropdown-menu\">\n              <li>Hydrodynamics</li>\n              <li>Micro-nano things</li>\n              <li class=\"divider\"></li>\n              <li><i class=\"icon-file\"></i> New</li>\n              <li><i class=\"icon-copy\"></i> Duplicate</li>\n              <li><i class=\"icon-trash\"></i> Delete</li>\n            </ul>\n          </div>\n        </div>\n      </form>\n      <div class=\"nav-collapse collapse navbar-inverse-collapse\">\n\n        <div class=\"btn-group\">\n          <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n            <i class=\"icon-download-alt\"></i>\n            <span class=\"caret\"></span>\n          </a>\n          <ul class=\"dropdown-menu\">\n            <li class=\"nav-header\">Import MC3 Collection</li>\n            <li class=\"divider\"></li>\n            <li>\n              <form class=\"form-search form-inline\">\n                <div class=\"input-append search-container\">\n                  <input id=\"map_search\" type=\"text\" class=\"search-query\" placeholder=\"Search Maps\">\n                  <button id=\"map_search_btn\" type=\"submit\" class=\"btn\"><i class=\"icon-search\"></i></button>\n                </div>\n              </form>\n            </li>\n            <li class=\"divider\"></li>\n            <li></li>\n          </ul>\n        </div>\n\n        <div class=\"btn-group\">\n          <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n            <i class=\"icon-th\"></i>\n            <span class=\"caret\"></span>\n          </a>\n          <ul class=\"dropdown-menu\">\n            <li class=\"nav-header\">Map Library</li>\n            <li class=\"divider\"></li>\n            <li></li>\n          </ul>\n        </div>\n\n        <div class=\"btn-group\">\n          <a class=\"btn\" href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "addToMap", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" title=\"Enter a map as a hierarchy\">\n            <i class=\"icon-list\"></i>\n          </a>\n        </div>\n\n        <div class=\"nav pull-right form-inline\">\n          <div class=\"btn-group\">\n            <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n              <i class=\"icon-eye-open\"></i>\n              <span class=\"caret\"></span>\n            </a>\n            <ul class=\"dropdown-menu\">\n              <li><label><input type=\"checkbox\">Show Relationships</label></li>\n              <li><label><input type=\"checkbox\">Show Relationship Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Descriptions</label></li>\n            </ul>\n          </div>\n          <div class=\"switch btn-group\">\n            <input type=\"checkbox\" />\n          </div>\n          <a href=\"#\" class=\"btn\">Kate</a>\n        </div>\n      </div>\n\n    </div>\n  </div>\n</div>\n\n<div class=\"container\">\n  ");
+  data.buffer.push(" title=\"Enter a map as a hierarchy\">\n            <i class=\"icon-list\"></i>\n          </a>\n        </div>\n\n        <div class=\"nav pull-right form-inline\">\n          <div class=\"btn-group\">\n            <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n              <i class=\"icon-eye-open\"></i>\n              <span class=\"caret\"></span>\n            </a>\n            <ul class=\"dropdown-menu\">\n              <li><label><input type=\"checkbox\">Show Relationships</label></li>\n              <li><label><input type=\"checkbox\">Show Relationship Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Descriptions</label></li>\n            </ul>\n          </div>\n          ");
+  hashContexts = {'data-on-label': depth0,'data-off-label': depth0,'class': depth0};
+  hashTypes = {'data-on-label': "STRING",'data-off-label': "STRING",'class': "STRING"};
+  options = {hash:{
+    'data-on-label': ("edit"),
+    'data-off-label': ("view"),
+    'class': ("switch-small")
+  },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['switch']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "switch", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n          <a href=\"#\" class=\"btn\">Kate</a>\n        </div>\n      </div>\n\n    </div>\n  </div>\n</div>\n\n<div class=\"container\">\n  ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1797,9 +1836,24 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   
 });
 
+Ember.TEMPLATES['components/flash-messages'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Ember.Handlebars.helpers; data = data || {};
+  var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-},{}],33:[function(require,module,exports){
+  data.buffer.push("<div id=\"message\">\n  ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "message", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n</div>");
+  return buffer;
+  
+});
+
+
+
+},{}],31:[function(require,module,exports){
 /* ============================================================
  * bootstrapSwitch v1.6 by Larentis Mattia @SpiritualGuru
  * http://www.larentis.eu/
@@ -2109,7 +2163,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
         $('.switch')['bootstrapSwitch'](); // attach bootstrapswitch
     });
 })(jQuery);
-},{}],34:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 (function(){/* ===================================================
  * bootstrap-transition.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#transitions
@@ -4403,7 +4457,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 }(window.jQuery);
 
 })()
-},{}],35:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 // Version: v0.13-59-ge999edb
 // Last commit: e999edb (2013-07-06 06:03:59 -0700)
 
@@ -13312,7 +13366,7 @@ DS.RESTAdapter = DS.Adapter.extend({
 
 })();
 
-},{}],36:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 // Version: v1.0.0-rc.6-167-g1af8166
 // Last commit: 1af8166 (2013-07-22 01:22:37 +0000)
 
@@ -45471,7 +45525,7 @@ Ember
 
 })();
 
-},{}],37:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 /*
 
 Copyright (C) 2011 by Yehuda Katz
@@ -45818,7 +45872,7 @@ Handlebars.template = Handlebars.VM.template;
 })(Handlebars);
 ;
 
-},{}],38:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v1.9.1
  * http://jquery.com/
@@ -55416,7 +55470,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 }
 
 })( window );
-},{}],39:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 (function(){/*
  * KineticJS JavaScript Framework v4.5.4
  * http://www.kineticjs.com/
@@ -67289,7 +67343,7 @@ var Kinetic = {};
 })();
 
 })()
-},{}],40:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 DS.LSSerializer = DS.JSONSerializer.extend({
 
   addBelongsTo: function(data, record, key, association) {
@@ -67506,45 +67560,7 @@ DS.LSAdapter = DS.Adapter.extend(Ember.Evented, {
 });
 
 
-},{}],41:[function(require,module,exports){
-var FlashController = require('../components/flash/flash_controller');
-var FlashView = Ember.View.extend({
-  contentBinding: "FlashController.content",
-  classNameBindings: ["isNotice", "isWarning", "isError"],
-  isNoticeBinding: "content.isNotice",
-  isWarningBinding: "content.isWarning",
-  isErrorBinding: "content.isError",
-
-  didInsertElement: function() {
-    this.$("#message").hide();
-    return FlashController.set("view", this);
-  },
-
-  show: function(callback) {
-    return this.$("#message").css({
-      top: "-40px"
-    }).animate({
-      top: "+=40",
-      opacity: "toggle"
-    }, 500, callback);
-  },
-
-  hide: function(callback) {
-    return this.$("#message").css({
-      top: "0px"
-    }).animate({
-      top: "-39px",
-      opacity: "toggle"
-    }, 500, callback);
-  }
-});
-
-Ember.Handlebars.helper('flash', FlashView);
-
-module.exports = FlashView;
-
-
-},{"../components/flash/flash_controller":19}],42:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 var ModalView = Ember.View.extend({
   layoutName: 'modal_layout',
 
@@ -67564,6 +67580,7 @@ var ModalView = Ember.View.extend({
     var view = this;
     this.$('.modal').one("hidden", function(ev){
       view.get('controller').send(event);
+      // TODO the modal works, but it still leaves junk in the DOM. Would like to find a way to clean it up
     });
     this.$('.modal').modal('hide');
   }
@@ -67573,5 +67590,22 @@ var ModalView = Ember.View.extend({
 Ember.Handlebars.helper('modal', ModalView);
 
 module.exports = ModalView;
-},{}]},{},[24])
+},{}],40:[function(require,module,exports){
+var SwitchView = Ember.View.extend({
+  tagName: 'div',
+  classNames: ['switch', 'btn-group'],
+  attributeBindings: ['onLabel:data-on-label', 'offLabel:data-off-label'],
+  onLabel: 'edit',
+  offLabel: 'view',
+
+  didInsertElement: function(){
+    this.$().bootstrapSwitch();
+  }
+});
+
+Ember.Handlebars.helper('switch', SwitchView);
+
+module.exports = SwitchView;
+
+},{}]},{},[22])
 ;

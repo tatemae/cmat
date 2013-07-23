@@ -9,7 +9,7 @@ require('../vendor/bootstrap');
 require('../vendor/bootstrap-switch');
 
 window.Kinetic = require('../vendor/kinetic-v4.5.4');
-require('../classes/conf/conf')
+require('../classes/conf/conf');
 require('../classes/common/jslang/Array');
 require('../classes/common/util/Utils');
 require('../classes/common/evt/Event');
@@ -36,6 +36,6 @@ var App = Ember.Application.create({
 });
 
 App.Store = require('./store'); // delete if you don't want ember-data
+App.Flash = require('../components/flash-messages');
 
-App.Flash = require('../components/flash/flash');
 module.exports = App;
