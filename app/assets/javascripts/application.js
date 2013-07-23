@@ -2037,7 +2037,7 @@ function program1(depth0,data) {
   },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['switch']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "switch", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n          <a href=\"#\" class=\"btn\">Kate</a>\n        </div>\n      </div>\n\n    </div>\n  </div>\n</div>\n\n<div class=\"container\">\n  ");
+  data.buffer.push("\n          <a href=\"#\" class=\"btn\">Kate</a>\n        </div>\n      </div>\n\n    </div>\n  </div>\n</div>\n\n<div class=\"map_container\">\n  ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
