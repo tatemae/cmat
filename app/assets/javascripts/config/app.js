@@ -38,6 +38,6 @@ var App = Ember.Application.create({
 });
 
 App.Store = require('./store'); // delete if you don't want ember-data
-App.Flash = require('../components/flash-messages');
+App.FlashMessages = require('../components/flash-messages');
 
 module.exports = App;
