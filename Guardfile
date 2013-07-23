@@ -4,6 +4,6 @@ notification :off
 interactor :off
 
 guard :shell do
-  watch(%r{^app/assets/javascripts/(.+)\.js$}) { `ember build` }
+  watch(%r{^app/assets/javascripts/(.+)\.(js|hbs)$}) { `ember build` }
   ignore /application.js/
 end

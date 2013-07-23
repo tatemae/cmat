@@ -16,6 +16,25 @@ UI = (function() {
   var container;
   var toolbar_height;
 
+  function showLoading(params) {
+    container = params.container;
+    toolbar_height = $('#'+params.toolbar).innerHeight();
+
+    if (stage)
+      return;
+
+    initStage(params);
+
+    canvas.add(loading = new Kinetic.Loading($$$.clone(dims))).draw();
+  }
+
+  function trackLoading(p) {
+    if (!loading)
+      return;
+
+    loading.setPercent(p);
+  }
+
   function build(params) {
     container = params.container;
     toolbar_height = $('#'+params.toolbar).innerHeight();
@@ -27,7 +46,7 @@ UI = (function() {
 
       loading = null;
     } else {
-      initStage();
+      initStage(params);
     }
 
     buildGroupLayers();
@@ -116,6 +135,8 @@ UI = (function() {
   }
 
   publicAPI.build = build;
+  publicAPI.showLoading = showLoading;
+  publicAPI.trackLoading = trackLoading;
 
   return publicAPI;
 })();

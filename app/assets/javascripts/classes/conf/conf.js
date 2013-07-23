@@ -5,7 +5,7 @@ Config = {
   },
   resources: {
     images: {
-      path: 'resources/img',
+      path: 'assets/',
       files: {
         splash: {
           png: {
