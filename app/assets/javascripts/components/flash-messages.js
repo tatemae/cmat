@@ -12,7 +12,7 @@ var FlashMessage = Ember.Object.extend({
   }).property("type").cacheable()
 });
 
-var FlashQueue = Ember.ArrayProxy.create({
+var flashQueue = Ember.ArrayProxy.create({
   content: [],
   contentChanged: function() {
     var current;
@@ -20,16 +20,13 @@ var FlashQueue = Ember.ArrayProxy.create({
     if (current !== this.objectAt(0)) {
       return App.FlashController.set("content", this.objectAt(0));
     }
-  },
-  pushFlash: function(type, message) {
-    return this.pushObject(App.FlashMessage.create({
-      message: message,
-      type: type
-    }));
   }
 });
 
 var FlashMessages = Ember.Component.extend({
+
+  current: null,
+  queue: Ember.ArrayProxy.create({}),
 
   // contentBinding: "App.FlashController.content",
   // classNameBindings: ["isNotice", "isWarning", "isError"],
@@ -37,8 +34,21 @@ var FlashMessages = Ember.Component.extend({
   // isWarningBinding: "content.isWarning",
   // isErrorBinding: "content.isError",
 
-  didInsertElement: function() {
+  didInsertElement: function(){
     this.$("#message").hide();
+    this.queue.addObserver('content', this.queueChange);
+  },
+
+  queueChange: function(){
+    this.show();
+    setTimeout(this.hide, 2500);
+  },
+
+  pushFlash: function(type, message) {
+    return flashQueue.pushObject(FlashMessage.create({
+      message: message,
+      type: type
+    }));
   },
 
   show: function(callback) {
@@ -82,23 +92,6 @@ module.exports = FlashMessages;
 //     }
 //   } else {
 //     return App.FlashQueue.contentChanged();
-//   }
-// });
-
-// App.FlashQueue = Ember.ArrayProxy.create({
-//   content: [],
-//   contentChanged: function() {
-//     var current;
-//     current = App.FlashController.get("content");
-//     if (current !== this.objectAt(0)) {
-//       return App.FlashController.set("content", this.objectAt(0));
-//     }
-//   },
-//   pushFlash: function(type, message) {
-//     return this.pushObject(App.FlashMessage.create({
-//       message: message,
-//       type: type
-//     }));
 //   }
 // });
 
