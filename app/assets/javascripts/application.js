@@ -580,9 +580,165 @@ Kinetic.Loading = (function() {
   return Class;
 })();
 },{}],8:[function(require,module,exports){
+// Copyright (c) 2013, Mihhail Lapuškin
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met: 
+
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer. 
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution. 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// The views and conclusions contained in the software and documentation are those
+// of the authors and should not be interpreted as representing official policies, 
+// either expressed or implied, of the FreeBSD Project.
+//
+//
+// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/util/ProportionalImage.js
+Kinetic.ProportionalImage = (function() {
+  var Class = $$$.Class({
+    _init: function(config) {
+      Kinetic.Image.call(this, config);
+
+      this.on('widthChange', this._syncHeight);
+      this.on('heightChange', this._syncWidth);
+
+      if (config.width !== undefined) {
+        this.setWidth(config.width);
+      } else if (config.height !== undefined) {
+        this.setHeight(config.height);
+      }
+    },
+
+    _syncDim: function(from, to, evt) {
+      var img = this.getImage();
+
+      this.attrs[to] = img[to] * evt.newVal / img[from];
+    },
+
+    _syncWidth: function(evt) {
+      this._syncDim('height', 'width', evt);
+    },
+
+    _syncHeight: function(evt) {
+      this._syncDim('width', 'height', evt);
+    },
+
+    refreshWidth: function() {
+      this._syncWidth({ newVal: this.getHeight() });
+    },
+
+    refreshHeight: function() {
+      this._syncHeight({ newVal: this.getWidth() });
+    }
+  });
+
+  Kinetic.Util.extend(Class, Kinetic.Image);
+
+  return Class;
+})();
+},{}],9:[function(require,module,exports){
+// Copyright (c) 2013, Mihhail Lapuškin
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met: 
+
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer. 
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution. 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// The views and conclusions contained in the software and documentation are those
+// of the authors and should not be interpreted as representing official policies, 
+// either expressed or implied, of the FreeBSD Project.
+//
+// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/widget/ProgressBar.js
+Kinetic.ProgressBar = (function() {
+  var DOTS = 15;
+  var FADE_DISTANCE = 0.3;
+
+  var Class = $$$.Class({
+    _init: function(config) {
+      Kinetic.Group.call(this, config);
+
+      this._build();
+      this.on('percentChange', this._percentChanged);
+    },
+
+    _build: function() {
+      var w = this.getWidth();
+      var h = this.getHeight();
+      var gap = (w - h * DOTS) / (DOTS - 1);
+
+      for (var i = 0; i < DOTS; i++) {
+        this.add(new Kinetic.ProportionalImage({
+          x: i * (h + gap),
+          height: h,
+          image: Image.text.dot,
+          opacity: 0
+        }));
+      }
+    },
+
+    _percentChanged: function(evt) {
+      evt.cancelBubble = true;
+
+      var w = this.getWidth();
+      var fadeDist = FADE_DISTANCE * w;
+      var isRev = this.getReversed();
+      var pos = Math.abs(evt.newVal - (isRev ? 1 : 0)) * (w + fadeDist) - fadeDist;
+
+      this.each(function(n) {
+        var npos = n.getX() + n.getWidth() / 2;
+
+        if (isRev) {
+          n.setOpacity(pos > npos ? 0 : Math.min(npos - pos, fadeDist) / fadeDist);
+        } else {
+          n.setOpacity(1 - (pos > npos ? 0 : Math.min(npos - pos, fadeDist) / fadeDist));
+        }
+      });
+
+      this.getLayer().draw();
+    }
+  });
+
+  Kinetic.Util.extend(Class, Kinetic.Group);
+  Kinetic.Node.addGetterSetter(Class, 'percent', 0);
+  Kinetic.Node.addGetterSetter(Class, 'reversed', false);
+
+  return Class;
+})();
+},{}],10:[function(require,module,exports){
 var Cmat = {
 
-  boot: function(){
+  boot: function(map){
 
     ImageLoader.isXDPI(function() {
       var w = window.innerWidth;
@@ -615,7 +771,7 @@ var Cmat = {
 };
 
 module.exports = Cmat;
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -766,7 +922,7 @@ Event = (function() {
     }
   };
 })();
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -880,7 +1036,7 @@ Array.prototype.remove = function(el) {
 Array.prototype.clone = function() {
   return this.slice();
 };
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -977,7 +1133,7 @@ Random = (function() {
 
   return randomObject;
 })();
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1061,7 +1217,7 @@ Line = $$$.Class({
     }
   }
 });
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1100,7 +1256,7 @@ Point = $$$.Class({
     return Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
   }
 });
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1230,7 +1386,7 @@ AbstractLoader = (function() {
     }
   });
 })();
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1302,7 +1458,7 @@ AudioLoader = (function() {
     }
   });
 })();
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1360,7 +1516,7 @@ ImageLoader = (function() {
 
   return Class;
 })();
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 DPI = {
   X: {
     width: 1280,
@@ -1379,7 +1535,7 @@ DPI = {
     height: 200
   }
 };
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1459,7 +1615,7 @@ Utils = $$$ = (function() {
     }
   };
 })();
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 Config = {
   settings: {
     canvas_element: 'map_canvas',
@@ -1546,7 +1702,7 @@ Config = {
     }
   }
 };
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var FlashMessage = Ember.Object.extend({
   type: "notice",
   message: null,
@@ -1654,7 +1810,7 @@ module.exports = FlashMessages;
 // App.FlashQueue.addObserver('length', function() {
 //   return this.contentChanged();
 // });
-},{}],21:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 // require other, dependencies here, ie:
 // require('./vendor/moment');
 
@@ -1666,6 +1822,7 @@ require('../vendor/bootstrap');
 require('../vendor/bootstrap-switch');
 
 window.Kinetic = require('../vendor/kinetic-v4.5.4');
+require('../vendor/addon/kineticjs_addon');
 require('../classes/conf/conf');
 require('../classes/common/jslang/Array');
 require('../classes/common/util/Utils');
@@ -1677,6 +1834,8 @@ require('../classes/common/util/DPI');
 require('../classes/common/math/Random');
 require('../classes/common/math/geom/Line');
 require('../classes/common/math/geom/Point');
+require('../classes/app/ui/object/util/ProportionalImage');
+require('../classes/app/ui/object/widget/ProgressBar');
 require('../classes/app/ui/anim/ExtraEasings');
 require('../classes/app/ui/anim/StepAnimation');
 require('../classes/app/ui/anim/LayoutManager');
@@ -1696,7 +1855,7 @@ App.Flash = require('../components/flash-messages');
 
 module.exports = App;
 
-},{"../classes/app/logic/Controller":1,"../classes/app/logic/InitController":2,"../classes/app/ui/UI":3,"../classes/app/ui/anim/ExtraEasings":4,"../classes/app/ui/anim/LayoutManager":5,"../classes/app/ui/anim/StepAnimation":6,"../classes/app/ui/layer/Loading":7,"../classes/cmat":8,"../classes/common/evt/Event":9,"../classes/common/jslang/Array":10,"../classes/common/math/Random":11,"../classes/common/math/geom/Line":12,"../classes/common/math/geom/Point":13,"../classes/common/resource/loader/AbstractLoader":14,"../classes/common/resource/loader/AudioLoader":15,"../classes/common/resource/loader/ImageLoader":16,"../classes/common/util/DPI":17,"../classes/common/util/Utils":18,"../classes/conf/conf":19,"../components/flash-messages":20,"../vendor/bootstrap":34,"../vendor/bootstrap-switch":33,"../vendor/ember":36,"../vendor/ember-data":35,"../vendor/handlebars":37,"../vendor/jquery":38,"../vendor/kinetic-v4.5.4":39,"./store":23}],22:[function(require,module,exports){
+},{"../classes/app/logic/Controller":1,"../classes/app/logic/InitController":2,"../classes/app/ui/UI":3,"../classes/app/ui/anim/ExtraEasings":4,"../classes/app/ui/anim/LayoutManager":5,"../classes/app/ui/anim/StepAnimation":6,"../classes/app/ui/layer/Loading":7,"../classes/app/ui/object/util/ProportionalImage":8,"../classes/app/ui/object/widget/ProgressBar":9,"../classes/cmat":10,"../classes/common/evt/Event":11,"../classes/common/jslang/Array":12,"../classes/common/math/Random":13,"../classes/common/math/geom/Line":14,"../classes/common/math/geom/Point":15,"../classes/common/resource/loader/AbstractLoader":16,"../classes/common/resource/loader/AudioLoader":17,"../classes/common/resource/loader/ImageLoader":18,"../classes/common/util/DPI":19,"../classes/common/util/Utils":20,"../classes/conf/conf":21,"../components/flash-messages":22,"../vendor/addon/kineticjs_addon":35,"../vendor/bootstrap":37,"../vendor/bootstrap-switch":36,"../vendor/ember":39,"../vendor/ember-data":38,"../vendor/handlebars":40,"../vendor/jquery":41,"../vendor/kinetic-v4.5.4":42,"./store":25}],24:[function(require,module,exports){
 var App = require('./app');
 
 App.Router.map(function() {
@@ -1707,7 +1866,7 @@ App.Router.map(function() {
   });
 });
 
-},{"./app":21}],23:[function(require,module,exports){
+},{"./app":23}],25:[function(require,module,exports){
 // by default, persist application data to localStorage.
 require('../vendor/localstorage_adapter');
 
@@ -1718,7 +1877,7 @@ module.exports = DS.Store.extend({
   // })
   adapter: DS.LSAdapter.create()
 });
-},{"../vendor/localstorage_adapter":40}],24:[function(require,module,exports){
+},{"../vendor/localstorage_adapter":43}],26:[function(require,module,exports){
 // This file is auto-generated by `ember build`.
 // You should not modify it.
 
@@ -1742,7 +1901,7 @@ require('./config/routes');
 module.exports = App;
 
 
-},{"./config/app":21,"./config/routes":22,"./models/map":25,"./models/model_base":26,"./routes/application_route":27,"./routes/index_route":28,"./routes/map/add_route":29,"./routes/map_route":30,"./routes/maps_route":31,"./templates":32,"./views/map_view":41,"./views/modal_view":42,"./views/switch_view":43}],25:[function(require,module,exports){
+},{"./config/app":23,"./config/routes":24,"./models/map":27,"./models/model_base":28,"./routes/application_route":29,"./routes/index_route":30,"./routes/map/add_route":31,"./routes/map_route":32,"./routes/maps_route":33,"./templates":34,"./views/map_view":44,"./views/modal_view":45,"./views/switch_view":46}],27:[function(require,module,exports){
 var ModelBase = require('./model_base');
 
 var Map = ModelBase.extend({
@@ -1764,7 +1923,7 @@ Map.reopenClass({
 
 module.exports = Map;
 
-},{"./model_base":26}],26:[function(require,module,exports){
+},{"./model_base":28}],28:[function(require,module,exports){
 var ModelBase = DS.Model.extend({
 });
 
@@ -1773,7 +1932,7 @@ ModelBase.reopenClass({
 });
 
 module.exports = ModelBase;
-},{}],27:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var ApplicationRoute = Ember.Route.extend({
   events: {
     addToMap: function(){
@@ -1786,7 +1945,7 @@ var ApplicationRoute = Ember.Route.extend({
 module.exports = ApplicationRoute;
 
 
-},{}],28:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var IndexRoute = Ember.Route.extend({
   beforeModel: function(){
     this.transitionTo('maps');
@@ -1794,7 +1953,7 @@ var IndexRoute = Ember.Route.extend({
 });
 
 module.exports = IndexRoute;
-},{}],29:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 var MapModel = require('../../models/map');
 var MapsAddRoute = Ember.Route.extend({
 
@@ -1821,7 +1980,7 @@ var MapsAddRoute = Ember.Route.extend({
 });
 
 module.exports = MapsAddRoute;
-},{"../../models/map":25}],30:[function(require,module,exports){
+},{"../../models/map":27}],32:[function(require,module,exports){
 var MapModel = require('../models/map');
 var MapRoute = Ember.Route.extend({
 
@@ -1839,7 +1998,7 @@ var MapRoute = Ember.Route.extend({
 module.exports = MapRoute;
 
 
-},{"../models/map":25}],31:[function(require,module,exports){
+},{"../models/map":27}],33:[function(require,module,exports){
 var MapModel = require('../models/map');
 
 MapsRoute = Ember.Route.extend({
@@ -1859,7 +2018,7 @@ MapsRoute = Ember.Route.extend({
 
 module.exports = MapsRoute;
 
-},{"../models/map":25}],32:[function(require,module,exports){
+},{"../models/map":27}],34:[function(require,module,exports){
 
 Ember.TEMPLATES['application'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [3,'>= 1.0.0-rc.4'];
@@ -2027,7 +2186,119 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 
 
 
-},{}],33:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
+(function() {
+  var nodeClassProtos = [];
+  
+  for (var key in Kinetic) {
+    for (var method in Kinetic[key].prototype) {
+      if (method === '_nodeInit') {
+        nodeClassProtos.push(Kinetic[key].prototype);
+        break;
+      }
+    }
+  }
+  
+  var addNodeMethod = function(name, func) {
+    nodeClassProtos.forEach(function(proto) {
+      var newFunc = func;
+      var oldFunc = proto[name];
+      
+      if (oldFunc) {
+        newFunc = function() {
+          oldFunc.apply(this, arguments);
+          func.apply(this, arguments);
+        };
+      }
+
+      proto[name] = newFunc;
+    });
+  };
+  
+  Kinetic.Util.addMethods(Kinetic.Stage, {
+    _getContentPosition: function() {
+      var rect = this.content.getBoundingClientRect ? this.content.getBoundingClientRect() : { top: 0, left: 0 };
+      return { top: rect.top, left: rect.left };
+    }
+  });
+
+  Kinetic.Util.addMethods(Kinetic.Group, {
+    size: function() {
+      return this.getChildren().length;
+    },
+  
+    each: function(fn) {
+      this.getChildren().forEach(fn);
+    },
+  
+    centerHorizontally: function(node) {
+      node.setX((this.getWidth() - node.getWidth()) / 2);
+    },
+  
+    centerVertically: function(node) {
+      node.setY((this.getHeight() - node.getHeight()) / 2);
+    },
+  
+    center: function(node) {
+      this.centerHorizontally(node);
+      this.centerVertically(node);
+    }
+  });
+
+  addNodeMethod('toLocalOf', function(n) {
+    var nGlobal = n.getAbsolutePosition();
+    var tnf = this.getAbsoluteTransform();
+    tnf.invert();
+    tnf.translate(nGlobal.x, nGlobal.y);
+    var tns = tnf.getTranslation();
+
+    return { x: this.getX() + tns.x, y: this.getY() + tns.y };
+  });
+
+  addNodeMethod('isTweening', function() {
+    return this.tween && this.tween.anim.isRunning();
+  });
+
+  addNodeMethod('destroyTween', function() {
+    if (this.tween) {
+      this.tween.destroy();
+    }
+  });
+  
+  addNodeMethod('finishTween', function() {
+    if (this.tween) {
+      this.tween.finish();
+    }
+  });
+
+  addNodeMethod('to', function(config) {
+    var clb = config.callback;
+    
+    config.onFinish = clb ? function() {
+      this.tween.destroy();
+      clb.call(this);
+    }.bind(this) : undefined;
+    
+    config.easing = Kinetic.Easings[config.easing];
+    config.node = this;
+    
+    delete config.callback;
+
+    this.destroyTween();
+    this.tween = new Kinetic.Tween(config);
+    this.tween.play();
+
+    return this.tween;
+  });
+  
+  addNodeMethod('destroy', function() {
+    this.destroyTween();
+  });
+
+  addNodeMethod = undefined;
+  nodeClassProtos = undefined;
+})();
+},{}],36:[function(require,module,exports){
 /* ============================================================
  * bootstrapSwitch v1.6 by Larentis Mattia @SpiritualGuru
  * http://www.larentis.eu/
@@ -2337,7 +2608,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
         $('.switch')['bootstrapSwitch'](); // attach bootstrapswitch
     });
 })(jQuery);
-},{}],34:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 (function(){/* ===================================================
  * bootstrap-transition.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#transitions
@@ -4631,7 +4902,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 }(window.jQuery);
 
 })()
-},{}],35:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 // Version: v0.13-59-ge999edb
 // Last commit: e999edb (2013-07-06 06:03:59 -0700)
 
@@ -13540,7 +13811,7 @@ DS.RESTAdapter = DS.Adapter.extend({
 
 })();
 
-},{}],36:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 // Version: v1.0.0-rc.6-167-g1af8166
 // Last commit: 1af8166 (2013-07-22 01:22:37 +0000)
 
@@ -45699,7 +45970,7 @@ Ember
 
 })();
 
-},{}],37:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /*
 
 Copyright (C) 2011 by Yehuda Katz
@@ -46046,7 +46317,7 @@ Handlebars.template = Handlebars.VM.template;
 })(Handlebars);
 ;
 
-},{}],38:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v1.9.1
  * http://jquery.com/
@@ -55644,7 +55915,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 }
 
 })( window );
-},{}],39:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 (function(){/*
  * KineticJS JavaScript Framework v4.5.4
  * http://www.kineticjs.com/
@@ -67517,7 +67788,7 @@ var Kinetic = {};
 })();
 
 })()
-},{}],40:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 DS.LSSerializer = DS.JSONSerializer.extend({
 
   addBelongsTo: function(data, record, key, association) {
@@ -67734,7 +68005,7 @@ DS.LSAdapter = DS.Adapter.extend(Ember.Evented, {
 });
 
 
-},{}],41:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 var Cmat = require('../classes/cmat');
 var MapView = Ember.View.extend({
   tagName: 'div',
@@ -67750,7 +68021,7 @@ Ember.Handlebars.helper('map', MapView);
 
 module.exports = MapView;
 
-},{"../classes/cmat":8}],42:[function(require,module,exports){
+},{"../classes/cmat":10}],45:[function(require,module,exports){
 var ModalView = Ember.View.extend({
   layoutName: 'modal_layout',
 
@@ -67780,7 +68051,7 @@ var ModalView = Ember.View.extend({
 Ember.Handlebars.helper('modal', ModalView);
 
 module.exports = ModalView;
-},{}],43:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 var SwitchView = Ember.View.extend({
   tagName: 'div',
   classNames: ['switch', 'btn-group'],
@@ -67797,5 +68068,5 @@ Ember.Handlebars.helper('switch', SwitchView);
 
 module.exports = SwitchView;
 
-},{}]},{},[24])
+},{}]},{},[26])
 ;
