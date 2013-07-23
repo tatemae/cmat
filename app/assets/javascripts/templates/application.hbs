@@ -1,9 +1,4 @@
-{{#flash id="flash-view"}}
-  <div id="message">
-    {{view.content.message}}
-  </div>
-{{/flash}}
-
+{{flash-messages}}
 <div id="toolbar" class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
@@ -85,9 +80,9 @@
               <li><label><input type="checkbox">Show Node Descriptions</label></li>
             </ul>
           </div>
-          <div class="switch btn-group">
+          {{#switch data-on-label="edit" data-off-label="view" class="switch-small"}}
             <input type="checkbox" />
-          </div>
+          {{/switch}}
           <a href="#" class="btn">Kate</a>
         </div>
       </div>
