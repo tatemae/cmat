@@ -755,7 +755,7 @@ var Cmat = {
     loaders.image.progress(UI.trackLoading);
 
     Event.allFired({
-      events: [ Event.pageLoaded, loaders.splash.loaded ],
+      events: [ loaders.splash.loaded ],
       callback: UI.showLoading({
         container: Config.settings.canvas_element,
         toolbar: Config.settings.toolbar_element
@@ -763,7 +763,7 @@ var Cmat = {
     });
 
     Event.allFired({
-      events: [ Event.pageLoaded ],
+      events: [ loaders.image.loaded ],
       callback: Controller.initAll
     });
   }
@@ -901,10 +901,6 @@ Event = (function() {
 
     pageLoaded: function(fn) {
       bind(document, 'DOMContentLoaded', fn);
-    },
-
-    kineticJsDefined: function(fn) {
-      bind(document, 'Kinetic', fn);
     },
 
     allFired: function(config) {
@@ -1623,7 +1619,7 @@ Config = {
   },
   resources: {
     images: {
-      path: 'assets/',
+      path: 'assets',
       files: {
         splash: {
           png: {

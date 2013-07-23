@@ -129,10 +129,6 @@ Event = (function() {
       bind(document, 'DOMContentLoaded', fn);
     },
 
-    kineticJsDefined: function(fn) {
-      bind(document, 'Kinetic', fn);
-    },
-
     allFired: function(config) {
       var left = config.events.length;
 
