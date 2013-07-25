@@ -62,11 +62,7 @@ Config = {
               _:          [ 'pause', 'restart', 'resume', 'next' ]
             },
 
-            bg: [ 'trans' ]
-          },
-
-          jpg: {
-            bg: [ 'normal', 'gs' ]
+            bg: [ 'normal', 'trans' ]
           }
         }
       }

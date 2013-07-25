@@ -25,46 +25,50 @@
 // of the authors and should not be interpreted as representing official policies, 
 // either expressed or implied, of the FreeBSD Project.
 //
-// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/util/ProportionalImage.js
-Kinetic.ProportionalImage = (function() {
+// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/layer/Background.js
+Kinetic.Background = (function() {
+  var ANIMATION_TIME = 0.5;
+
   var Class = $$$.Class({
     _init: function(config) {
-      Kinetic.Image.call(this, config);
+      config.listening = false;
 
-      this.on('widthChange', this._syncHeight);
-      this.on('heightChange', this._syncWidth);
+      Kinetic.Group.call(this, config);
 
-      if (config.width !== undefined) {
-        this.setWidth(config.width);
-      } else if (config.height !== undefined) {
-        this.setHeight(config.height);
-      }
+      this.add(this.normal = this._createImage(Image.bg.normal));
+      // this.add(this.gs = this._createImage(Image.bg.gs));
     },
 
-    _syncDim: function(from, to, evt) {
-      var img = this.getImage();
-
-      this.attrs[to] = img[to] * evt.newVal / img[from];
+    _createImage: function(img) {
+      return new Kinetic.Image({
+        width: this.getWidth(),
+        height: this.getHeight(),
+        image: img
+      });
     },
 
-    _syncWidth: function(evt) {
-      this._syncDim('height', 'width', evt);
+    toGrayscale: function(callback) {
+      this.gs.show();
+      this.gs.to({
+        duration: ANIMATION_TIME,
+        opacity: 1,
+        callback: callback
+      });
     },
 
-    _syncHeight: function(evt) {
-      this._syncDim('width', 'height', evt);
-    },
-
-    refreshWidth: function() {
-      this._syncWidth({ newVal: this.getHeight() });
-    },
-
-    refreshHeight: function() {
-      this._syncHeight({ newVal: this.getWidth() });
+    toColor: function(callback) {
+      this.gs.to({
+        duration: ANIMATION_TIME,
+        opacity: 0,
+        callback: function() {
+          this.gs.hide();
+          if (callback) callback();
+        }.bind(this)
+      });
     }
   });
 
-  Kinetic.Util.extend(Class, Kinetic.Image);
+  Kinetic.Util.extend(Class, Kinetic.Group);
 
   return Class;
 })();

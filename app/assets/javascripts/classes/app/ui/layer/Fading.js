@@ -25,46 +25,41 @@
 // of the authors and should not be interpreted as representing official policies, 
 // either expressed or implied, of the FreeBSD Project.
 //
-// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/util/ProportionalImage.js
-Kinetic.ProportionalImage = (function() {
+// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/layer/Fading.js
+Kinetic.Fading = (function() {
+  var LONG_TIME = 5;
+  var FAST_TIME = 1;
+
   var Class = $$$.Class({
     _init: function(config) {
-      Kinetic.Image.call(this, config);
+      config.fill = 'black';
+      config.listening = false;
 
-      this.on('widthChange', this._syncHeight);
-      this.on('heightChange', this._syncWidth);
-
-      if (config.width !== undefined) {
-        this.setWidth(config.width);
-      } else if (config.height !== undefined) {
-        this.setHeight(config.height);
-      }
+      Kinetic.Rect.call(this, config);
     },
 
-    _syncDim: function(from, to, evt) {
-      var img = this.getImage();
-
-      this.attrs[to] = img[to] * evt.newVal / img[from];
+    fadeOut: function(dur, callback) {
+      this.to({
+        opacity: 0,
+        easing: 'EaseIn',
+        duration: dur,
+        callback: function() {
+          this.destroy();
+          if (callback) callback();
+        }
+      });
     },
 
-    _syncWidth: function(evt) {
-      this._syncDim('height', 'width', evt);
+    longFadeOut: function(callback) {
+      this.fadeOut(LONG_TIME, callback);
     },
 
-    _syncHeight: function(evt) {
-      this._syncDim('width', 'height', evt);
-    },
-
-    refreshWidth: function() {
-      this._syncWidth({ newVal: this.getHeight() });
-    },
-
-    refreshHeight: function() {
-      this._syncHeight({ newVal: this.getWidth() });
+    fastFadeOut: function(callback) {
+      this.fadeOut(FAST_TIME, callback);
     }
   });
 
-  Kinetic.Util.extend(Class, Kinetic.Image);
+  Kinetic.Util.extend(Class, Kinetic.Rect);
 
   return Class;
 })();

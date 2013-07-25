@@ -77,14 +77,14 @@ InitController = $$$.Class({
   ctrName: 'init',
   ctrInit: function() {
     this.initUI();
-    this.launchApp();
+    this.launch();
   },
 
   initUI: function() {
     UI.build();
   },
 
-  launchApp: function() {
+  launch: function() {
     this.ctr('cmat_app').cmatApp();
   }
 });
@@ -534,7 +534,6 @@ Kinetic.StepAnimation = (function() {
 // of the authors and should not be interpreted as representing official policies, 
 // either expressed or implied, of the FreeBSD Project.
 //
-//
 // based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/layer/Background.js
 Kinetic.Background = (function() {
   var ANIMATION_TIME = 0.5;
@@ -657,7 +656,6 @@ Kinetic.CmatApp = (function() {
 // The views and conclusions contained in the software and documentation are those
 // of the authors and should not be interpreted as representing official policies, 
 // either expressed or implied, of the FreeBSD Project.
-//
 //
 // based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/layer/Fading.js
 Kinetic.Fading = (function() {
@@ -1112,6 +1110,7 @@ Kinetic.AppNode = (function() {
 // of the authors and should not be interpreted as representing official policies, 
 // either expressed or implied, of the FreeBSD Project.
 //
+//
 // based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/circle/Connection.js
 Kinetic.Connection = (function() {
   var MIN_COUNT = 4;
@@ -1317,7 +1316,6 @@ Kinetic.PressCatcher = (function() {
 // The views and conclusions contained in the software and documentation are those
 // of the authors and should not be interpreted as representing official policies, 
 // either expressed or implied, of the FreeBSD Project.
-//
 //
 // based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/util/ProportionalImage.js
 Kinetic.ProportionalImage = (function() {
@@ -2579,13 +2577,13 @@ var MapsAddRoute = Ember.Route.extend({
 
 module.exports = MapsAddRoute;
 },{"../../models/map":33}],38:[function(require,module,exports){
-var App = require('../config/app');
 var MapModel = require('../models/map');
 var MapRoute = Ember.Route.extend({
 
   model: function(params){
     //return MapModel.find(params.map_id);
     // Temp HACK until we get API in place
+    //App.FlashMessages.pushFlash('notice', 'The flash works!.');
     return MapModel.createRecord({
       name: 'Map'
     });
@@ -2596,7 +2594,7 @@ var MapRoute = Ember.Route.extend({
 module.exports = MapRoute;
 
 
-},{"../config/app":29,"../models/map":33}],39:[function(require,module,exports){
+},{"../models/map":33}],39:[function(require,module,exports){
 var MapModel = require('../models/map');
 
 MapsRoute = Ember.Route.extend({
@@ -2629,11 +2627,14 @@ function program1(depth0,data) {
   data.buffer.push("\n            <input type=\"checkbox\" />\n          ");
   }
 
-  data.buffer.push("<div id=\"toolbar\" class=\"navbar navbar-fixed-top\">\n  <div class=\"navbar-inner\">\n    <div class=\"container\">\n      <a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".navbar-inverse-collapse\">\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </a>\n      <form class=\"navbar-form form-inline pull-left\">\n        <label class=\"control-label\" for=\"title\">Title:</label>\n        <div class=\"input-append\">\n          <input class=\"span2\" id=\"title\" type=\"text\">\n          <div class=\"btn-group\">\n            <button class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">\n              <span class=\"caret\"></span>\n            </button>\n            <ul class=\"dropdown-menu cmat_dropdown\">\n              <li>Hydrodynamics</li>\n              <li>Micro-nano things</li>\n              <li class=\"divider\"></li>\n              <li><i class=\"icon-file\"></i> New</li>\n              <li><i class=\"icon-copy\"></i> Duplicate</li>\n              <li><i class=\"icon-trash\"></i> Delete</li>\n            </ul>\n          </div>\n        </div>\n      </form>\n      <div class=\"nav-collapse collapse navbar-inverse-collapse\">\n\n        <div class=\"btn-group\">\n          <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n            <i class=\"icon-download-alt\"></i>\n            <span class=\"caret\"></span>\n          </a>\n          <ul class=\"dropdown-menu cmat_dropdown\">\n            <li class=\"nav-header\">Import MC3 Collection</li>\n            <li class=\"divider\"></li>\n            <li class=\"dropdown open\">\n              <form class=\"form-search\">\n                <div class=\"input-append search-container\">\n                  <input id=\"map_search\" type=\"text\" class=\"search-query\" placeholder=\"Search Maps\">\n                  <button id=\"map_search_btn\" type=\"submit\" class=\"btn\"><i class=\"icon-search\"></i></button>\n                </div>\n              </form>\n            </li>\n            <li class=\"divider\"></li>\n            <li></li>\n          </ul>\n        </div>\n\n        <div class=\"btn-group\">\n          <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n            <i class=\"icon-th\"></i>\n            <span class=\"caret\"></span>\n          </a>\n          <ul class=\"dropdown-menu cmat_dropdown\">\n            <li class=\"nav-header\">Map Library</li>\n            <li class=\"divider\"></li>\n            <li></li>\n          </ul>\n        </div>\n\n        <div class=\"btn-group\">\n          <a class=\"btn\" href=\"#\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "flash-messages", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n<div id=\"toolbar\" class=\"navbar navbar-fixed-top\">\n  <div class=\"navbar-inner\">\n    <div class=\"container\">\n      <a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".navbar-inverse-collapse\">\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </a>\n      <form class=\"navbar-form form-inline pull-left\">\n        <label class=\"control-label\" for=\"title\">TITLE</label>\n        <div class=\"input-append\">\n          <input class=\"span2\" id=\"title\" type=\"text\">\n          <div class=\"btn-group\">\n            <button class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">\n              <span class=\"caret\"></span>\n            </button>\n            <ul class=\"dropdown-menu\">\n              <li>Hydrodynamics</li>\n              <li>Micro-nano things</li>\n              <li class=\"divider\"></li>\n              <li><i class=\"icon-file\"></i> New</li>\n              <li><i class=\"icon-copy\"></i> Duplicate</li>\n              <li><i class=\"icon-trash\"></i> Delete</li>\n            </ul>\n          </div>\n        </div>\n      </form>\n      <div class=\"nav-collapse collapse navbar-inverse-collapse\">\n        <div class=\"nav pull-center form-inline\">\n          <div class=\"btn-group\">\n            <a class=\"btn dropdown-toggle icon_download\" data-toggle=\"dropdown\" href=\"#\"></a>\n            <ul class=\"dropdown-menu\">\n              <li class=\"nav-header\">Import MC3 Collection</li>\n              <li class=\"divider\"></li>\n              <li>\n                <form class=\"form-search form-inline\">\n                  <div class=\"input-append search-container\">\n                    <input id=\"map_search\" type=\"text\" class=\"search-query\" placeholder=\"Search Maps\">\n                    <button id=\"map_search_btn\" type=\"submit\" class=\"btn\"><i class=\"icon-search\"></i></button>\n                  </div>\n                </form>\n              </li>\n              <li class=\"divider\"></li>\n              <li></li>\n            </ul>\n          </div>\n\n          <div class=\"btn-group\">\n            <a class=\"btn dropdown-toggle icon_th\" data-toggle=\"dropdown\" href=\"#\"></a>\n            <ul class=\"dropdown-menu\">\n              <li class=\"nav-header\">Map Library</li>\n              <li class=\"divider\"></li>\n              <li></li>\n            </ul>\n          </div>\n\n          <div class=\"btn-group\">\n            <a class=\"btn icon_list\" href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "addToMap", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" title=\"Enter a map as a hierarchy\">\n            <i class=\"icon-list\"></i>\n          </a>\n        </div>\n\n        <div class=\"nav pull-right form-inline\">\n          <div class=\"btn-group\">\n            <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n              <i class=\"icon-eye-open\"></i>\n              <span class=\"caret\"></span>\n            </a>\n            <ul class=\"dropdown-menu cmat_dropdown\">\n              <li><label><input type=\"checkbox\">Show Relationships</label></li>\n              <li><label><input type=\"checkbox\">Show Relationship Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Descriptions</label></li>\n            </ul>\n          </div>\n          ");
+  data.buffer.push(" title=\"Enter a map as a hierarchy\"></a>\n          </div>\n        </div>\n\n        <div class=\"nav pull-right form-inline\">\n          <div class=\"btn-group\">\n            <a class=\"btn dropdown-toggle icon_eye_open\" data-toggle=\"dropdown\" href=\"#\"></a>\n            <ul class=\"dropdown-menu\">\n              <li><label><input type=\"checkbox\">Show Relationships</label></li>\n              <li><label><input type=\"checkbox\">Show Relationship Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Descriptions</label></li>\n            </ul>\n          </div>\n          ");
   hashContexts = {'data-on-label': depth0,'data-off-label': depth0,'class': depth0};
   hashTypes = {'data-on-label': "STRING",'data-off-label': "STRING",'class': "STRING"};
   options = {hash:{
@@ -2643,7 +2644,7 @@ function program1(depth0,data) {
   },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['switch']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "switch", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n          <a href=\"#\" class=\"btn\">Kate</a>\n        </div>\n      </div>\n\n    </div>\n  </div>\n</div>\n\n<div class=\"map_container\">\n  ");
+  data.buffer.push("\n          <div class=\"btn-group\">\n            <a href=\"#\" class=\"btn name_btn\">Kate</a>\n          </div>\n        </div>\n      </div>\n\n    </div>\n  </div>\n</div>\n\n<div class=\"map_container\">\n  ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -2751,6 +2752,31 @@ function program1(depth0,data) {
   stack2 = ((stack1 = helpers.modal),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "modal", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   else { data.buffer.push(''); }
+  
+});
+
+Ember.TEMPLATES['map/index'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Ember.Handlebars.helpers; data = data || {};
+  var buffer = '';
+
+
+  return buffer;
+  
+});
+
+Ember.TEMPLATES['components/flash-messages'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [3,'>= 1.0.0-rc.4'];
+helpers = helpers || Ember.Handlebars.helpers; data = data || {};
+  var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div id=\"message\">\n  ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "message", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n</div>");
+  return buffer;
   
 });
 

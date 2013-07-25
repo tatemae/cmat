@@ -16,7 +16,12 @@ UI = (function() {
   var container;
   var toolbar_height;
 
-  function showLoading(params) {
+  function showLoading() {
+    params = {
+      container: Config.settings.canvas_element,
+      toolbar: Config.settings.toolbar_element
+    }
+
     container = params.container;
     toolbar_height = $('#'+params.toolbar).innerHeight();
 
@@ -35,7 +40,12 @@ UI = (function() {
     loading.setPercent(p);
   }
 
-  function build(params) {
+  function build() {
+    params = {
+      container: Config.settings.canvas_element,
+      toolbar: Config.settings.toolbar_element
+    }
+
     container = params.container;
     toolbar_height = $('#'+params.toolbar).innerHeight();
 
@@ -97,9 +107,9 @@ UI = (function() {
     
     // canvas.add(layer.message = new Kinetic.Message($$$.clone(dims)));
     // canvas.add(layer.quit = new Kinetic.Quit($$$.clone(dims)));
-    // canvas.add(layer.fading = new Kinetic.Fading($$$.clone(dims)));
+    canvas.add(layer.fading = new Kinetic.Fading($$$.clone(dims)));
 
-    // $$$.copy(publicAPI, layer);
+    $$$.copy(publicAPI, layer);
   }
 
   function buildLayoutManager() {

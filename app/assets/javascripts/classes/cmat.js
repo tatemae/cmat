@@ -18,10 +18,7 @@ var Cmat = {
 
     Event.allFired({
       events: [ loaders.splash.loaded ],
-      callback: UI.showLoading({
-        container: Config.settings.canvas_element,
-        toolbar: Config.settings.toolbar_element
-      })
+      callback: UI.showLoading
     });
 
     Event.allFired({
