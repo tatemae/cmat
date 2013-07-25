@@ -1,4 +1,20 @@
 ;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
+AppController = $$$.Class({
+  extend: Controller,
+  ctrName: 'cmat_app',
+  ctrInit: function() {
+  },
+
+  cmatApp: function() {
+    UI.fading.fastFadeOut(function() {
+      this.newApp();
+    }.bind(this));
+  },
+
+  newApp: function() {
+  }
+});
+},{}],2:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -55,30 +71,24 @@ Controller = (function() {
 
   return Class;
 })();
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 InitController = $$$.Class({
   extend: Controller,
   ctrName: 'init',
   ctrInit: function() {
-    this.initUI({
-      container: Config.settings.canvas_element,
-      toolbar: Config.settings.toolbar_element
-    });
-    this.doSomething();
-    this.doSomethingElse();
+    this.initUI();
+    this.launchApp();
   },
 
-  initUI: function(params) {
-    UI.build(params);
+  initUI: function() {
+    UI.build();
   },
 
-  doSomething: function() {
-  },
-
-  doSomethingElse: function() {
+  launchApp: function() {
+    this.ctr('cmat_app').cmatApp();
   }
 });
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 UI = (function() {
   var PADDING = 0.016;
   var MAX_RATIO = 15 / 9;
@@ -97,7 +107,12 @@ UI = (function() {
   var container;
   var toolbar_height;
 
-  function showLoading(params) {
+  function showLoading() {
+    params = {
+      container: Config.settings.canvas_element,
+      toolbar: Config.settings.toolbar_element
+    }
+
     container = params.container;
     toolbar_height = $('#'+params.toolbar).innerHeight();
 
@@ -116,7 +131,12 @@ UI = (function() {
     loading.setPercent(p);
   }
 
-  function build(params) {
+  function build() {
+    params = {
+      container: Config.settings.canvas_element,
+      toolbar: Config.settings.toolbar_element
+    }
+
     container = params.container;
     toolbar_height = $('#'+params.toolbar).innerHeight();
 
@@ -166,18 +186,8 @@ UI = (function() {
   }
 
   function buildGroupLayers() {
-    testRect = new Kinetic.Rect({
-      name: "testRect",
-      x: 0,
-      y: 0,
-      width: stage.getWidth(),
-      height: stage.getHeight(),
-      fill: 'red'
-    });
-    canvas.add(testRect);
-    stage.draw();
-    // canvas.add(layer.bg = new Kinetic.Background($$$.clone(dims)));
-    // canvas.add(layer.game = new Kinetic.Game($$$.clone(dims)));
+    canvas.add(layer.bg = new Kinetic.Background($$$.clone(dims)));
+    canvas.add(layer.cmat_app = new Kinetic.CmatApp($$$.clone(dims)));
     // canvas.add(layer.inactiveDisp = new Kinetic.InactiveDisplay($$$.clone(dims)));
     // canvas.add(layer.menu = new Kinetic.Menu($$$.clone(dims)));
     // canvas.add(layer.gameOver = new Kinetic.GameOver($$$.clone(dims)));
@@ -188,9 +198,9 @@ UI = (function() {
     
     // canvas.add(layer.message = new Kinetic.Message($$$.clone(dims)));
     // canvas.add(layer.quit = new Kinetic.Quit($$$.clone(dims)));
-    // canvas.add(layer.fading = new Kinetic.Fading($$$.clone(dims)));
+    canvas.add(layer.fading = new Kinetic.Fading($$$.clone(dims)));
 
-    // $$$.copy(publicAPI, layer);
+    $$$.copy(publicAPI, layer);
   }
 
   function buildLayoutManager() {
@@ -215,13 +225,20 @@ UI = (function() {
     // });
   }
 
+  function getPos(e) {
+    var xy = {};
+    xy = stage.getTouchPosition() || stage.getMousePosition();
+    return xy;
+  }
+
   publicAPI.build = build;
   publicAPI.showLoading = showLoading;
   publicAPI.trackLoading = trackLoading;
+  publicAPI.getPos = getPos;
 
   return publicAPI;
 })();
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -267,7 +284,7 @@ Kinetic.Easings.SoftBackEaseInOut = function(t, b, c, d, a, p) {
   }
   return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
 };
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -419,7 +436,7 @@ Kinetic.LayoutManager = (function() {
 
   return Class;
 })();
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -489,7 +506,198 @@ Kinetic.StepAnimation = (function() {
 
   return Class;
 })();
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
+// Copyright (c) 2013, Mihhail Lapuškin
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met: 
+
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer. 
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution. 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// The views and conclusions contained in the software and documentation are those
+// of the authors and should not be interpreted as representing official policies, 
+// either expressed or implied, of the FreeBSD Project.
+//
+//
+// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/layer/Background.js
+Kinetic.Background = (function() {
+  var ANIMATION_TIME = 0.5;
+
+  var Class = $$$.Class({
+    _init: function(config) {
+      config.listening = false;
+
+      Kinetic.Group.call(this, config);
+
+      this.add(this.normal = this._createImage(Image.bg.normal));
+      // this.add(this.gs = this._createImage(Image.bg.gs));
+    },
+
+    _createImage: function(img) {
+      return new Kinetic.Image({
+        width: this.getWidth(),
+        height: this.getHeight(),
+        image: img
+      });
+    },
+
+    toGrayscale: function(callback) {
+      this.gs.show();
+      this.gs.to({
+        duration: ANIMATION_TIME,
+        opacity: 1,
+        callback: callback
+      });
+    },
+
+    toColor: function(callback) {
+      this.gs.to({
+        duration: ANIMATION_TIME,
+        opacity: 0,
+        callback: function() {
+          this.gs.hide();
+          if (callback) callback();
+        }.bind(this)
+      });
+    }
+  });
+
+  Kinetic.Util.extend(Class, Kinetic.Group);
+
+  return Class;
+})();
+},{}],9:[function(require,module,exports){
+Kinetic.CmatApp = (function() {
+  var CIRCLE_AREA_TO_SCREEN_REL = 0.04;
+  var MARKER_TO_MAX_CIRCLE_REL = 0.1;
+  var FADE_TIME = 0.5;
+
+  var Class = $$$.Class({
+    _init: function(config) {
+      Kinetic.Group.call(this, config);
+      this.add(this.pressCatcher = this._createPressCatcher());
+      this.add(this.nodes = new Kinetic.Group({ listening: true }));
+    },
+
+    _createPressCatcher: function() {
+      return new Kinetic.PressCatcher({
+        width: this.getWidth(),
+        height: this.getHeight(),
+        onPress: this._addNode.bind(this),
+        visible: true
+      });
+    },
+
+    _addNode: function(e) {
+      var area = this.getWidth() * this.getHeight();
+      var maxRadius = Math.floor(Math.sqrt(area * CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
+      var radiusFunc = function(s, max) {
+        return maxRadius * Math.sqrt(s / max);
+      };
+      var xy = UI.getPos(e);
+      var node = new Kinetic.AppNode({
+        id: 1,
+        x: xy.x,
+        y: xy.y,
+        active: true,
+        score: 3,
+        radiusFunc: radiusFunc,
+        draggable: true
+      });
+      this.nodes.add(node);
+      this.nodes.draw();
+    }
+
+  });
+
+  Kinetic.Util.extend(Class, Kinetic.Group);
+
+  return Class;
+})();
+},{}],10:[function(require,module,exports){
+// Copyright (c) 2013, Mihhail Lapuškin
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met: 
+
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer. 
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution. 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// The views and conclusions contained in the software and documentation are those
+// of the authors and should not be interpreted as representing official policies, 
+// either expressed or implied, of the FreeBSD Project.
+//
+//
+// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/layer/Fading.js
+Kinetic.Fading = (function() {
+  var LONG_TIME = 5;
+  var FAST_TIME = 1;
+
+  var Class = $$$.Class({
+    _init: function(config) {
+      config.fill = 'black';
+      config.listening = false;
+
+      Kinetic.Rect.call(this, config);
+    },
+
+    fadeOut: function(dur, callback) {
+      this.to({
+        opacity: 0,
+        easing: 'EaseIn',
+        duration: dur,
+        callback: function() {
+          this.destroy();
+          if (callback) callback();
+        }
+      });
+    },
+
+    longFadeOut: function(callback) {
+      this.fadeOut(LONG_TIME, callback);
+    },
+
+    fastFadeOut: function(callback) {
+      this.fadeOut(FAST_TIME, callback);
+    }
+  });
+
+  Kinetic.Util.extend(Class, Kinetic.Rect);
+
+  return Class;
+})();
+},{}],11:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -579,7 +787,510 @@ Kinetic.Loading = (function() {
 
   return Class;
 })();
-},{}],8:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
+// Copyright (c) 2013, Mihhail Lapuškin
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met: 
+
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer. 
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution. 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// The views and conclusions contained in the software and documentation are those
+// of the authors and should not be interpreted as representing official policies, 
+// either expressed or implied, of the FreeBSD Project.
+//
+// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/circle/GameCircle.js
+Kinetic.AppNode = (function() {
+  var MAX_SCORE = 5;
+  var EXPAND = 1.2;
+  var COLLAPSE = 0.95;
+  var EXPAND_TIME = 0.2;
+  var COLLAPSE_TIME = 0.5;
+  var TO_NORMAL_TIME = 0.15;
+  var FADE_OUT_TIME = 0.3;
+  var FAST_ROTATE_OUT_TIME = 0.3;
+  var LONG_ROTATE_OUT_TIME = 0.6;
+
+  var Class = $$$.Class({
+    _init: function(config) {
+      Kinetic.Image.call(this, config);
+
+      this.attrs.connections = [];
+      this.attrs._connections = [];
+      this.attrs.neighbours = [];
+      this.attrs.ownNeighbours = [];
+      this._ownsConnection = {};
+
+      this.on('click tap', this._pressed);
+      this.on('radiusChange', this._syncRadiusWithImageSize);
+      this.on('widthChange heightChange', this._syncSizeWithOffset);
+
+      this.setRadius(this._calcRadius());
+      this._updateImage();
+    },
+
+    _updateImage: function() {
+      var s = this.getScore();
+
+      this.setImage(this.attrs.active ? Image.circle.active[s] : Image.circle.passive[s]);
+    },
+
+    _syncRadiusWithImageSize: function() {
+      var d = this.getRadius() * 2;
+
+      this.setSize(d, d);
+    },
+
+    _calcRadius: function(s) {
+      return this.attrs.radiusFunc(this.getScore() + (s || 0), MAX_SCORE);
+    },
+
+    _syncSizeWithOffset: function() {
+      this.setOffset(this.getWidth() / 2, this.getHeight() / 2);
+    },
+
+    getConnections: function() {
+      return this.attrs.connections;
+    },
+
+    _removeConnection: function(conn) {
+      this.attrs.connections.remove(conn);
+    },
+
+    getNeighbours: function() {
+      return this.attrs.neighbours;
+    },
+
+    _removeNeighbour: function(circle) {
+      this.attrs.neighbours.remove(circle);
+    },
+
+    getOwnNeighbours: function() {
+      return this.attrs.ownNeighbours;
+    },
+
+    _addOwnNeighbour: function(circle) {
+      this.attrs.ownNeighbours.add(circle);
+      this._ownsConnection[circle._id] = true;
+    },
+
+    _removeOwnNeighbour: function(circle) {
+      this.attrs.ownNeighbours.remove(circle);
+      this._ownsConnection[circle._id] = false;
+    },
+
+    connections: function() {
+      return this.getConnections().length;
+    },
+
+    connect: function(circle) {
+      if (circle != this && !this.isConnected(circle)) {
+        var conn = new Kinetic.Connection($$$.copy({ circles: [ this, circle ] }, this.attrs.connection));
+
+        this.getConnections().add(conn);
+        circle.getConnections().add(conn);
+        this.getNeighbours().add(circle);
+        circle.getNeighbours().add(this);
+
+        this._addOwnNeighbour(circle);
+
+        this.attrs.connection.parent.add(conn);
+      }
+    },
+
+    disconnect: function(circle) {
+      if (circle != this && this.isConnected(circle)) {
+        var delConn;
+
+        this.getConnections().forEach(function(conn) {
+          if (conn.hasCircle(circle)) {
+            delConn = conn;
+          }
+        });
+
+        this._removeConnection(delConn);
+        circle._removeConnection(delConn);
+        this._removeNeighbour(circle);
+        circle._removeNeighbour(this);
+
+        if (this.ownsConnectionWith(circle)) {
+          this._removeOwnNeighbour(circle);
+        } else {
+          circle._removeOwnNeighbour(this);
+        }
+
+        delConn.destroy();
+      }
+    },
+
+    ownsConnectionWith: function(c) {
+      return this._ownsConnection[c._id];
+    },
+
+    isConnected: function(c) {
+      return this.getNeighbours().contains(c);
+    },
+
+    toggleActive: function() {
+      this.attrs.active = !this.isActive();
+
+      this._updateImage();
+    },
+
+    isActive: function() {
+      return this.attrs.active;
+    },
+
+    setScore: function(s) {
+      this.attrs.score = s;
+    },
+
+    getScore: function() {
+      return this.attrs.score;
+    },
+
+    getPressCountLeft: function() {
+      return this.getScore() * 2 + (this.isActive() ? -1 : 0);
+    },
+
+    decreaseScore: function() {
+      this.setScore(this.getScore() - 1);
+    },
+
+    _playPressSound: function() {
+      SoundManager.play(Audio.sound.tap.circle);
+    },
+
+    _animatePress: function() {
+      var tweening = this.isTweening();
+      var active = this.isActive();
+      var actualRadius = this._calcRadius();
+      var currRadius = this.getRadius();
+      var expandRadius = !tweening ? currRadius : active ? this._calcRadius(1) : actualRadius;
+      var normalRadius = tweening || active ? actualRadius : currRadius;
+
+      this.to({
+        radius: expandRadius * EXPAND,
+        duration: EXPAND_TIME,
+        easing: 'StrongEaseOut',
+        callback: function() {
+          this.to({
+            radius: normalRadius * COLLAPSE,
+            duration: COLLAPSE_TIME,
+            easing: 'BackEaseInOut',
+            callback: function() {
+              this.to({
+                radius: normalRadius,
+                duration: TO_NORMAL_TIME,
+                easing: 'BackEaseOut'
+              });
+            }
+          });
+        }
+      });
+    },
+
+    removeCircle: function() {
+      this._removeCircle();
+    },
+
+    _removeCircle: function(pressed) {
+      var neighs = this.getNeighbours().clone();
+      neighs.forEach(function(c) {
+        c.setListening(false);
+      });
+
+      this.setListening(false);
+      this.to({
+        scaleX: 0,
+        scaleY: 0,
+        opacity: 0.1,
+        rotation: Math.PI * 2,
+        duration: this.getScore() > 1 ? LONG_ROTATE_OUT_TIME : FAST_ROTATE_OUT_TIME,
+        callback: function() {
+          var parent = this.getParent();
+
+          neighs.forEach(function(c) {
+            this.disconnect(c);
+            c.setListening(true);
+          }.bind(this));
+
+          this.destroy();
+
+          parent.fire((pressed ? 'pressed' : 'disconnected') + 'Removed', {
+            circle: this,
+            neighbours: neighs
+          });
+        }
+      });
+
+      this.getConnections().forEach(function(conn) {
+        conn.to({
+          opacity: 0.0,
+          duration: FADE_OUT_TIME
+        });
+      });
+    },
+
+    _pressed: function(evt) {
+      evt.cancelBubble = true;
+
+      this._playPressSound();
+
+      if (this.isActive()) {
+        if (this.getScore() === 1) {
+          this._removeCircle(true);
+        } else {
+          this.decreaseScore();
+          this._animatePress();
+          this.toggleActive();
+
+          if (this.connections() > 0) {
+            this.getParent().fire('activePressed', this);
+          }
+        }
+      } else {
+        this._animatePress();
+        this.toggleActive();
+      }
+
+      this.getParent().fire('onePressed', this);
+    },
+    
+    simulatePress: function() {
+      this._pressed({});
+    }
+  });
+
+  Kinetic.Util.extend(Class, Kinetic.Image);
+  Kinetic.Node.addGetterSetter(Class, 'radius');
+  Kinetic.Node.addGetterSetter(Class, 'score');
+
+  return Class;
+})();
+},{}],13:[function(require,module,exports){
+// Copyright (c) 2013, Mihhail Lapuškin
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met: 
+
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer. 
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution. 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// The views and conclusions contained in the software and documentation are those
+// of the authors and should not be interpreted as representing official policies, 
+// either expressed or implied, of the FreeBSD Project.
+//
+// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/circle/Connection.js
+Kinetic.Connection = (function() {
+  var MIN_COUNT = 4;
+  var MAX_STRETCH = 1.5;
+
+  var Class = $$$.Class({
+    _init: function(config) {
+      config.drawFunc = this.drawFunc;
+
+      Kinetic.Shape.call(this, config);
+
+      this.getCircles().forEach(function(c) {
+        c.on('xChange yChange radiusChange', this.refresh.bind(this));
+      }.bind(this));
+
+      this.drawn = true;
+      this.refresh();
+      this.markerImg = Image.circle.connection.marker;
+    },
+
+    refresh: function() {
+      if (!this.drawn) return;
+
+      this.drawn = false;
+      this._markers = [];
+
+      var circles = this.getCircles();
+      var c1 = circles[0], c2 = circles[1];
+      var x1 = c1.getX(), y1 = c1.getY(), r1 = c1.getRadius();
+      var x2 = c2.getX(), y2 = c2.getY(), r2 = c2.getRadius();
+      var minMarkers = Math.max(MIN_COUNT, 2);
+      var maxPadding = MAX_STRETCH;
+      var maxPaddingPlusMarker = maxPadding + 1;
+      var markerRadius = this.attrs.markerRadius;
+      var markerDiameter = markerRadius * 2;
+
+      // find the points where the joining line intersects circles
+      var l = new Line(x1, y1, x2, y2);
+      var ip1 = l.intersectCircle(x1, y1, r1 - markerDiameter);
+      var ip2 = l.intersectCircle(x2, y2, r2 - markerDiameter);
+      var minDist = Number.MAX_VALUE, minP1, minP2;
+
+      // find the right points(closest to each other)
+      ip1.forEach(function(p1) {
+        ip2.forEach(function(p2) {
+          var d = p1.distance(p2);
+          if (d < minDist) {
+            minDist = d;
+            minP1 = p1;
+            minP2 = p2;
+          }
+        });
+      });
+
+      x1 = minP1.x;
+      y1 = minP1.y;
+      x2 = minP2.x;
+      y2 = minP2.y;
+
+      var d = minDist;
+      var dx = x2 - x1, dy = y2 - y1;
+      var fitsMarkers = d / markerDiameter;
+      var fitsMarkersInt = Math.floor(fitsMarkers);
+      var markersShown = fitsMarkersInt - fitsMarkersInt % 2; // show only even number of markers
+
+      if (markersShown < 2)
+        return;
+
+      var initialPadding = 0.5; // before first marker (same amount is at the end also)
+      var extraInitialPadding = 0;
+      var padding = 0; // between markers
+
+      // don't begin stretching until we have at least this much markers
+      // available
+      if (markersShown < minMarkers) {
+        extraInitialPadding = fitsMarkers % 2 / 2;
+        // we have some extra space, so let's begin stretching
+      } else {
+        markersShown = minMarkers;
+        padding = (fitsMarkers - markersShown) / (markersShown + 1);
+
+        // don't stretch more than needed
+        if (padding >= maxPadding) {
+          // see how much extra space we have
+          extraInitialPadding = maxPadding + (padding - maxPadding) * (markersShown + 1) / 2;
+
+          // see how many extra markers can we fit
+          while (extraInitialPadding > maxPaddingPlusMarker) {
+            markersShown += 2;
+            extraInitialPadding -= maxPaddingPlusMarker;
+          }
+
+          padding = maxPadding;
+          // continue stretching
+        } else {
+          extraInitialPadding = padding;
+        }
+      }
+
+      initialPadding += extraInitialPadding;
+
+      for (var i = 0, sx = dx / fitsMarkers, sy = dy / fitsMarkers; i < markersShown; i++) {
+        var j = i * (1 + padding) + initialPadding;
+
+        this._markers.add([ x1 + j * sx - markerRadius, y1 + j * sy - markerRadius, markerDiameter ]);
+      }
+    },
+
+    drawFunc: function(canvas) {
+      var context = canvas.getContext();
+      var img = this.markerImg;
+
+      this._markers.forEach(function(m) {
+        context.drawImage(img, m[0], m[1], m[2], m[2]);
+      });
+
+      this.drawn = true;
+    },
+
+    getCircles: function() {
+      return this.attrs.circles;
+    },
+
+    hasCircle: function(c) {
+      var circles = this.getCircles();
+
+      return circles[0] === c || circles[1] === c;
+    }
+  });
+
+  Kinetic.Util.extend(Class, Kinetic.Shape);
+
+  return Class;
+})();
+},{}],14:[function(require,module,exports){
+// Copyright (c) 2013, Mihhail Lapuškin
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met: 
+
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer. 
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution. 
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// The views and conclusions contained in the software and documentation are those
+// of the authors and should not be interpreted as representing official policies, 
+// either expressed or implied, of the FreeBSD Project.
+//
+// based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/util/PressCatcher.js
+Kinetic.PressCatcher = (function() {
+  var Class = $$$.Class({
+    _init: function(config) {
+      config.image = Image.bg.trans;
+
+      Kinetic.Rect.call(this, config);
+
+      this.on('tap click', config.onPress);
+    }
+  });
+
+  Kinetic.Util.extend(Class, Kinetic.Rect);
+
+  return Class;
+})();
+},{}],15:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -651,7 +1362,7 @@ Kinetic.ProportionalImage = (function() {
 
   return Class;
 })();
-},{}],9:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -735,7 +1446,7 @@ Kinetic.ProgressBar = (function() {
 
   return Class;
 })();
-},{}],10:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 var Cmat = {
 
   boot: function(map){
@@ -756,10 +1467,7 @@ var Cmat = {
 
     Event.allFired({
       events: [ loaders.splash.loaded ],
-      callback: UI.showLoading({
-        container: Config.settings.canvas_element,
-        toolbar: Config.settings.toolbar_element
-      })
+      callback: UI.showLoading
     });
 
     Event.allFired({
@@ -771,7 +1479,7 @@ var Cmat = {
 };
 
 module.exports = Cmat;
-},{}],11:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -918,7 +1626,7 @@ Event = (function() {
     }
   };
 })();
-},{}],12:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1032,7 +1740,7 @@ Array.prototype.remove = function(el) {
 Array.prototype.clone = function() {
   return this.slice();
 };
-},{}],13:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1129,7 +1837,7 @@ Random = (function() {
 
   return randomObject;
 })();
-},{}],14:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1213,7 +1921,7 @@ Line = $$$.Class({
     }
   }
 });
-},{}],15:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1252,7 +1960,7 @@ Point = $$$.Class({
     return Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
   }
 });
-},{}],16:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1382,7 +2090,7 @@ AbstractLoader = (function() {
     }
   });
 })();
-},{}],17:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1454,7 +2162,7 @@ AudioLoader = (function() {
     }
   });
 })();
-},{}],18:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1512,7 +2220,7 @@ ImageLoader = (function() {
 
   return Class;
 })();
-},{}],19:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 DPI = {
   X: {
     width: 1280,
@@ -1531,7 +2239,7 @@ DPI = {
     height: 200
   }
 };
-},{}],20:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 // Copyright (c) 2013, Mihhail Lapuškin
 // All rights reserved.
 
@@ -1611,7 +2319,7 @@ Utils = $$$ = (function() {
     }
   };
 })();
-},{}],21:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 Config = {
   settings: {
     canvas_element: 'map_canvas',
@@ -1676,11 +2384,7 @@ Config = {
               _:          [ 'pause', 'restart', 'resume', 'next' ]
             },
 
-            bg: [ 'trans' ]
-          },
-
-          jpg: {
-            bg: [ 'normal', 'gs' ]
+            bg: [ 'normal', 'trans' ]
           }
         }
       }
@@ -1698,108 +2402,7 @@ Config = {
     }
   }
 };
-},{}],22:[function(require,module,exports){
-var FlashMessage = Ember.Object.extend({
-  type: "notice",
-  message: null,
-  isNotice: (function() {
-    return this.get("type") === "notice";
-  }).property("type").cacheable(),
-  isWarning: (function() {
-    return this.get("type") === "warning";
-  }).property("type").cacheable(),
-  isError: (function() {
-    return this.get("type") === "error";
-  }).property("type").cacheable()
-});
-
-var flashQueue = Ember.ArrayProxy.create({
-  content: [],
-  contentChanged: function() {
-    var current;
-    current = App.FlashController.get("content");
-    if (current !== this.objectAt(0)) {
-      return App.FlashController.set("content", this.objectAt(0));
-    }
-  }
-});
-
-var FlashMessages = Ember.Component.extend({
-
-  current: null,
-  queue: Ember.ArrayProxy.create({}),
-
-  // contentBinding: "App.FlashController.content",
-  // classNameBindings: ["isNotice", "isWarning", "isError"],
-  // isNoticeBinding: "content.isNotice",
-  // isWarningBinding: "content.isWarning",
-  // isErrorBinding: "content.isError",
-
-  didInsertElement: function(){
-    this.$("#message").hide();
-    this.queue.addObserver('content', this.queueChange);
-  },
-
-  queueChange: function(){
-    this.show();
-    setTimeout(this.hide, 2500);
-  },
-
-  pushFlash: function(type, message) {
-    return flashQueue.pushObject(FlashMessage.create({
-      message: message,
-      type: type
-    }));
-  },
-
-  show: function(callback) {
-    return this.$("#message").css({
-      top: "-40px"
-    }).animate({
-      top: "+=40",
-      opacity: "toggle"
-    }, 500, callback);
-  },
-
-  hide: function(callback) {
-    return this.$("#message").css({
-      top: "0px"
-    }).animate({
-      top: "-39px",
-      opacity: "toggle"
-    }, 500, callback);
-  }
-
-});
-
-module.exports = FlashMessages;
-
-
-
-// App.FlashController = Ember.Object.create({
-//   content: null,
-//   clearContent: function(content, view) {
-//     return view.hide(function() {
-//       return App.FlashQueue.removeObject(content);
-//     });
-//   }
-// });
-
-// App.FlashController.addObserver('content', function() {
-//   if (this.get("content")) {
-//     if (this.get("view")) {
-//       this.get("view").show();
-//       return setTimeout(this.clearContent, 2500, this.get("content"), this.get("view"));
-//     }
-//   } else {
-//     return App.FlashQueue.contentChanged();
-//   }
-// });
-
-// App.FlashQueue.addObserver('length', function() {
-//   return this.contentChanged();
-// });
-},{}],23:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 // require other, dependencies here, ie:
 // require('./vendor/moment');
 
@@ -1824,13 +2427,20 @@ require('../classes/common/math/Random');
 require('../classes/common/math/geom/Line');
 require('../classes/common/math/geom/Point');
 require('../classes/app/ui/object/util/ProportionalImage');
+require('../classes/app/ui/object/util/PressCatcher');
 require('../classes/app/ui/object/widget/ProgressBar');
+require('../classes/app/ui/object/node/Connection');
+require('../classes/app/ui/object/node/AppNode');
 require('../classes/app/ui/anim/ExtraEasings');
 require('../classes/app/ui/anim/StepAnimation');
 require('../classes/app/ui/anim/LayoutManager');
 require('../classes/app/ui/layer/Loading');
+require('../classes/app/ui/layer/Fading');
+require('../classes/app/ui/layer/Background');
+require('../classes/app/ui/layer/CmatApp');
 require('../classes/app/ui/UI');
 require('../classes/app/logic/Controller');
+require('../classes/app/logic/CmatAppController');
 require('../classes/app/logic/InitController');
 require('../classes/cmat');
 
@@ -1839,12 +2449,11 @@ var App = Ember.Application.create({
   LOG_VIEW_LOOKUPS: true
 });
 
-App.Store = require('./store'); // delete if you don't want ember-data
-App.FlashMessages = require('../components/flash-messages');
+App.Store = require('./store');
 
 module.exports = App;
 
-},{"../classes/app/logic/Controller":1,"../classes/app/logic/InitController":2,"../classes/app/ui/UI":3,"../classes/app/ui/anim/ExtraEasings":4,"../classes/app/ui/anim/LayoutManager":5,"../classes/app/ui/anim/StepAnimation":6,"../classes/app/ui/layer/Loading":7,"../classes/app/ui/object/util/ProportionalImage":8,"../classes/app/ui/object/widget/ProgressBar":9,"../classes/cmat":10,"../classes/common/evt/Event":11,"../classes/common/jslang/Array":12,"../classes/common/math/Random":13,"../classes/common/math/geom/Line":14,"../classes/common/math/geom/Point":15,"../classes/common/resource/loader/AbstractLoader":16,"../classes/common/resource/loader/AudioLoader":17,"../classes/common/resource/loader/ImageLoader":18,"../classes/common/util/DPI":19,"../classes/common/util/Utils":20,"../classes/conf/conf":21,"../components/flash-messages":22,"../vendor/addon/kineticjs_addon":35,"../vendor/bootstrap":37,"../vendor/bootstrap-switch":36,"../vendor/ember":39,"../vendor/ember-data":38,"../vendor/handlebars":40,"../vendor/jquery":41,"../vendor/kinetic-v4.5.4":42,"./store":25}],24:[function(require,module,exports){
+},{"../classes/app/logic/CmatAppController":1,"../classes/app/logic/Controller":2,"../classes/app/logic/InitController":3,"../classes/app/ui/UI":4,"../classes/app/ui/anim/ExtraEasings":5,"../classes/app/ui/anim/LayoutManager":6,"../classes/app/ui/anim/StepAnimation":7,"../classes/app/ui/layer/Background":8,"../classes/app/ui/layer/CmatApp":9,"../classes/app/ui/layer/Fading":10,"../classes/app/ui/layer/Loading":11,"../classes/app/ui/object/node/AppNode":12,"../classes/app/ui/object/node/Connection":13,"../classes/app/ui/object/util/PressCatcher":14,"../classes/app/ui/object/util/ProportionalImage":15,"../classes/app/ui/object/widget/ProgressBar":16,"../classes/cmat":17,"../classes/common/evt/Event":18,"../classes/common/jslang/Array":19,"../classes/common/math/Random":20,"../classes/common/math/geom/Line":21,"../classes/common/math/geom/Point":22,"../classes/common/resource/loader/AbstractLoader":23,"../classes/common/resource/loader/AudioLoader":24,"../classes/common/resource/loader/ImageLoader":25,"../classes/common/util/DPI":26,"../classes/common/util/Utils":27,"../classes/conf/conf":28,"../vendor/addon/kineticjs_addon":41,"../vendor/bootstrap":43,"../vendor/bootstrap-switch":42,"../vendor/ember":45,"../vendor/ember-data":44,"../vendor/handlebars":46,"../vendor/jquery":47,"../vendor/kinetic-v4.5.4":48,"./store":31}],30:[function(require,module,exports){
 var App = require('./app');
 
 App.Router.map(function() {
@@ -1855,7 +2464,7 @@ App.Router.map(function() {
   });
 });
 
-},{"./app":23}],25:[function(require,module,exports){
+},{"./app":29}],31:[function(require,module,exports){
 // by default, persist application data to localStorage.
 require('../vendor/localstorage_adapter');
 
@@ -1866,7 +2475,7 @@ module.exports = DS.Store.extend({
   // })
   adapter: DS.LSAdapter.create()
 });
-},{"../vendor/localstorage_adapter":43}],26:[function(require,module,exports){
+},{"../vendor/localstorage_adapter":49}],32:[function(require,module,exports){
 // This file is auto-generated by `ember build`.
 // You should not modify it.
 
@@ -1874,7 +2483,6 @@ var App = window.App = require('./config/app');
 require('./templates');
 
 
-App.FlashMessages = require('./components/flash-messages');
 App.Map = require('./models/map');
 App.ModelBase = require('./models/model_base');
 App.ApplicationRoute = require('./routes/application_route');
@@ -1891,7 +2499,7 @@ require('./config/routes');
 module.exports = App;
 
 
-},{"./components/flash-messages":22,"./config/app":23,"./config/routes":24,"./models/map":27,"./models/model_base":28,"./routes/application_route":29,"./routes/index_route":30,"./routes/map/add_route":31,"./routes/map_route":32,"./routes/maps_route":33,"./templates":34,"./views/map_view":44,"./views/modal_view":45,"./views/switch_view":46}],27:[function(require,module,exports){
+},{"./config/app":29,"./config/routes":30,"./models/map":33,"./models/model_base":34,"./routes/application_route":35,"./routes/index_route":36,"./routes/map/add_route":37,"./routes/map_route":38,"./routes/maps_route":39,"./templates":40,"./views/map_view":50,"./views/modal_view":51,"./views/switch_view":52}],33:[function(require,module,exports){
 var ModelBase = require('./model_base');
 
 var Map = ModelBase.extend({
@@ -1913,7 +2521,7 @@ Map.reopenClass({
 
 module.exports = Map;
 
-},{"./model_base":28}],28:[function(require,module,exports){
+},{"./model_base":34}],34:[function(require,module,exports){
 var ModelBase = DS.Model.extend({
 });
 
@@ -1922,7 +2530,7 @@ ModelBase.reopenClass({
 });
 
 module.exports = ModelBase;
-},{}],29:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 var ApplicationRoute = Ember.Route.extend({
   events: {
     addToMap: function(){
@@ -1935,7 +2543,7 @@ var ApplicationRoute = Ember.Route.extend({
 module.exports = ApplicationRoute;
 
 
-},{}],30:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 var IndexRoute = Ember.Route.extend({
   beforeModel: function(){
     this.transitionTo('maps');
@@ -1943,7 +2551,7 @@ var IndexRoute = Ember.Route.extend({
 });
 
 module.exports = IndexRoute;
-},{}],31:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 var MapModel = require('../../models/map');
 var MapsAddRoute = Ember.Route.extend({
 
@@ -1970,14 +2578,14 @@ var MapsAddRoute = Ember.Route.extend({
 });
 
 module.exports = MapsAddRoute;
-},{"../../models/map":27}],32:[function(require,module,exports){
+},{"../../models/map":33}],38:[function(require,module,exports){
+var App = require('../config/app');
 var MapModel = require('../models/map');
 var MapRoute = Ember.Route.extend({
 
   model: function(params){
     //return MapModel.find(params.map_id);
     // Temp HACK until we get API in place
-    //App.FlashMessages.pushFlash('notice', 'The flash works!.');
     return MapModel.createRecord({
       name: 'Map'
     });
@@ -1988,7 +2596,7 @@ var MapRoute = Ember.Route.extend({
 module.exports = MapRoute;
 
 
-},{"../models/map":27}],33:[function(require,module,exports){
+},{"../config/app":29,"../models/map":33}],39:[function(require,module,exports){
 var MapModel = require('../models/map');
 
 MapsRoute = Ember.Route.extend({
@@ -2008,7 +2616,7 @@ MapsRoute = Ember.Route.extend({
 
 module.exports = MapsRoute;
 
-},{"../models/map":27}],34:[function(require,module,exports){
+},{"../models/map":33}],40:[function(require,module,exports){
 
 Ember.TEMPLATES['application'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [3,'>= 1.0.0-rc.4'];
@@ -2021,14 +2629,11 @@ function program1(depth0,data) {
   data.buffer.push("\n            <input type=\"checkbox\" />\n          ");
   }
 
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "flash-messages", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n<div id=\"toolbar\" class=\"navbar navbar-fixed-top\">\n  <div class=\"navbar-inner\">\n    <div class=\"container\">\n      <a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".navbar-inverse-collapse\">\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </a>\n      <form class=\"navbar-form form-inline pull-left\">\n        <label class=\"control-label\" for=\"title\">TITLE</label>\n        <div class=\"input-append\">\n          <input class=\"span2\" id=\"title\" type=\"text\">\n          <div class=\"btn-group\">\n            <button class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">\n              <span class=\"caret\"></span>\n            </button>\n            <ul class=\"dropdown-menu\">\n              <li>Hydrodynamics</li>\n              <li>Micro-nano things</li>\n              <li class=\"divider\"></li>\n              <li><i class=\"icon-file\"></i> New</li>\n              <li><i class=\"icon-copy\"></i> Duplicate</li>\n              <li><i class=\"icon-trash\"></i> Delete</li>\n            </ul>\n          </div>\n        </div>\n      </form>\n      <div class=\"nav-collapse collapse navbar-inverse-collapse\">\n        <div class=\"nav pull-center form-inline\">\n          <div class=\"btn-group\">\n            <a class=\"btn dropdown-toggle icon_download\" data-toggle=\"dropdown\" href=\"#\"></a>\n            <ul class=\"dropdown-menu\">\n              <li class=\"nav-header\">Import MC3 Collection</li>\n              <li class=\"divider\"></li>\n              <li>\n                <form class=\"form-search form-inline\">\n                  <div class=\"input-append search-container\">\n                    <input id=\"map_search\" type=\"text\" class=\"search-query\" placeholder=\"Search Maps\">\n                    <button id=\"map_search_btn\" type=\"submit\" class=\"btn\"><i class=\"icon-search\"></i></button>\n                  </div>\n                </form>\n              </li>\n              <li class=\"divider\"></li>\n              <li></li>\n            </ul>\n          </div>\n\n          <div class=\"btn-group\">\n            <a class=\"btn dropdown-toggle icon_th\" data-toggle=\"dropdown\" href=\"#\"></a>\n            <ul class=\"dropdown-menu\">\n              <li class=\"nav-header\">Map Library</li>\n              <li class=\"divider\"></li>\n              <li></li>\n            </ul>\n          </div>\n\n          <div class=\"btn-group\">\n            <a class=\"btn icon_list\" href=\"#\" ");
+  data.buffer.push("<div id=\"toolbar\" class=\"navbar navbar-fixed-top\">\n  <div class=\"navbar-inner\">\n    <div class=\"container\">\n      <a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".navbar-inverse-collapse\">\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </a>\n      <form class=\"navbar-form form-inline pull-left\">\n        <label class=\"control-label\" for=\"title\">Title:</label>\n        <div class=\"input-append\">\n          <input class=\"span2\" id=\"title\" type=\"text\">\n          <div class=\"btn-group\">\n            <button class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">\n              <span class=\"caret\"></span>\n            </button>\n            <ul class=\"dropdown-menu cmat_dropdown\">\n              <li>Hydrodynamics</li>\n              <li>Micro-nano things</li>\n              <li class=\"divider\"></li>\n              <li><i class=\"icon-file\"></i> New</li>\n              <li><i class=\"icon-copy\"></i> Duplicate</li>\n              <li><i class=\"icon-trash\"></i> Delete</li>\n            </ul>\n          </div>\n        </div>\n      </form>\n      <div class=\"nav-collapse collapse navbar-inverse-collapse\">\n\n        <div class=\"btn-group\">\n          <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n            <i class=\"icon-download-alt\"></i>\n            <span class=\"caret\"></span>\n          </a>\n          <ul class=\"dropdown-menu cmat_dropdown\">\n            <li class=\"nav-header\">Import MC3 Collection</li>\n            <li class=\"divider\"></li>\n            <li class=\"dropdown open\">\n              <form class=\"form-search\">\n                <div class=\"input-append search-container\">\n                  <input id=\"map_search\" type=\"text\" class=\"search-query\" placeholder=\"Search Maps\">\n                  <button id=\"map_search_btn\" type=\"submit\" class=\"btn\"><i class=\"icon-search\"></i></button>\n                </div>\n              </form>\n            </li>\n            <li class=\"divider\"></li>\n            <li></li>\n          </ul>\n        </div>\n\n        <div class=\"btn-group\">\n          <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n            <i class=\"icon-th\"></i>\n            <span class=\"caret\"></span>\n          </a>\n          <ul class=\"dropdown-menu cmat_dropdown\">\n            <li class=\"nav-header\">Map Library</li>\n            <li class=\"divider\"></li>\n            <li></li>\n          </ul>\n        </div>\n\n        <div class=\"btn-group\">\n          <a class=\"btn\" href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "addToMap", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" title=\"Enter a map as a hierarchy\"></a>\n          </div>\n        </div>\n\n        <div class=\"nav pull-right form-inline\">\n          <div class=\"btn-group\">\n            <a class=\"btn dropdown-toggle icon_eye_open\" data-toggle=\"dropdown\" href=\"#\"></a>\n            <ul class=\"dropdown-menu\">\n              <li><label><input type=\"checkbox\">Show Relationships</label></li>\n              <li><label><input type=\"checkbox\">Show Relationship Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Descriptions</label></li>\n            </ul>\n          </div>\n          ");
+  data.buffer.push(" title=\"Enter a map as a hierarchy\">\n            <i class=\"icon-list\"></i>\n          </a>\n        </div>\n\n        <div class=\"nav pull-right form-inline\">\n          <div class=\"btn-group\">\n            <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n              <i class=\"icon-eye-open\"></i>\n              <span class=\"caret\"></span>\n            </a>\n            <ul class=\"dropdown-menu cmat_dropdown\">\n              <li><label><input type=\"checkbox\">Show Relationships</label></li>\n              <li><label><input type=\"checkbox\">Show Relationship Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Labels</label></li>\n              <li><label><input type=\"checkbox\">Show Node Descriptions</label></li>\n            </ul>\n          </div>\n          ");
   hashContexts = {'data-on-label': depth0,'data-off-label': depth0,'class': depth0};
   hashTypes = {'data-on-label': "STRING",'data-off-label': "STRING",'class': "STRING"};
   options = {hash:{
@@ -2038,7 +2643,7 @@ function program1(depth0,data) {
   },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['switch']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "switch", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n          <div class=\"btn-group\">\n            <a href=\"#\" class=\"btn name_btn\">Kate</a>\n          </div>\n        </div>\n      </div>\n\n    </div>\n  </div>\n</div>\n\n<div class=\"map_container\">\n  ");
+  data.buffer.push("\n          <a href=\"#\" class=\"btn\">Kate</a>\n        </div>\n      </div>\n\n    </div>\n  </div>\n</div>\n\n<div class=\"map_container\">\n  ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -2149,34 +2754,9 @@ function program1(depth0,data) {
   
 });
 
-Ember.TEMPLATES['map/index'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [3,'>= 1.0.0-rc.4'];
-helpers = helpers || Ember.Handlebars.helpers; data = data || {};
-  var buffer = '';
 
 
-  return buffer;
-  
-});
-
-Ember.TEMPLATES['components/flash-messages'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [3,'>= 1.0.0-rc.4'];
-helpers = helpers || Ember.Handlebars.helpers; data = data || {};
-  var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
-
-
-  data.buffer.push("<div id=\"message\">\n  ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "message", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n</div>");
-  return buffer;
-  
-});
-
-
-
-},{}],35:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 (function() {
   var nodeClassProtos = [];
   
@@ -2288,7 +2868,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   addNodeMethod = undefined;
   nodeClassProtos = undefined;
 })();
-},{}],36:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 /* ============================================================
  * bootstrapSwitch v1.6 by Larentis Mattia @SpiritualGuru
  * http://www.larentis.eu/
@@ -2598,7 +3178,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
         $('.switch')['bootstrapSwitch'](); // attach bootstrapswitch
     });
 })(jQuery);
-},{}],37:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 (function(){/* ===================================================
  * bootstrap-transition.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#transitions
@@ -4892,7 +5472,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 }(window.jQuery);
 
 })()
-},{}],38:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 // Version: v0.13-59-ge999edb
 // Last commit: e999edb (2013-07-06 06:03:59 -0700)
 
@@ -13801,7 +14381,7 @@ DS.RESTAdapter = DS.Adapter.extend({
 
 })();
 
-},{}],39:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 // Version: v1.0.0-rc.6-167-g1af8166
 // Last commit: 1af8166 (2013-07-22 01:22:37 +0000)
 
@@ -45960,7 +46540,7 @@ Ember
 
 })();
 
-},{}],40:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 /*
 
 Copyright (C) 2011 by Yehuda Katz
@@ -46307,7 +46887,7 @@ Handlebars.template = Handlebars.VM.template;
 })(Handlebars);
 ;
 
-},{}],41:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v1.9.1
  * http://jquery.com/
@@ -55905,7 +56485,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 }
 
 })( window );
-},{}],42:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 (function(){/*
  * KineticJS JavaScript Framework v4.5.4
  * http://www.kineticjs.com/
@@ -67778,7 +68358,7 @@ var Kinetic = {};
 })();
 
 })()
-},{}],43:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 DS.LSSerializer = DS.JSONSerializer.extend({
 
   addBelongsTo: function(data, record, key, association) {
@@ -67995,7 +68575,7 @@ DS.LSAdapter = DS.Adapter.extend(Ember.Evented, {
 });
 
 
-},{}],44:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 var Cmat = require('../classes/cmat');
 var MapView = Ember.View.extend({
   tagName: 'div',
@@ -68011,7 +68591,7 @@ Ember.Handlebars.helper('map', MapView);
 
 module.exports = MapView;
 
-},{"../classes/cmat":10}],45:[function(require,module,exports){
+},{"../classes/cmat":17}],51:[function(require,module,exports){
 var ModalView = Ember.View.extend({
   layoutName: 'modal_layout',
 
@@ -68041,7 +68621,7 @@ var ModalView = Ember.View.extend({
 Ember.Handlebars.helper('modal', ModalView);
 
 module.exports = ModalView;
-},{}],46:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 var SwitchView = Ember.View.extend({
   tagName: 'div',
   classNames: ['switch', 'btn-group'],
@@ -68058,5 +68638,5 @@ Ember.Handlebars.helper('switch', SwitchView);
 
 module.exports = SwitchView;
 
-},{}]},{},[26])
+},{}]},{},[32])
 ;

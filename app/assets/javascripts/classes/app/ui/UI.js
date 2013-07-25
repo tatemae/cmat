@@ -85,18 +85,8 @@ UI = (function() {
   }
 
   function buildGroupLayers() {
-    testRect = new Kinetic.Rect({
-      name: "testRect",
-      x: 0,
-      y: 0,
-      width: stage.getWidth(),
-      height: stage.getHeight(),
-      fill: 'red'
-    });
-    canvas.add(testRect);
-    stage.draw();
-    // canvas.add(layer.bg = new Kinetic.Background($$$.clone(dims)));
-    // canvas.add(layer.game = new Kinetic.Game($$$.clone(dims)));
+    canvas.add(layer.bg = new Kinetic.Background($$$.clone(dims)));
+    canvas.add(layer.cmat_app = new Kinetic.CmatApp($$$.clone(dims)));
     // canvas.add(layer.inactiveDisp = new Kinetic.InactiveDisplay($$$.clone(dims)));
     // canvas.add(layer.menu = new Kinetic.Menu($$$.clone(dims)));
     // canvas.add(layer.gameOver = new Kinetic.GameOver($$$.clone(dims)));
@@ -134,9 +124,16 @@ UI = (function() {
     // });
   }
 
+  function getPos(e) {
+    var xy = {};
+    xy = stage.getTouchPosition() || stage.getMousePosition();
+    return xy;
+  }
+
   publicAPI.build = build;
   publicAPI.showLoading = showLoading;
   publicAPI.trackLoading = trackLoading;
+  publicAPI.getPos = getPos;
 
   return publicAPI;
 })();
