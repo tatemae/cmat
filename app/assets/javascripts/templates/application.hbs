@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
       </a>
       <form class="navbar-form form-inline pull-left">
-        <label class="control-label" for="title">Title:</label>
+        <label class="control-label" for="title">TITLE</label>
         <div class="input-append">
           <input class="span2" id="title" type="text">
           <div class="btn-group">
@@ -27,52 +27,42 @@
         </div>
       </form>
       <div class="nav-collapse collapse navbar-inverse-collapse">
+        <div class="nav pull-center form-inline">
+          <div class="btn-group">
+            <a class="btn dropdown-toggle icon_download" data-toggle="dropdown" href="#"></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Import MC3 Collection</li>
+              <li class="divider"></li>
+              <li>
+                <form class="form-search form-inline">
+                  <div class="input-append search-container">
+                    <input id="map_search" type="text" class="search-query" placeholder="Search Maps">
+                    <button id="map_search_btn" type="submit" class="btn"><i class="icon-search"></i></button>
+                  </div>
+                </form>
+              </li>
+              <li class="divider"></li>
+              <li></li>
+            </ul>
+          </div>
 
-        <div class="btn-group">
-          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="icon-download-alt"></i>
-            <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li class="nav-header">Import MC3 Collection</li>
-            <li class="divider"></li>
-            <li>
-              <form class="form-search form-inline">
-                <div class="input-append search-container">
-                  <input id="map_search" type="text" class="search-query" placeholder="Search Maps">
-                  <button id="map_search_btn" type="submit" class="btn"><i class="icon-search"></i></button>
-                </div>
-              </form>
-            </li>
-            <li class="divider"></li>
-            <li></li>
-          </ul>
-        </div>
+          <div class="btn-group">
+            <a class="btn dropdown-toggle icon_th" data-toggle="dropdown" href="#"></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Map Library</li>
+              <li class="divider"></li>
+              <li></li>
+            </ul>
+          </div>
 
-        <div class="btn-group">
-          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="icon-th"></i>
-            <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li class="nav-header">Map Library</li>
-            <li class="divider"></li>
-            <li></li>
-          </ul>
-        </div>
-
-        <div class="btn-group">
-          <a class="btn" href="#" {{action addToMap}} title="Enter a map as a hierarchy">
-            <i class="icon-list"></i>
-          </a>
+          <div class="btn-group">
+            <a class="btn icon_list" href="#" {{action addToMap}} title="Enter a map as a hierarchy"></a>
+          </div>
         </div>
 
         <div class="nav pull-right form-inline">
           <div class="btn-group">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-              <i class="icon-eye-open"></i>
-              <span class="caret"></span>
-            </a>
+            <a class="btn dropdown-toggle icon_eye_open" data-toggle="dropdown" href="#"></a>
             <ul class="dropdown-menu">
               <li><label><input type="checkbox">Show Relationships</label></li>
               <li><label><input type="checkbox">Show Relationship Labels</label></li>
@@ -83,7 +73,9 @@
           {{#switch data-on-label="edit" data-off-label="view" class="switch-small"}}
             <input type="checkbox" />
           {{/switch}}
-          <a href="#" class="btn">Kate</a>
+          <div class="btn-group">
+            <a href="#" class="btn name_btn">Kate</a>
+          </div>
         </div>
       </div>
 

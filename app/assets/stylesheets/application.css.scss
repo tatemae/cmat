@@ -32,3 +32,104 @@ body{
      }
   }
 }
+.navbar-inner{
+  background:white;
+  height:47px;
+  webkit-box-shadow:none !important;
+  box-shadow:none !important;
+  moz-box-shadow:none !important;
+  border:1px solid rgb(235,235,235);
+}
+label[for=title]{
+  font-weight:bold;
+  color:rgb(243,156,16);
+  height:20px;
+  line-height:46px;
+  padding-right:5px;
+}
+.container{
+  .pull-left{
+    width:33%;
+  }
+  .pull-center {
+    width:33%;
+    text-align:center;
+  }
+  .pull-right {
+    .btn-group{
+      margin-left:6px;
+      margin-right:6px;
+    }
+  }
+  #title{
+    font-size:12px;
+    color:rgb(44,62,80);
+    font-family: 'Montserret', serif;
+    height:16px;
+    webkit-box-shadow:none !important;
+    box-shadow:none !important;
+    moz-box-shadow:none !important;
+    border-right:none;
+    border-color:rgb(211,215,218);
+  }
+  .nav-collapse{
+  line-height:42px;
+    .btn-group{
+      .btn{
+        padding:14px;
+        border-color:rgb(217,217,217);
+        margin-left:6px;
+        margin-right:6px;
+      }
+      .icon_download{
+        background:rgb(243, 243, 243) url('/assets/import_collection.png') no-repeat center;
+        background-size:19px 19px;
+      }
+      .icon_th{
+        background:rgb(243, 243, 243) url('/assets/library.png') no-repeat center;
+        background-size:17px 17px;
+      }
+      .icon_list{
+        background:rgb(243, 243, 243) url('/assets/upload_mass_text.png') no-repeat center;
+        background-size:14px 20px;
+      }
+      .icon_eye_open{
+        background:rgb(243, 243, 243) url('/assets/view_option.png') no-repeat 5px center;
+        background-size:19px 13px;
+      }
+      .name_btn{
+      padding:4px 8px;
+        background:rgb(243, 243, 243);
+      }
+    }
+  }
+  .input-append{
+    .dropdown-toggle{
+      background:white;
+      webkit-box-shadow:none !important;
+      box-shadow:none !important;
+      moz-box-shadow:none !important;
+      height:26px;
+      border-left:none;
+      border-color:rgb(211,215,218);
+    }
+    .dropdown-menu{
+      font-family: 'MavenPro', serif;
+    }
+  }
+  .caret{
+    margin-top:6px;
+    border-top: 7px solid rgb(106,105,105);
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+  }
+  .switch-small{
+    margin-top:0;
+  }
+  label.switch-small{
+      background:white;
+  }
+  .has-switch span.switch-left{
+    background:rgb(106,105,105);
+  }
+}
