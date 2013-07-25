@@ -183,10 +183,6 @@ Kinetic.AppNode = (function() {
       this.setScore(this.getScore() - 1);
     },
 
-    _playPressSound: function() {
-      SoundManager.play(Audio.sound.tap.circle);
-    },
-
     _animatePress: function() {
       var tweening = this.isTweening();
       var active = this.isActive();
@@ -260,8 +256,6 @@ Kinetic.AppNode = (function() {
 
     _pressed: function(evt) {
       evt.cancelBubble = true;
-
-      this._playPressSound();
 
       if (this.isActive()) {
         if (this.getScore() === 1) {
