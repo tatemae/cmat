@@ -25,11 +25,11 @@ var ToolbarController = Ember.Controller.extend({
 
   searchMaps: function(){
     var query = this.get('mapSearchQuery');
-    this.set('mapSearchResults', ['one', 'two']);
+    this.set('mapSearchResults', [{title: 'one'}, {title: 'two'}]);
   }.observes('mapSearchQuery'),
 
-  importMap: function(){
-
+  importMap: function(map){
+    console.log('Importing map:' + map.title);
   },
 
   changeTitle: function(){
