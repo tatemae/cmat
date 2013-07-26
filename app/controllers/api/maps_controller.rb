@@ -3,50 +3,35 @@ class Api::MapsController < ApplicationController
   respond_to :json
 
   skip_before_filter :verify_authenticity_token
-  before_filter :authenticate_user!, only: [:create, :destroy, :update]
-  before_action :set_map, only: [:show, :edit, :update, :destroy]
+  #before_filter :authenticate_user!, only: [:create, :destroy, :update]
+  before_action :set_map, only: [:show, :update, :destroy]
 
   def index
-    @maps = Map.all
+    if params[:user_id]
+      @maps = User.find(params[:user_id]).maps
+    else
+      @maps = Map.all
+    end
+    respond_with(@maps)
   end
 
   def show
-  end
-
-  def new
-    @map = Map.new
-  end
-
-  def edit
+    respond_with(@map)
   end
 
   def create
-    @map = Map.new(map_params)
-
-    respond_to do |format|
-      if @map.save
-        format.json { render action: 'show', status: :created, location: @map }
-      else
-        format.json { render json: @map.errors, status: :unprocessable_entity }
-      end
-    end
+    @map = Map.create(map_params)
+    respond_with(@map)
   end
 
   def update
-    respond_to do |format|
-      if @map.update(map_params)
-        format.json { head :no_content }
-      else
-        format.json { render json: @map.errors, status: :unprocessable_entity }
-      end
-    end
+    @map.update(map_params)
+    respond_with(@map)
   end
 
   def destroy
     @map.destroy
-    respond_to do |format|
-      format.json { head :no_content }
-    end
+    respond_with(@map)
   end
 
   private
@@ -55,8 +40,8 @@ class Api::MapsController < ApplicationController
       @map = Map.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def map_params
-      params[:map]
+      params.require(:map).permit(:title, :payload)
     end
+
 end

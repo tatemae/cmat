@@ -17,8 +17,8 @@ ActiveRecord::Schema.define(version: 20130726220208) do
   enable_extension "plpgsql"
 
   create_table "maps", force: true do |t|
-    t.string   "name"
-    t.text     "cargo"
+    t.string   "title"
+    t.text     "payload"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
