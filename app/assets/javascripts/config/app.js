@@ -24,6 +24,7 @@ require('../classes/common/math/geom/Line');
 require('../classes/common/math/geom/Point');
 require('../classes/app/ui/object/util/ProportionalImage');
 require('../classes/app/ui/object/util/PressCatcher');
+require('../classes/app/ui/object/util/MouseOverCatcher');
 require('../classes/app/ui/object/widget/ProgressBar');
 require('../classes/app/ui/object/node/Connection');
 require('../classes/app/ui/object/node/WholeNode');

@@ -36,6 +36,7 @@ Kinetic.AppNode = (function() {
   var FADE_OUT_TIME = 0.3;
   var FAST_ROTATE_OUT_TIME = 0.3;
   var LONG_ROTATE_OUT_TIME = 0.6;
+  var PERCENT_RADIUS = 4;
 
   var Class = $$$.Class({
     _init: function(config) {
@@ -66,7 +67,7 @@ Kinetic.AppNode = (function() {
     },
 
     _calcRadius: function(s) {
-      return this.attrs.radiusFunc(1, 1);
+      return this.attrs.radiusFunc(1, PERCENT_RADIUS);
     },
 
     _syncSizeWithOffset: function() {
@@ -236,6 +237,7 @@ Kinetic.AppNode = (function() {
     simulatePress: function() {
       this._pressed({});
     }
+
   });
 
   Kinetic.Util.extend(Class, Kinetic.Image);

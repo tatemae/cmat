@@ -1,14 +1,30 @@
 Kinetic.WholeNode = (function() {
+  var CIRCLE_AREA_TO_SCREEN_REL = 0.005;
+  var EXPAND_TIME = 0.2;
+  var TO_NORMAL_TIME = 0.15;
 
   var Class = $$$.Class({
     _init: function(config) {
       Kinetic.Group.call(this, config);
-      this.CIRCLE_AREA_TO_SCREEN_REL = 0.04;
+      this.attrs.connections = [];
+      this.attrs._connections = [];
       this.addNode(config);
     },
 
+    _createMouseOverCatcher: function(){
+      return new Kinetic.MouseOverCatcher({
+        x: this.node.getX() - this.node.getWidth(),
+        y: this.node.getY() - this.node.getHeight(),
+        width: this.node.getWidth() * 2,
+        height: this.node.getHeight() * 2,
+        onMouseOver: this._mouseover.bind(this),
+        onMouseOut: this._mouseout.bind(this),
+        visible: true
+      });
+    },
+
     addNode: function(config) {
-      var maxRadius = Math.floor(Math.sqrt(config.area * this.CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
+      var maxRadius = Math.floor(Math.sqrt(config.area * CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
       var radiusFunc = function(s, max) {
         return maxRadius * Math.sqrt(s / max);
       };
@@ -26,11 +42,42 @@ Kinetic.WholeNode = (function() {
         x: 0 + this.node.getWidth(),
         y: 0,
         radiusFunc: radiusFunc,
-        draggable: false
+        draggable: false,
+        opacity: 0
       }));
 
-      this.node_adder.setY(this.node_adder.getY() - this.node_adder.getHeight() / 2);
+      this.node_adder.setY(this.node_adder.getY() - this.node_adder.getHeight() / 2 - 15);
+      this.node_adder.setX(this.node_adder.getX() - 15);
+      this.add(this.mouseOverCatcher = this._createMouseOverCatcher());
+      this.mouseOverCatcher.moveToBottom();
+      this.mouseOverCatcher.moveUp();
+    },
 
+    _animateMouseover: function() {
+
+      this.node_adder.to({
+        opacity: 1,
+        duration: EXPAND_TIME,
+        easing: 'EaseIn'
+      });
+
+    },
+
+    _animateMouseout: function() {
+
+      this.node_adder.to({
+        opacity: 0,
+        duration: TO_NORMAL_TIME,
+        easing: 'BackEaseOut'
+      });
+    },
+
+     _mouseover: function(evt) {
+      this._animateMouseover();
+    },
+
+    _mouseout: function(evt) {
+      this._animateMouseout();
     }
 
   });

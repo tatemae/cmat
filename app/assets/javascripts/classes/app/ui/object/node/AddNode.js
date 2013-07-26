@@ -8,6 +8,7 @@ Kinetic.AddNode = (function() {
   var FADE_OUT_TIME = 0.3;
   var FAST_ROTATE_OUT_TIME = 0.3;
   var LONG_ROTATE_OUT_TIME = 0.6;
+  var PERCENT_RADIUS = 17;
 
   var Class = $$$.Class({
     _init: function(config) {
@@ -34,7 +35,7 @@ Kinetic.AddNode = (function() {
     },
 
     _calcRadius: function(s) {
-      return this.attrs.radiusFunc(1, 1) * 0.37;
+      return this.attrs.radiusFunc(1, PERCENT_RADIUS);
     },
 
     _syncSizeWithOffset: function() {
@@ -98,6 +99,8 @@ Kinetic.AddNode = (function() {
       evt.cancelBubble = true;
 
       this._animatePress();
+
+      this.parent.parent.parent._addNode(evt, this.parent);
 
       // this.getParent().fire('onePressed', this);
     },
