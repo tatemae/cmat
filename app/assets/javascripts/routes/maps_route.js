@@ -5,7 +5,7 @@ MapsRoute = Ember.Route.extend({
   afterModel: function(model, transition){
     if(transition.targetName == "maps.index"){
       var map = MapModel.createRecord({
-        name: 'Map'
+        name: 'New Map'
       });
       map.save().then(function(){
         this.transitionTo('map', map);

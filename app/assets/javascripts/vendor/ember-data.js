@@ -1,5 +1,5 @@
-// Version: v0.13-59-ge999edb
-// Last commit: e999edb (2013-07-06 06:03:59 -0700)
+// Version: v0.13-65-g778a087
+// Last commit: 778a087 (2013-07-21 19:10:35 -0700)
 
 
 (function() {
@@ -48,7 +48,7 @@ var define, requireModule;
 */
 
 /**
-  All Ember Data methods and functions are defined inside of this namespace.
+  All Ember Data methods and functions are defined inside of this namespace. 
 
   @class DS
   @static
@@ -125,7 +125,7 @@ Ember.onLoad('Ember.Application', function(Application) {
 (function() {
 /**
  * Date.parse with progressive enhancement for ISO 8601 <https://github.com/csnover/js-iso8601>
- * © 2011 Colin Snover <http://zetafleet.com>
+ * Â© 2011 Colin Snover <http://zetafleet.com>
  * Released under MIT license.
  */
 
@@ -135,12 +135,12 @@ var origParse = Date.parse, numericKeys = [ 1, 4, 5, 6, 7, 10, 11 ];
 Ember.Date.parse = function (date) {
     var timestamp, struct, minutesOffset = 0;
 
-    // ES5 §15.9.4.2 states that the string should attempt to be parsed as a Date Time String Format string
-    // before falling back to any implementation-specific date parsing, so that’s what we do, even if native
+    // ES5 Â§15.9.4.2 states that the string should attempt to be parsed as a Date Time String Format string
+    // before falling back to any implementation-specific date parsing, so thatâ€™s what we do, even if native
     // implementations could be faster
-    //              1 YYYY                2 MM       3 DD           4 HH    5 mm       6 ss        7 msec        8 Z 9 ±    10 tzHH    11 tzmm
+    //              1 YYYY                2 MM       3 DD           4 HH    5 mm       6 ss        7 msec        8 Z 9 Â±    10 tzHH    11 tzmm
     if ((struct = /^(\d{4}|[+\-]\d{6})(?:-(\d{2})(?:-(\d{2}))?)?(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?(?:(Z)|([+\-])(\d{2})(?::(\d{2}))?)?)?$/.exec(date))) {
-        // avoid NaN timestamps caused by “undefined” values being passed to Date.UTC
+        // avoid NaN timestamps caused by â€œundefinedâ€ values being passed to Date.UTC
         for (var i = 0, k; (k = numericKeys[i]); ++i) {
             struct[k] = +struct[k] || 0;
         }
@@ -8194,8 +8194,7 @@ DS.FixtureSerializer = DS.Serializer.extend({
 */
 
 var get = Ember.get, fmt = Ember.String.fmt,
-    indexOf = Ember.EnumerableUtils.indexOf,
-    dump = Ember.get(window, 'JSON.stringify') || function(object) { return object.toString(); };
+    indexOf = Ember.EnumerableUtils.indexOf;
 
 /**
   `DS.FixtureAdapter` is an adapter that loads records from memory.
@@ -8228,7 +8227,7 @@ DS.FixtureAdapter = DS.Adapter.extend({
       return fixtures.map(function(fixture){
         var fixtureIdType = typeof fixture.id;
         if(fixtureIdType !== "number" && fixtureIdType !== "string"){
-          throw new Error(fmt('the id property must be defined as a number or string for fixture %@', [dump(fixture)]));
+          throw new Error(fmt('the id property must be defined as a number or string for fixture %@', [fixture]));
         }
         fixture.id = fixture.id + '';
         return fixture;
@@ -8642,7 +8641,7 @@ DS.RESTAdapter = DS.Adapter.extend({
     data = {};
     data[root] = this.serialize(record);
 
-    return this.ajax(this.buildURL(root, id), "PUT",{
+    return this.ajax(this.buildURL(root, id, record), "PUT",{
       data: data
     }).then(function(json){
       adapter.didUpdateRecord(store, type, record, json);
@@ -8685,7 +8684,7 @@ DS.RESTAdapter = DS.Adapter.extend({
     root = this.rootForType(type);
     adapter = this;
 
-    return this.ajax(this.buildURL(root, id), "DELETE").then(function(json){
+    return this.ajax(this.buildURL(root, id, record), "DELETE").then(function(json){
       adapter.didDeleteRecord(store, type, record, json);
     }, function(xhr){
       adapter.didError(store, type, record, xhr);
@@ -8831,18 +8830,18 @@ DS.RESTAdapter = DS.Adapter.extend({
     return serializer.pluralize(string);
   },
 
-  buildURL: function(record, suffix) {
+  buildURL: function(root, suffix, record) {
     var url = [this.url];
 
     Ember.assert("Namespace URL (" + this.namespace + ") must not start with slash", !this.namespace || this.namespace.toString().charAt(0) !== "/");
-    Ember.assert("Record URL (" + record + ") must not start with slash", !record || record.toString().charAt(0) !== "/");
+    Ember.assert("Root URL (" + root + ") must not start with slash", !root || root.toString().charAt(0) !== "/");
     Ember.assert("URL suffix (" + suffix + ") must not start with slash", !suffix || suffix.toString().charAt(0) !== "/");
 
     if (!Ember.isNone(this.namespace)) {
       url.push(this.namespace);
     }
 
-    url.push(this.pluralize(record));
+    url.push(this.pluralize(root));
     if (suffix !== undefined) {
       url.push(suffix);
     }

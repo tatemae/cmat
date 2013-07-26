@@ -76,7 +76,7 @@
             </div>
           </div>
           {{#switch data-on-label="edit" data-off-label="view" class="switch-small"}}
-            <input type="checkbox" />
+            {{view Ember.Checkbox checkedBinding="isEditing"}}
           {{/switch}}
           <div class="btn-group">
             <a href="#" class="btn btn-toolbar name_btn">Kate</a>

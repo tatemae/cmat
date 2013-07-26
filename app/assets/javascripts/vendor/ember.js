@@ -1,5 +1,5 @@
-// Version: v1.0.0-rc.6-167-g1af8166
-// Last commit: 1af8166 (2013-07-22 01:22:37 +0000)
+// Version: v1.0.0-rc.6-275-g79d5a07
+// Last commit: 79d5a07 (2013-07-26 08:48:32 -0700)
 
 
 (function() {
@@ -156,8 +156,8 @@ Ember.deprecateFunc = function(message, func) {
 
 })();
 
-// Version: v1.0.0-rc.6-167-g1af8166
-// Last commit: 1af8166 (2013-07-22 01:22:37 +0000)
+// Version: v1.0.0-rc.6-275-g79d5a07
+// Last commit: 79d5a07 (2013-07-26 08:48:32 -0700)
 
 
 (function() {
@@ -4363,6 +4363,23 @@ registerComputedWithProperties('map', function(properties) {
 });
 
 /**
+  Creates a new property that is an alias for another property
+  on an object. Calls to `get` or `set` this property behave as
+  though they were called on the original property.
+
+  ```javascript
+  Person = Ember.Object.extend({
+    name: 'Alex Matchneer',
+    nomen: Ember.computed.alias('name')
+  });
+
+  alex = Person.create();
+  alex.get('nomen'); // 'Alex Matchneer'
+  alex.get('name');  // 'Alex Matchneer'
+
+  alex.set('nomen', '@machty');
+  alex.get('name');  // '@machty'
+  ```
   @method computed.alias
   @for Ember
   @param {String} dependentKey
@@ -10296,15 +10313,6 @@ Ember.Array = Ember.Mixin.create(Ember.Enumerable, /** @scope Ember.Array.protot
 Ember.Comparable = Ember.Mixin.create( /** @scope Ember.Comparable.prototype */{
 
   /**
-    walk like a duck. Indicates that the object can be compared.
-
-    @property isComparable
-    @type Boolean
-    @default true
-  */
-  isComparable: true,
-
-  /**
     Override to return the result of the comparison of the two parameters. The
     compare method should return:
 
@@ -14786,6 +14794,45 @@ ClassSet.prototype = {
   }
 };
 
+var BAD_TAG_NAME_TEST_REGEXP = /[^a-zA-Z0-9\-]/;
+var BAD_TAG_NAME_REPLACE_REGEXP = /[^a-zA-Z0-9\-]/g;
+
+function stripTagName(tagName) {
+  if (!tagName) {
+    return tagName;
+  }
+
+  if (!BAD_TAG_NAME_TEST_REGEXP.test(tagName)) {
+    return tagName;
+  }
+
+  return tagName.replace(BAD_TAG_NAME_REPLACE_REGEXP, '');
+}
+
+var BAD_CHARS_REGEXP = /&(?!\w+;)|[<>"'`]/g;
+var POSSIBLE_CHARS_REGEXP = /[&<>"'`]/;
+
+function escapeAttribute(value) {
+  // Stolen shamelessly from Handlebars
+
+  var escape = {
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#x27;",
+    "`": "&#x60;"
+  };
+
+  var escapeChar = function(chr) {
+    return escape[chr] || "&amp;";
+  };
+
+  var string = value.toString();
+
+  if(!POSSIBLE_CHARS_REGEXP.test(string)) { return string; }
+  return string.replace(BAD_CHARS_REGEXP, escapeChar);
+}
+
 /**
   `Ember.RenderBuffer` gathers information regarding the a view and generates the
   final representation. `Ember.RenderBuffer` will generate HTML which can be pushed
@@ -15073,14 +15120,14 @@ Ember._RenderBuffer.prototype =
         style = this.elementStyle,
         attr, prop;
 
-    buffer += '<' + tagName;
+    buffer += '<' + stripTagName(tagName);
 
     if (id) {
-      buffer += ' id="' + this._escapeAttribute(id) + '"';
+      buffer += ' id="' + escapeAttribute(id) + '"';
       this.elementId = null;
     }
     if (classes) {
-      buffer += ' class="' + this._escapeAttribute(classes.join(' ')) + '"';
+      buffer += ' class="' + escapeAttribute(classes.join(' ')) + '"';
       this.classes = null;
     }
 
@@ -15089,7 +15136,7 @@ Ember._RenderBuffer.prototype =
 
       for (prop in style) {
         if (style.hasOwnProperty(prop)) {
-          buffer += prop + ':' + this._escapeAttribute(style[prop]) + ';';
+          buffer += prop + ':' + escapeAttribute(style[prop]) + ';';
         }
       }
 
@@ -15101,7 +15148,7 @@ Ember._RenderBuffer.prototype =
     if (attrs) {
       for (attr in attrs) {
         if (attrs.hasOwnProperty(attr)) {
-          buffer += ' ' + attr + '="' + this._escapeAttribute(attrs[attr]) + '"';
+          buffer += ' ' + attr + '="' + escapeAttribute(attrs[attr]) + '"';
         }
       }
 
@@ -15116,7 +15163,7 @@ Ember._RenderBuffer.prototype =
             if (value === true) {
               buffer += ' ' + prop + '="' + prop + '"';
             } else {
-              buffer += ' ' + prop + '="' + this._escapeAttribute(props[prop]) + '"';
+              buffer += ' ' + prop + '="' + escapeAttribute(props[prop]) + '"';
             }
           }
         }
@@ -15131,7 +15178,7 @@ Ember._RenderBuffer.prototype =
 
   pushClosingTag: function() {
     var tagName = this.tagNames.pop();
-    if (tagName) { this.buffer += '</' + tagName + '>'; }
+    if (tagName) { this.buffer += '</' + stripTagName(tagName) + '>'; }
   },
 
   currentTagName: function() {
@@ -15229,32 +15276,7 @@ Ember._RenderBuffer.prototype =
 
   innerString: function() {
     return this.buffer;
-  },
-
-  _escapeAttribute: function(value) {
-    // Stolen shamelessly from Handlebars
-
-    var escape = {
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#x27;",
-      "`": "&#x60;"
-    };
-
-    var badChars = /&(?!\w+;)|[<>"'`]/g;
-    var possible = /[&<>"'`]/;
-
-    var escapeChar = function(chr) {
-      return escape[chr] || "&amp;";
-    };
-
-    var string = value.toString();
-
-    if (!possible.test(string)) { return string; }
-    return string.replace(badChars, escapeChar);
   }
-
 };
 
 })();
@@ -16512,6 +16534,14 @@ Ember.View = Ember.CoreView.extend(
       return get(this, '_context');
     }
   }).volatile(),
+
+  /**
+    The parent context for this template.
+  */
+  parentContext: function() {
+    var parentView = get(this, '_parentView');
+    return parentView && get(parentView, '_context');
+  },
 
   /**
     @private
@@ -19186,6 +19216,8 @@ Ember.CollectionView.CONTAINER_MAP = {
 
 
 (function() {
+var set = Ember.set;
+
 /**
 @module ember
 @submodule ember-views
@@ -19272,8 +19304,9 @@ Ember.CollectionView.CONTAINER_MAP = {
 Ember.Component = Ember.View.extend({
   init: function() {
     this._super();
-    this.set('context', this);
-    this.set('controller', this);
+    set(this, 'context', this);
+    set(this, 'controller', this);
+    set(this, 'templateData', {keywords: {}});
   }
 });
 
@@ -20532,11 +20565,13 @@ Ember.Handlebars.template = function(spec) {
 
 (function() {
 /**
- * Mark a string as safe for raw output with Handlebars. If you
+ * Mark a string as safe for unescaped output with Handlebars. If you
  * return HTML from a Handlebars helper, use this function to
  * ensure Handlebars does not escape the HTML.
  *
- * `Ember.String.htmlSafe('<div>someString</div>')`
+ * ```javascript
+ * Ember.String.htmlSafe('<div>someString</div>')
+ * ```
  *
  * @method htmlSafe
  * @for Ember.String
@@ -20552,8 +20587,11 @@ var htmlSafe = Ember.String.htmlSafe;
 if (Ember.EXTEND_PROTOTYPES === true || Ember.EXTEND_PROTOTYPES.String) {
 
   /**
-   * Use `'<div>someString</div>'.htmlSafe()` to mark a string as being
-   * safe for raw output with Handlebars.
+   * Mark a string as being safe for unescaped output with Handlebars.
+   *
+   * ```javascript
+   * '<div>someString</div>'.htmlSafe()
+   * ```
    *
    * See `Ember.String.htmlSafe`.
    *
@@ -21085,7 +21123,7 @@ function bind(property, options, preserveContext, shouldDisplay, valueNormalizer
 
       var template, context, result = handlebarsGet(currentContext, property, options);
 
-      result = valueNormalizer(result);
+      result = valueNormalizer ? valueNormalizer(result) : result;
 
       context = preserveContext ? currentContext : result;
       if (shouldDisplay(result)) {
@@ -22883,7 +22921,7 @@ var get = Ember.get, set = Ember.set;
   @return {String} HTML string
 */
 Ember.Handlebars.registerHelper('yield', function(options) {
-  var view = options.data.view, template;
+  var currentView = options.data.view, view = currentView, template;
 
   while (view && !get(view, 'layout')) {
     view = get(view, 'parentView');
@@ -22893,7 +22931,15 @@ Ember.Handlebars.registerHelper('yield', function(options) {
 
   template = get(view, 'template');
 
-  if (template) { template(this, options); }
+  var keywords = view._parentView.cloneKeywords();
+
+  currentView.appendChild(Ember.View, {
+    tagName: '',
+    template: template,
+    context: get(view._parentView, 'context'),
+    controller: get(view._parentView, 'controller'),
+    templateData: {keywords: keywords}
+  });
 });
 
 })();

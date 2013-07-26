@@ -6,6 +6,7 @@ var Cmat = {
     toolbar.addObserver('showRelationshipLabels', this, 'propChange');
     toolbar.addObserver('showNodeLabels', this, 'propChange');
     toolbar.addObserver('showNodeDescriptions', this, 'propChange');
+    toolbar.addObserver('isEditing', this, 'modeChange');
 
     ImageLoader.isXDPI(function() {
       var w = window.innerWidth;
@@ -34,6 +35,10 @@ var Cmat = {
 
   propChange: function(){
     alert('something changed');
+  },
+
+  modeChange: function(toolbar){
+    alert('editing:' + toolbar.get('isEditing'));
   }
 
 };
