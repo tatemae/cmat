@@ -140,10 +140,15 @@ UI = (function() {
     return xy;
   }
 
+  function getStage() {
+    return stage;
+  }
+
   publicAPI.build = build;
   publicAPI.showLoading = showLoading;
   publicAPI.trackLoading = trackLoading;
   publicAPI.getPos = getPos;
+  publicAPI.getStage = getStage;
 
   return publicAPI;
 })();

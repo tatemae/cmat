@@ -47,7 +47,7 @@ Kinetic.AppNode = (function() {
       this.attrs.ownNeighbours = [];
       this._ownsConnection = {};
 
-      this.on('click tap', this._pressed);
+      this.on('dblclick dbltap', this._pressed);
       this.on('radiusChange', this._syncRadiusWithImageSize);
       this.on('widthChange heightChange', this._syncSizeWithOffset);
 
@@ -56,9 +56,7 @@ Kinetic.AppNode = (function() {
     },
 
     _updateImage: function() {
-      var s = this.getScore();
-
-      this.setImage(this.attrs.active ? Image.circle.active[s] : Image.circle.passive[s]);
+      this.setImage(Image.node.node_red);
     },
 
     _syncRadiusWithImageSize: function() {
@@ -68,7 +66,7 @@ Kinetic.AppNode = (function() {
     },
 
     _calcRadius: function(s) {
-      return this.attrs.radiusFunc(this.getScore() + (s || 0), MAX_SCORE);
+      return this.attrs.radiusFunc(1, 1);
     },
 
     _syncSizeWithOffset: function() {
@@ -157,39 +155,12 @@ Kinetic.AppNode = (function() {
       return this.getNeighbours().contains(c);
     },
 
-    toggleActive: function() {
-      this.attrs.active = !this.isActive();
-
-      this._updateImage();
-    },
-
-    isActive: function() {
-      return this.attrs.active;
-    },
-
-    setScore: function(s) {
-      this.attrs.score = s;
-    },
-
-    getScore: function() {
-      return this.attrs.score;
-    },
-
-    getPressCountLeft: function() {
-      return this.getScore() * 2 + (this.isActive() ? -1 : 0);
-    },
-
-    decreaseScore: function() {
-      this.setScore(this.getScore() - 1);
-    },
-
     _animatePress: function() {
       var tweening = this.isTweening();
-      var active = this.isActive();
       var actualRadius = this._calcRadius();
       var currRadius = this.getRadius();
-      var expandRadius = !tweening ? currRadius : active ? this._calcRadius(1) : actualRadius;
-      var normalRadius = tweening || active ? actualRadius : currRadius;
+      var expandRadius = !tweening ? currRadius : actualRadius;
+      var normalRadius = tweening ? actualRadius : currRadius;
 
       this.to({
         radius: expandRadius * EXPAND,
@@ -257,24 +228,9 @@ Kinetic.AppNode = (function() {
     _pressed: function(evt) {
       evt.cancelBubble = true;
 
-      if (this.isActive()) {
-        if (this.getScore() === 1) {
-          this._removeCircle(true);
-        } else {
-          this.decreaseScore();
-          this._animatePress();
-          this.toggleActive();
+      this._animatePress();
 
-          if (this.connections() > 0) {
-            this.getParent().fire('activePressed', this);
-          }
-        }
-      } else {
-        this._animatePress();
-        this.toggleActive();
-      }
-
-      this.getParent().fire('onePressed', this);
+      // this.getParent().fire('onePressed', this);
     },
     
     simulatePress: function() {

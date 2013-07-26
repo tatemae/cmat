@@ -1,13 +1,12 @@
 Kinetic.CmatApp = (function() {
   var CIRCLE_AREA_TO_SCREEN_REL = 0.04;
-  var MARKER_TO_MAX_CIRCLE_REL = 0.1;
-  var FADE_TIME = 0.5;
 
   var Class = $$$.Class({
     _init: function(config) {
       Kinetic.Group.call(this, config);
       this.add(this.pressCatcher = this._createPressCatcher());
       this.add(this.nodes = new Kinetic.Group({ listening: true }));
+      this.add(this.add_nodes = new Kinetic.Group({ listening: true }));
     },
 
     _createPressCatcher: function() {
@@ -20,23 +19,36 @@ Kinetic.CmatApp = (function() {
     },
 
     _addNode: function(e) {
-      var area = this.getWidth() * this.getHeight();
-      var maxRadius = Math.floor(Math.sqrt(area * CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
-      var radiusFunc = function(s, max) {
-        return maxRadius * Math.sqrt(s / max);
-      };
       var xy = UI.getPos(e);
-      var node = new Kinetic.AppNode({
+      // var node = new Kinetic.AppNode({
+      //   id: 1,
+      //   x: xy.x,
+      //   y: xy.y,
+      //   active: true,
+      //   score: 3,
+      //   radiusFunc: radiusFunc,
+      //   draggable: true
+      // });
+      // this.nodes.add(node);
+      // this.nodes.draw();
+
+      var wholeNode = new Kinetic.WholeNode({
         id: 1,
         x: xy.x,
         y: xy.y,
-        active: true,
-        score: 3,
-        radiusFunc: radiusFunc,
-        draggable: true
+        draggable: true,
+        evt: e,
+        area: this.getWidth() * this.getHeight()
       });
-      this.nodes.add(node);
-      this.nodes.draw();
+      // wholeNode.addNode();
+      // this.nodes.add(wholeNode.node);
+      // this.add_nodes.add(wholeNode.node_adder);
+      // this.add_nodes.draw();
+      // this.nodes.draw();
+
+      this.add(wholeNode);
+      wholeNode.draw();
+
     }
 
   });

@@ -62,7 +62,8 @@ Config = {
               _:          [ 'pause', 'restart', 'resume', 'next' ]
             },
 
-            bg: [ 'normal', 'trans' ]
+            bg: [ 'normal', 'trans' ],
+            node: [ 'node_red', 'node_red_add' ]
           }
         }
       }
