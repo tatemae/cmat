@@ -2,6 +2,11 @@ var Cmat = {
 
   boot: function(map, toolbar){
 
+    toolbar.addObserver('showRelationships', this, 'propChange');
+    toolbar.addObserver('showRelationshipLabels', this, 'propChange');
+    toolbar.addObserver('showNodeLabels', this, 'propChange');
+    toolbar.addObserver('showNodeDescriptions', this, 'propChange');
+
     ImageLoader.isXDPI(function() {
       var w = window.innerWidth;
       var h = window.innerHeight;
@@ -25,6 +30,10 @@ var Cmat = {
       events: [ loaders.image.loaded ],
       callback: Controller.initAll
     });
+  },
+
+  propChange: function(){
+    alert('something changed');
   }
 
 };
