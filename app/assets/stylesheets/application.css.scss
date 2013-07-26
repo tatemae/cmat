@@ -32,6 +32,13 @@ body{
      }
   }
 }
+ul.menu-list{
+  margin: 2px 10px;
+  padding: 0;
+  li{
+    list-style: none;
+  }
+}
 .navbar-inner{
   background:white;
   height:47px;
@@ -75,26 +82,25 @@ label[for=title]{
   .nav-collapse{
   line-height:42px;
     .btn-group{
-      .btn{
+      .btn-toolbar{
         padding:14px;
-        border-color:rgb(217,217,217);
-        margin-left:6px;
-        margin-right:6px;
+        border-color:$button_border_gray;
+        margin:4px 6px 0 6px;
       }
       .icon_download{
-        background:rgb(243, 243, 243) url('/assets/import_collection.png') no-repeat center;
+        background:$button_background_gray url('/assets/import_collection.png') no-repeat center;
         background-size:19px 19px;
       }
       .icon_th{
-        background:rgb(243, 243, 243) url('/assets/library.png') no-repeat center;
+        background:$button_background_gray url('/assets/library.png') no-repeat center;
         background-size:17px 17px;
       }
       .icon_list{
-        background:rgb(243, 243, 243) url('/assets/upload_mass_text.png') no-repeat center;
+        background:$button_background_gray url('/assets/upload_mass_text.png') no-repeat center;
         background-size:14px 20px;
       }
       .icon_eye_open{
-        background:rgb(243, 243, 243) url('/assets/view_option.png') no-repeat 5px center;
+        background:$button_background_gray url('/assets/view_option.png') no-repeat 5px center;
         background-size:19px 13px;
       }
       .name_btn{
