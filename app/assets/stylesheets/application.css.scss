@@ -88,19 +88,19 @@ label[for=title]{
         margin:4px 6px 0 6px;
       }
       .icon_download{
-        background:$button_background_gray url('/assets/import_collection.png') no-repeat center;
+        background:$button_background_gray asset-url('import_collection.png') no-repeat center;
         background-size:19px 19px;
       }
       .icon_th{
-        background:$button_background_gray url('/assets/library.png') no-repeat center;
+        background:$button_background_gray asset-url('library.png') no-repeat center;
         background-size:17px 17px;
       }
       .icon_list{
-        background:$button_background_gray url('/assets/upload_mass_text.png') no-repeat center;
+        background:$button_background_gray asset-url('upload_mass_text.png') no-repeat center;
         background-size:14px 20px;
       }
       .icon_eye_open{
-        background:$button_background_gray url('/assets/view_option.png') no-repeat 5px center;
+        background:$button_background_gray asset-url('view_option.png') no-repeat 5px center;
         background-size:19px 13px;
       }
       .name_btn{
