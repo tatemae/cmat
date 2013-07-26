@@ -45,11 +45,11 @@ ul.menu-list{
   webkit-box-shadow:none !important;
   box-shadow:none !important;
   moz-box-shadow:none !important;
-  border:1px solid rgb(235,235,235);
+  border:1px solid $button_border_light_gray;
 }
 label[for=title]{
   font-weight:bold;
-  color:rgb(243,156,16);
+  color:$font_gray;
   height:20px;
   line-height:46px;
   padding-right:5px;
@@ -70,14 +70,14 @@ label[for=title]{
   }
   #title{
     font-size:12px;
-    color:rgb(44,62,80);
+    color:$yellow;
     font-family: 'Montserret', serif;
     height:16px;
     webkit-box-shadow:none !important;
     box-shadow:none !important;
     moz-box-shadow:none !important;
     border-right:none;
-    border-color:rgb(211,215,218);
+    border-color:$dropdown_border_gray;
   }
   .nav-collapse{
   line-height:42px;
@@ -105,7 +105,7 @@ label[for=title]{
       }
       .name_btn{
       padding:4px 8px;
-        background:rgb(243, 243, 243);
+        background:$button_background_gray;
       }
     }
   }
@@ -117,7 +117,7 @@ label[for=title]{
       moz-box-shadow:none !important;
       height:26px;
       border-left:none;
-      border-color:rgb(211,215,218);
+      border-color:$dropdown_border_gray;
     }
     .dropdown-menu{
       font-family: 'MavenPro', serif;
@@ -125,7 +125,7 @@ label[for=title]{
   }
   .caret{
     margin-top:6px;
-    border-top: 7px solid rgb(106,105,105);
+    border-top: 7px solid $dark_gray;
     border-right: 4px solid transparent;
     border-left: 4px solid transparent;
   }
@@ -136,6 +136,6 @@ label[for=title]{
       background:white;
   }
   .has-switch span.switch-left{
-    background:rgb(106,105,105);
+    background:$dark_gray;
   }
 }
