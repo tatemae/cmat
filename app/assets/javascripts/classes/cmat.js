@@ -1,6 +1,6 @@
 var Cmat = {
 
-  boot: function(map){
+  boot: function(map, toolbar){
 
     ImageLoader.isXDPI(function() {
       var w = window.innerWidth;

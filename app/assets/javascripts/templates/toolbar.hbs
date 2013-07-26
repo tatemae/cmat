@@ -1,0 +1,83 @@
+<div id="toolbar" class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <form class="navbar-form form-inline pull-left">
+        <label class="control-label" for="title">TITLE</label>
+        <div class="input-append">
+          <input class="span2" id="title" type="text">
+          <div class="btn-group">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>Hydrodynamics</li>
+              <li>Micro-nano things</li>
+              <li class="divider"></li>
+              <li><a href="#" {{action newMap}} title="Create a new map"><i class="icon-file"></i> New</a></li>
+              <li><a href="#" {{action mapAct 'duplicate'}} title="Duplicate the current map"><i class="icon-copy"></i> Duplicate</a></li>
+              <li><a href="#" {{action mapAct 'destroy'}} title="Delete this map map"><i class="icon-trash"></i> Delete</a></li>
+            </ul>
+          </div>
+        </div>
+      </form>
+      <div class="nav-collapse collapse navbar-inverse-collapse">
+        <div class="nav pull-center form-inline">
+          <div class="btn-group">
+            <a class="btn dropdown-toggle icon_download" data-toggle="dropdown" href="#"></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Import MC3 Collection</li>
+              <li class="divider"></li>
+              <li>
+                <form class="form-search form-inline stop-click-close">
+                  <div class="input-append search-container">
+                    <input id="map_search" type="text" class="search-query" placeholder="Search Maps">
+                    <button id="map_search_btn" type="submit" class="btn"><i class="icon-search"></i></button>
+                  </div>
+                </form>
+              </li>
+              <li class="divider"></li>
+              <li></li>
+            </ul>
+          </div>
+
+          <div class="btn-group">
+            <a class="btn dropdown-toggle icon_th" data-toggle="dropdown" href="#"></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Map Library</li>
+              <li class="divider"></li>
+              <li></li>
+            </ul>
+          </div>
+
+          <div class="btn-group">
+            <a class="btn icon_list" href="#" {{action addToMap}} title="Enter a map as a hierarchy"></a>
+          </div>
+        </div>
+
+        <div class="nav pull-right form-inline">
+          <div class="btn-group">
+            <a class="btn dropdown-toggle icon_eye_open" data-toggle="dropdown" href="#"></a>
+            <ul class="dropdown-menu stop-click-close">
+              <li><label>{{view Ember.Checkbox checkedBinding="showRelationships"}}Show Relationships</label></li>
+              <li><label>{{view Ember.Checkbox checkedBinding="showRelationshipLabels"}}Show Relationship Labels</label></li>
+              <li><label>{{view Ember.Checkbox checkedBinding="showNodeLabels"}}Show Node Labels</label></li>
+              <li><label>{{view Ember.Checkbox checkedBinding="showNodeDescriptions"}}Show Node Descriptions</label></li>
+            </ul>
+          </div>
+          {{#switch data-on-label="edit" data-off-label="view" class="switch-small"}}
+            <input type="checkbox" />
+          {{/switch}}
+          <div class="btn-group">
+            <a href="#" class="btn name_btn">Kate</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
