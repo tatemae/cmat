@@ -20,8 +20,8 @@ class Api::MapsController < ApplicationController
   end
 
   def create
-    @map = Map.create(map_params)
-    respond_with(@map)
+    @map = Map.create!(map_params)
+    respond_with(@map, location: api_map_url(@map))
   end
 
   def update
