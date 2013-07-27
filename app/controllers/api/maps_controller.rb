@@ -12,26 +12,26 @@ class Api::MapsController < ApplicationController
     else
       @maps = Map.all
     end
-    respond_with(@maps)
+    respond_with(:api, @maps)
   end
 
   def show
-    respond_with(@map)
+    respond_with(:api, @map)
   end
 
   def create
-    @map = Map.create!(map_params)
-    respond_with(@map, location: api_map_url(@map))
+    @map = Map.create(map_params)
+    respond_with(:api, @map)
   end
 
   def update
     @map.update(map_params)
-    respond_with(@map)
+    respond_with(:api, @map)
   end
 
   def destroy
     @map.destroy
-    respond_with(@map)
+    respond_with(:api, @map)
   end
 
   private

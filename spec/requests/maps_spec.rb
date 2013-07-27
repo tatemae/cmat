@@ -4,7 +4,7 @@ describe "Maps" do
   describe "GET /maps" do
     it "retrieves an collection of maps" do
       Map.create! title: 'foo1'
-      Map.create! title: 'foo1'
+      Map.create! title: 'foo2'
       get api_maps_path format: :json
       expect(JSON.parse(response.body)['maps'].count).to eq(2)
     end
@@ -20,7 +20,7 @@ describe "Maps" do
 
   describe "POST /maps" do
     it "creates a map" do
-      post api_maps_path, map: { title: "foo"}, format: :json
+      post api_maps_path, map: { title: "foo" }, format: :json
       expect(JSON.parse(response.body)['title']).to eq('foo')
     end
   end
