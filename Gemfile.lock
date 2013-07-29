@@ -40,6 +40,13 @@ GEM
       sass-rails (>= 3.1.0)
     builder (3.1.4)
     coderay (1.0.9)
+    columnize (0.3.6)
+    debugger (1.6.1)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.2.0)
+      debugger-ruby_core_source (~> 1.2.3)
+    debugger-linecache (1.2.0)
+    debugger-ruby_core_source (1.2.3)
     diff-lcs (1.2.4)
     ember-data-source (0.13)
       ember-source
@@ -178,6 +185,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers
   bootstrap-sass-rails (>= 2.3.1.2)
+  debugger
   ember-rails
   ember-source (= 1.0.0.rc6.2)
   flatui-rails

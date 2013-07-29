@@ -36,6 +36,7 @@ gem 'font-awesome-sass-rails'
 gem 'flatui-rails'
 
 group :development, :test do
+  gem 'debugger'
   gem 'rspec-rails', '~> 2.0'
   gem 'guard'
   gem 'guard-shell'
