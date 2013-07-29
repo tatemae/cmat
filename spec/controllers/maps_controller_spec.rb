@@ -13,7 +13,7 @@ describe Api::MapsController do
   let(:valid_session) { {} }
 
   describe "GET index" do
-    it "assigns all api_maps as @api_maps" do
+    it "assigns all maps as @maps" do
       map = Map.create! valid_attributes
       get :index, {format: :json}, valid_session
       assigns(:maps).should eq([map])
@@ -21,7 +21,7 @@ describe Api::MapsController do
   end
 
   describe "GET show" do
-    it "assigns the requested api_map as @api_map" do
+    it "assigns the requested map as @map" do
       map = Map.create! valid_attributes
       get :show, {:id => map.to_param, format: :json}, valid_session
       assigns(:map).should eq(map)
@@ -57,7 +57,7 @@ describe Api::MapsController do
     describe "with valid params" do
       it "updates the requested map" do
         map = Map.create! valid_attributes
-        # Assuming there are no other api_maps in the database, this
+        # Assuming there are no other maps in the database, this
         # specifies that the Map created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
