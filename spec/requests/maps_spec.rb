@@ -14,14 +14,14 @@ describe "Maps" do
     it "retrieves a map" do
       @map = Map.create! title: 'foo'
       get api_map_path(@map.id), format: :json
-      expect(JSON.parse(response.body)['id']).to eq(@map.id)
+      expect(JSON.parse(response.body)['map']['id']).to eq(@map.id)
     end
   end
 
   describe "POST /maps" do
     it "creates a map" do
       post api_maps_path, map: { title: "foo" }, format: :json
-      expect(JSON.parse(response.body)['title']).to eq('foo')
+      expect(JSON.parse(response.body)['map']['title']).to eq('foo')
     end
   end
 
