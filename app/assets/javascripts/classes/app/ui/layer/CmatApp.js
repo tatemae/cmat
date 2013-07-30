@@ -7,7 +7,7 @@ Kinetic.CmatApp = (function() {
       this.add(this.pressCatcher = this._createPressCatcher());
       this.add(this.wholeNodes = new Kinetic.Group({ listening: true }));
       this.add(this.connections = new Kinetic.Group({ listening: false }));
-      // this.add(this.add_nodes = new Kinetic.Group({ listening: true }));
+      this.attrs.nextNodeID = 1;
     },
 
     _createPressCatcher: function() {
@@ -25,7 +25,7 @@ Kinetic.CmatApp = (function() {
       this.area = this.getWidth() * this.getHeight();
 
       var wholeNode = new Kinetic.WholeNode({
-        id: 1,
+        id: this.attrs.nextNodeID++,
         x: xy.x,
         y: xy.y,
         draggable: true

@@ -36,7 +36,7 @@ Kinetic.WholeNode = (function() {
       };
 
       this.add(this.node = new Kinetic.AppNode({
-        id: 1,
+        id: config.id,
         x: 0,
         y: 0,
         radiusFunc: radiusFunc,
@@ -44,7 +44,6 @@ Kinetic.WholeNode = (function() {
       }));
 
       this.add(this.node_adder = new Kinetic.AddNode({
-        id: 1,
         x: 0 + this.node.getWidth(),
         y: 0,
         radiusFunc: radiusFunc,
