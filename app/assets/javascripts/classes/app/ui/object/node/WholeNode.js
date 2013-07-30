@@ -104,6 +104,8 @@ Kinetic.WholeNode = (function() {
       if (node != this && !this.isConnected(node)) {
         var conn = new Kinetic.Connection($$$.copy({ nodes: [ this, node ] }, this.node.attrs.connection));
 
+        // conn.bindChanges([this, node]);
+
         this.getConnections().add(conn);
         node.getConnections().add(conn);
         this.getNeighbours().add(node);

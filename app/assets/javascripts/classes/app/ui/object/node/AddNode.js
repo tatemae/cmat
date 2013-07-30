@@ -102,7 +102,7 @@ Kinetic.AddNode = (function() {
 
       this.parent.parent.parent._addNode(evt, this.parent);
 
-      // this.getParent().fire('onePressed', this);
+      this.getParent().fire('addPressed', this);
     },
 
     _mouseover: function(evt) {

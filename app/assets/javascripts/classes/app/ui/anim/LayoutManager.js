@@ -40,7 +40,7 @@ Kinetic.LayoutManager = (function() {
 
       Kinetic.StepAnimation.call(this, config);
 
-      this._circles = config.circles;
+      this._wholeNodes = config.wholeNodes;
       this._conns = config.connections;
       this._corners = config.clearCorners;
       this._bounds = config.bounds;
@@ -51,7 +51,7 @@ Kinetic.LayoutManager = (function() {
     _onAdjustStep: function() {
       this._algorithm.runOnce();
       this._conns.forEach(function(c) { c.refresh(); });
-      this._circles.forEach(function(c) { c.cachedTransform = undefined; });
+      this._wholeNodes.forEach(function(c) { c.cachedTransform = undefined; });
     },
 
     _clearFromCorners: function(a, x, y, minXY, maxX, maxY) {
@@ -119,7 +119,7 @@ Kinetic.LayoutManager = (function() {
 
     _initAlgorithm: function() {
       this._algorithm = new ForceDirected({
-        circles: this._circles,
+        wholeNodes: this._wholeNodes,
         operations: {
           equals:       function(a, b)  { return a === b; },
           radius:       function(a)     { return a.attrs.radius; },

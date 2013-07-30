@@ -116,22 +116,22 @@ UI = (function() {
     // var turns = layer.game.hud.turns;
     // var pause = layer.game.hud.pause;
 
-    // publicAPI.layoutManager = new Kinetic.LayoutManager({
-    //   circles: layer.game.circles.getChildren(),
-    //   connections: layer.game.connections.getChildren(),
-    //   clearCorners: {
-    //     tl: {
-    //       width: turns.getSizeWidth(),
-    //       height: turns.getHeight()
-    //     },
-    //     tr: {
-    //       width: pause.getWidth(),
-    //       height: pause.getHeight()
-    //     }
-    //   },
-    //   redrawNode: canvas,
-    //   bounds: $$$.clone(dims)
-    // });
+    publicAPI.layoutManager = new Kinetic.LayoutManager({
+      nodes: layer.cmat_app.wholeNodes.getChildren(),
+      connections: layer.cmat_app.connections.getChildren(),
+      // clearCorners: {
+      //   tl: {
+      //     width: turns.getSizeWidth(),
+      //     height: turns.getHeight()
+      //   },
+      //   tr: {
+      //     width: pause.getWidth(),
+      //     height: pause.getHeight()
+      //   }
+      // },
+      redrawNode: canvas,
+      bounds: $$$.clone(dims)
+    });
   }
 
   function getPos(e) {

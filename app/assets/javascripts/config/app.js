@@ -22,6 +22,7 @@ require('../classes/common/util/DPI');
 require('../classes/common/math/Random');
 require('../classes/common/math/geom/Line');
 require('../classes/common/math/geom/Point');
+require('../classes/common/math/graph/ForceDirected');
 require('../classes/app/ui/object/util/ProportionalImage');
 require('../classes/app/ui/object/util/PressCatcher');
 require('../classes/app/ui/object/util/MouseOverCatcher');

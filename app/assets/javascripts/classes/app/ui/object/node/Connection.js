@@ -168,7 +168,7 @@ Kinetic.Connection = (function() {
     hasNode: function(c) {
       var nodes = this.getNodes();
 
-      return nodes[0] === c || nodes[1] === c;
+      return nodes[0] === c.id || nodes[1] === c.id;
     }
   });
 

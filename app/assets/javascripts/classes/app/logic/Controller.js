@@ -47,9 +47,8 @@ Controller = (function() {
   };
 
   Class.initAll = function() {
-    for (var c in ctrs) {
-      ctrs[c].ctrInit();
-    }
+    ctrs["init"].ctrInit();
+    ctrs["cmat_app"].ctrInit();
   };
 
   return Class;

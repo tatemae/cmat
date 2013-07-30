@@ -2,6 +2,7 @@ AppController = $$$.Class({
   extend: Controller,
   ctrName: 'cmat_app',
   ctrInit: function() {
+    UI.cmat_app.wholeNodes.on('addPressed', this.addControlPressed.bind(this));
   },
 
   cmatApp: function() {
@@ -11,5 +12,9 @@ AppController = $$$.Class({
   },
 
   newApp: function() {
+  },
+
+  addControlPressed: function() {
+    UI.layoutManager.adjustLayout();
   }
 });
