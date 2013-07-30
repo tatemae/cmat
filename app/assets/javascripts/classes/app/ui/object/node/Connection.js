@@ -37,13 +37,13 @@ Kinetic.Connection = (function() {
 
       Kinetic.Shape.call(this, config);
 
-      this.getCircles().forEach(function(c) {
+      this.getNodes().forEach(function(c) {
         c.on('xChange yChange radiusChange', this.refresh.bind(this));
       }.bind(this));
 
       this.drawn = true;
       this.refresh();
-      this.markerImg = Image.circle.connection.marker;
+      this.markerImg = Image.node.connection.marker;
     },
 
     refresh: function() {
@@ -52,20 +52,20 @@ Kinetic.Connection = (function() {
       this.drawn = false;
       this._markers = [];
 
-      var circles = this.getCircles();
-      var c1 = circles[0], c2 = circles[1];
-      var x1 = c1.getX(), y1 = c1.getY(), r1 = c1.getRadius();
-      var x2 = c2.getX(), y2 = c2.getY(), r2 = c2.getRadius();
+      var nodes = this.getNodes();
+      var c1 = nodes[0], c2 = nodes[1];
+      var x1 = c1.getX(), y1 = c1.getY(), r1 = c1.node.getRadius();
+      var x2 = c2.getX(), y2 = c2.getY(), r2 = c2.node.getRadius();
       var minMarkers = Math.max(MIN_COUNT, 2);
       var maxPadding = MAX_STRETCH;
       var maxPaddingPlusMarker = maxPadding + 1;
       var markerRadius = this.attrs.markerRadius;
       var markerDiameter = markerRadius * 2;
 
-      // find the points where the joining line intersects circles
+      // find the points where the joining line intersects nodes
       var l = new Line(x1, y1, x2, y2);
-      var ip1 = l.intersectCircle(x1, y1, r1 - markerDiameter);
-      var ip2 = l.intersectCircle(x2, y2, r2 - markerDiameter);
+      var ip1 = l.intersectNode(x1, y1, r1 - markerDiameter);
+      var ip2 = l.intersectNode(x2, y2, r2 - markerDiameter);
       var minDist = Number.MAX_VALUE, minP1, minP2;
 
       // find the right points(closest to each other)
@@ -145,14 +145,14 @@ Kinetic.Connection = (function() {
       this.drawn = true;
     },
 
-    getCircles: function() {
-      return this.attrs.circles;
+    getNodes: function() {
+      return this.attrs.nodes;
     },
 
-    hasCircle: function(c) {
-      var circles = this.getCircles();
+    hasNode: function(c) {
+      var nodes = this.getNodes();
 
-      return circles[0] === c || circles[1] === c;
+      return nodes[0] === c || nodes[1] === c;
     }
   });
 

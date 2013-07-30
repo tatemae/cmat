@@ -47,7 +47,7 @@ Line = $$$.Class({
     return new Point(xx, m * xx + c);
   },
 
-  intersectCircle: function(x, y, r) {
+  intersectNode: function(x, y, r) {
     if (this.isParallelToY) {
       return [ new Point(x, y - r), new Point(x, y + r) ];
     } else {

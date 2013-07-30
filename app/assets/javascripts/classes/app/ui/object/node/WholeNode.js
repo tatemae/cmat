@@ -1,14 +1,20 @@
 Kinetic.WholeNode = (function() {
   var CIRCLE_AREA_TO_SCREEN_REL = 0.005;
+  var MARKER_TO_MAX_CIRCLE_REL = 0.1;
   var EXPAND_TIME = 0.2;
   var TO_NORMAL_TIME = 0.15;
 
   var Class = $$$.Class({
-    _init: function(config) {
+    _init: function(config, area) {
       Kinetic.Group.call(this, config);
+
       this.attrs.connections = [];
       this.attrs._connections = [];
-      this.addNode(config);
+      this.attrs.neighbours = [];
+      this.attrs.ownNeighbours = [];
+      this._ownsConnection = {};
+
+      this.addNode(config, area);
     },
 
     _createMouseOverCatcher: function(){
@@ -23,8 +29,8 @@ Kinetic.WholeNode = (function() {
       });
     },
 
-    addNode: function(config) {
-      var maxRadius = Math.floor(Math.sqrt(config.area * CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
+    addNode: function(config, area) {
+      var maxRadius = Math.floor(Math.sqrt(area * CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
       var radiusFunc = function(s, max) {
         return maxRadius * Math.sqrt(s / max);
       };
@@ -51,6 +57,96 @@ Kinetic.WholeNode = (function() {
       this.add(this.mouseOverCatcher = this._createMouseOverCatcher());
       this.mouseOverCatcher.moveToBottom();
       this.mouseOverCatcher.moveUp();
+    },
+
+    attachConnections: function(connections, area) {
+      var maxRadius = Math.floor(Math.sqrt(area * CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
+      this.node.attrs.connection = {
+        parent: connections,
+        markerRadius: maxRadius * MARKER_TO_MAX_CIRCLE_REL
+      }
+    },
+
+    getConnections: function() {
+      return this.attrs.connections;
+    },
+
+    _removeConnection: function(conn) {
+      this.attrs.connections.remove(conn);
+    },
+
+    getNeighbours: function() {
+      return this.attrs.neighbours;
+    },
+
+    _removeNeighbour: function(node) {
+      this.attrs.neighbours.remove(node);
+    },
+
+    getOwnNeighbours: function() {
+      return this.attrs.ownNeighbours;
+    },
+
+    _addOwnNeighbour: function(node) {
+      this.attrs.ownNeighbours.add(node);
+      this._ownsConnection[node._id] = true;
+    },
+
+    _removeOwnNeighbour: function(node) {
+      this.attrs.ownNeighbours.remove(node);
+      this._ownsConnection[node._id] = false;
+    },
+
+    connections: function() {
+      return this.getConnections().length;
+    },
+
+    connect: function(node) {
+      if (node != this && !this.isConnected(node)) {
+        var conn = new Kinetic.Connection($$$.copy({ nodes: [ this, node ] }, this.node.attrs.connection));
+
+        this.getConnections().add(conn);
+        node.getConnections().add(conn);
+        this.getNeighbours().add(node);
+        node.getNeighbours().add(this);
+
+        this._addOwnNeighbour(node);
+
+        this.node.attrs.connection.parent.add(conn);
+      }
+    },
+
+    disconnect: function(node) {
+      if (node != this && this.isConnected(node)) {
+        var delConn;
+
+        this.getConnections().forEach(function(conn) {
+          if (conn.hasNode(node)) {
+            delConn = conn;
+          }
+        });
+
+        this._removeConnection(delConn);
+        node._removeConnection(delConn);
+        this._removeNeighbour(node);
+        node._removeNeighbour(this);
+
+        if (this.ownsConnectionWith(node)) {
+          this._removeOwnNeighbour(node);
+        } else {
+          node._removeOwnNeighbour(this);
+        }
+
+        delConn.destroy();
+      }
+    },
+
+    ownsConnectionWith: function(c) {
+      return this._ownsConnection[c._id];
+    },
+
+    isConnected: function(c) {
+      return this.getNeighbours().contains(c);
     },
 
     _animateMouseover: function() {

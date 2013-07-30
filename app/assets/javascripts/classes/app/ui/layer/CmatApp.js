@@ -6,6 +6,7 @@ Kinetic.CmatApp = (function() {
       Kinetic.Group.call(this, config);
       this.add(this.pressCatcher = this._createPressCatcher());
       this.add(this.wholeNodes = new Kinetic.Group({ listening: true }));
+      this.add(this.connections = new Kinetic.Group({ listening: false }));
       // this.add(this.add_nodes = new Kinetic.Group({ listening: true }));
     },
 
@@ -20,39 +21,25 @@ Kinetic.CmatApp = (function() {
 
     _addNode: function(e, parent) {
       var xy = UI.getPos(e);
-      // var node = new Kinetic.AppNode({
-      //   id: 1,
-      //   x: xy.x,
-      //   y: xy.y,
-      //   active: true,
-      //   score: 3,
-      //   radiusFunc: radiusFunc,
-      //   draggable: true
-      // });
-      // this.nodes.add(node);
-      // this.nodes.draw();
+
+      this.area = this.getWidth() * this.getHeight();
 
       var wholeNode = new Kinetic.WholeNode({
         id: 1,
         x: xy.x,
         y: xy.y,
-        draggable: true,
-        evt: e,
-        area: this.getWidth() * this.getHeight()
-      });
-      // wholeNode.addNode();
+        draggable: true
+      }, this.area);
+      wholeNode.attachConnections(this.connections, this.area);
       this.wholeNodes.add(wholeNode);
-      // this.add_nodes.add(wholeNode.node_adder);
-      // this.add_nodes.draw();
-      // this.nodes.draw();
-
-      // this.add(wholeNode);
 
       if (parent !== undefined){
-        // parent.attrs.connections.push
         wholeNode.setY(parent.getY() + 100);
+        parent.connect(wholeNode);
       }
       wholeNode.draw();
+
+      // var asdf = this.toJSON();
 
 
     }
