@@ -15,7 +15,7 @@ Config = {
 
         common: {
           png: {
-            bg: [ 'normal', 'trans', 'darthvader' ],
+            bg: [ 'normal', 'trans' ],
             node: {
               connection: [ 'marker' ],
               _: [ 'node_red', 'node_red_add' ]

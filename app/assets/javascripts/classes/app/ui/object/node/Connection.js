@@ -136,11 +136,27 @@ Kinetic.Connection = (function() {
 
     drawFunc: function(canvas) {
       var context = canvas.getContext();
-      var img = this.markerImg;
+      // var img = this.markerImg;
 
-      this._markers.forEach(function(m) {
-        context.drawImage(img, m[0], m[1], m[2], m[2]);
-      });
+      context.beginPath();
+      context.moveTo(this._markers[0][0], this._markers[0][1]);
+      context.lineTo(this._markers[this._markers.length-1][0], this._markers[this._markers.length-1][1]);
+      context.closePath();
+      context.strokeStyle = 'blue';
+
+      context.lineJoin = "round";
+      context.lineWidth = 3;
+      context.stroke();
+
+      // this._markers.forEach(function(m) {
+      //   x = m[0] + m[2]/2;
+      //   y = m[1] + m[2]/2;
+      //   context.translate(x, y);
+      //   context.rotate(2);
+      //   context.drawImage(img, m[0], m[1], m[2], m[2]);
+      //   context.rotate(-2);
+      //   context.translate(-x, -y);
+      // });
 
       this.drawn = true;
     },
