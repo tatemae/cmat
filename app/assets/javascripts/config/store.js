@@ -2,5 +2,6 @@ module.exports = DS.Store.extend({
   adapter: DS.RESTAdapter.create({
     namespace: 'api'
   })
-  //adapter: DS.LSAdapter.create()
 });
+
+//DS.Store.registerAdapter(['App.Toolbar'], DS.LSAdapter.create());

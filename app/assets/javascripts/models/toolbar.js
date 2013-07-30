@@ -6,8 +6,4 @@ var Toolbar = DS.Model.extend({
   showNodeDescriptions: DS.attr('boolean')
 });
 
-Toolbar.reopenClass({
-  adapter: DS.LSAdapter.create()
-});
-
 module.exports = Toolbar;
