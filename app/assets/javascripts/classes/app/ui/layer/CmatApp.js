@@ -67,7 +67,7 @@ Kinetic.CmatApp = (function() {
     },
 
     observeSettings: function() {
-      return Object.observes(CmatSettings.node.get('state'), this.updateSettings());
+      return CmatSettings.node.addObserver('state', this, 'updateSettings');
     },
 
     updateSettings: function() {
@@ -76,6 +76,7 @@ Kinetic.CmatApp = (function() {
         var node = CmatSettings.node;
         wholeNode = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
         wholeNode.attrs.name = node.get('name');
+        wholeNode.label.setAttr('text', wholeNode.attrs.name);
         wholeNode.attrs.info = node.get('info');
         wholeNode.attrs.type = node.get('type');
       } else if ( CmatSettings.node.get('state') == "cancel" ){

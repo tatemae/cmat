@@ -73,8 +73,6 @@ Kinetic.WholeNode = (function() {
       this.add(this.mouseOverCatcher = this._createMouseOverCatcher());
       this.mouseOverCatcher.moveToBottom();
       this.mouseOverCatcher.moveUp();
-
-      this.observeAttr();
     },
 
     getConnections: function() {
@@ -159,7 +157,6 @@ Kinetic.WholeNode = (function() {
     },
 
     _animateMouseover: function() {
-
       this.node_adder.to({
         opacity: 1,
         duration: EXPAND_TIME,
@@ -169,7 +166,6 @@ Kinetic.WholeNode = (function() {
     },
 
     _animateMouseout: function() {
-
       this.node_adder.to({
         opacity: 0,
         duration: TO_NORMAL_TIME,
@@ -188,14 +184,6 @@ Kinetic.WholeNode = (function() {
     _doubleClick: function(e) {
       // HACK. This is ugly since the node now has to know about how it is accessed.
       this.parent.parent.editNode(this);
-    },
-
-    updateName: function() {
-      this.label.setAttr('text', this.attrs.name);
-    },
-
-    observeAttr: function() {
-      return Object.observes(this.attrs.name, this.updateName());
     }
 
   });
