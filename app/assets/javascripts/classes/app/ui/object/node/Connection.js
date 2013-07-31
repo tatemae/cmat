@@ -141,15 +141,17 @@ Kinetic.Connection = (function() {
       var context = canvas.getContext();
       // var img = this.markerImg;
 
-      context.beginPath();
-      context.moveTo(this._markers[0][0], this._markers[0][1]);
-      context.lineTo(this._markers[this._markers.length-1][0], this._markers[this._markers.length-1][1]);
-      context.closePath();
-      context.strokeStyle = 'blue';
+      if (this._markers.length > 1){
+        context.beginPath();
+        context.moveTo(this._markers[0][0], this._markers[0][1]);
+        context.lineTo(this._markers[this._markers.length-1][0], this._markers[this._markers.length-1][1]);
+        context.closePath();
+        context.strokeStyle = 'blue';
 
-      context.lineJoin = "round";
-      context.lineWidth = 3;
-      context.stroke();
+        context.lineJoin = "round";
+        context.lineWidth = 3;
+        context.stroke();
+      }
 
       // this._markers.forEach(function(m) {
       //   x = m[0] + m[2]/2;
