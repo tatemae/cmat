@@ -67,7 +67,7 @@ Kinetic.CmatApp = (function() {
     },
 
     observeSettings: function() {
-      return Object.observe(CmatSettings.node.get('state'), this.updateSettings());
+      return Object.observes(CmatSettings.node.get('state'), this.updateSettings());
     },
 
     updateSettings: function() {

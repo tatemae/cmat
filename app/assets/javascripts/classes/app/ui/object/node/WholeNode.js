@@ -18,8 +18,6 @@ Kinetic.WholeNode = (function() {
       this.attrs.info = '';
       this.attrs.type = '';
 
-      this.observeAttr();
-
       this.addNode(config, area);
     },
 
@@ -75,6 +73,8 @@ Kinetic.WholeNode = (function() {
       this.add(this.mouseOverCatcher = this._createMouseOverCatcher());
       this.mouseOverCatcher.moveToBottom();
       this.mouseOverCatcher.moveUp();
+
+      this.observeAttr();
     },
 
     getConnections: function() {
@@ -195,7 +195,7 @@ Kinetic.WholeNode = (function() {
     },
 
     observeAttr: function() {
-      return Object.observe(this.attrs.name, this.updateName());
+      return Object.observes(this.attrs.name, this.updateName());
     }
 
   });
