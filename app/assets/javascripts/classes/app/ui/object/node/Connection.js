@@ -32,20 +32,20 @@ Kinetic.Connection = (function() {
   var MAX_STRETCH = 1.5;
 
   var Class = $$$.Class({
-    _init: function(config) {
+    _init: function(config, markerRadius) {
       config.drawFunc = this.drawFunc;
 
       Kinetic.Shape.call(this, config);
 
       this.getNodes().forEach(function(c) {
-        // c.on('xChange yChange radiusChange', this.refresh.bind(this));
         var node = UI.cmat_app.wholeNodes.get('#'+c)[0].getParent();
         node.on('xChange yChange radiusChange', this.refresh.bind(this));
       }.bind(this));
 
+      this.markerDiameter = markerRadius * 2;
+
       this.drawn = true;
       this.refresh();
-      this.markerImg = Image.node.connection.marker;
     },
 
     refresh: function() {
@@ -55,91 +55,16 @@ Kinetic.Connection = (function() {
       this._markers = [];
 
       var nodes = this.getNodes();
-      // var c1 = nodes[0], c2 = nodes[1];
       var c1 = UI.cmat_app.wholeNodes.get('#'+nodes[0])[0].getParent(), c2 = UI.cmat_app.wholeNodes.get('#'+nodes[1])[0].getParent();
-      var x1 = c1.getX(), y1 = c1.getY(), r1 = c1.node.getRadius();
-      var x2 = c2.getX(), y2 = c2.getY(), r2 = c2.node.getRadius();
-      var minMarkers = Math.max(MIN_COUNT, 2);
-      var maxPadding = MAX_STRETCH;
-      var maxPaddingPlusMarker = maxPadding + 1;
-      var markerRadius = this.attrs.markerRadius;
-      var markerDiameter = markerRadius * 2;
+      var x1 = c1.getX(), y1 = c1.getY(), x2 = c2.getX(), y2 = c2.getY();
 
-      // find the points where the joining line intersects nodes
-      var l = new Line(x1, y1, x2, y2);
-      var ip1 = l.intersectNode(x1, y1, r1 - markerDiameter);
-      var ip2 = l.intersectNode(x2, y2, r2 - markerDiameter);
-      var minDist = Number.MAX_VALUE, minP1, minP2;
+      this._markers.push([x1, y1]);
+      this._markers.push([x2, y2]);
 
-      // find the right points(closest to each other)
-      ip1.forEach(function(p1) {
-        ip2.forEach(function(p2) {
-          var d = p1.distance(p2);
-          if (d < minDist) {
-            minDist = d;
-            minP1 = p1;
-            minP2 = p2;
-          }
-        });
-      });
-
-      x1 = minP1.x;
-      y1 = minP1.y;
-      x2 = minP2.x;
-      y2 = minP2.y;
-
-      var d = minDist;
-      var dx = x2 - x1, dy = y2 - y1;
-      var fitsMarkers = d / markerDiameter;
-      var fitsMarkersInt = Math.floor(fitsMarkers);
-      var markersShown = fitsMarkersInt - fitsMarkersInt % 2; // show only even number of markers
-
-      if (markersShown < 2)
-        return;
-
-      var initialPadding = 0.5; // before first marker (same amount is at the end also)
-      var extraInitialPadding = 0;
-      var padding = 0; // between markers
-
-      // don't begin stretching until we have at least this much markers
-      // available
-      if (markersShown < minMarkers) {
-        extraInitialPadding = fitsMarkers % 2 / 2;
-        // we have some extra space, so let's begin stretching
-      } else {
-        markersShown = minMarkers;
-        padding = (fitsMarkers - markersShown) / (markersShown + 1);
-
-        // don't stretch more than needed
-        if (padding >= maxPadding) {
-          // see how much extra space we have
-          extraInitialPadding = maxPadding + (padding - maxPadding) * (markersShown + 1) / 2;
-
-          // see how many extra markers can we fit
-          while (extraInitialPadding > maxPaddingPlusMarker) {
-            markersShown += 2;
-            extraInitialPadding -= maxPaddingPlusMarker;
-          }
-
-          padding = maxPadding;
-          // continue stretching
-        } else {
-          extraInitialPadding = padding;
-        }
-      }
-
-      initialPadding += extraInitialPadding;
-
-      for (var i = 0, sx = dx / fitsMarkers, sy = dy / fitsMarkers; i < markersShown; i++) {
-        var j = i * (1 + padding) + initialPadding;
-
-        this._markers.add([ x1 + j * sx, y1 + j * sy, markerDiameter ]);
-      }
     },
 
     drawFunc: function(canvas) {
       var context = canvas.getContext();
-      // var img = this.markerImg;
 
       if (this._markers.length > 1){
         context.beginPath();
@@ -152,16 +77,6 @@ Kinetic.Connection = (function() {
         context.lineWidth = this.attrs.lineWidth;
         context.stroke();
       }
-
-      // this._markers.forEach(function(m) {
-      //   x = m[0] + m[2]/2;
-      //   y = m[1] + m[2]/2;
-      //   context.translate(x, y);
-      //   context.rotate(2);
-      //   context.drawImage(img, m[0], m[1], m[2], m[2]);
-      //   context.rotate(-2);
-      //   context.translate(-x, -y);
-      // });
 
       this.drawn = true;
     },

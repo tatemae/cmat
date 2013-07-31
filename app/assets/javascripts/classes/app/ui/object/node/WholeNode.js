@@ -58,13 +58,9 @@ Kinetic.WholeNode = (function() {
       this.mouseOverCatcher.moveUp();
     },
 
-    attachConnections: function(connections, area) {
-      var maxRadius = Math.floor(Math.sqrt(area * CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
-      this.node.attrs.connection = {
-        parent: connections,
-        markerRadius: maxRadius * MARKER_TO_MAX_CIRCLE_REL
-      }
-    },
+    // attachConnections: function(connections, area) {
+      
+    // },
 
     getConnections: function() {
       return this.attrs.connections;
@@ -102,11 +98,12 @@ Kinetic.WholeNode = (function() {
 
     connect: function(node) {
       if (node != this && !this.isConnected(node)) {
-        var config = this.node.attrs.connection;
-        config.strokeStyle = '#34495E';
-        config.lineJoin = 'round';
-        config.lineWidth = 1;
-        var conn = new Kinetic.Connection($$$.copy({ nodes: [ this.node.attrs.id, node.attrs.id ] }, config));
+        var attrs = {};
+        attrs.strokeStyle = '#34495E';
+        attrs.lineJoin = 'round';
+        attrs.lineWidth = 1;
+        attrs.nodes = [ this.node.attrs.id, node.attrs.id ];
+        var conn = new Kinetic.Connection(attrs, this.parent.parent.getMarkerRadius());
 
         // conn.bindChanges([this, node]);
 
@@ -117,7 +114,10 @@ Kinetic.WholeNode = (function() {
 
         // this._addOwnNeighbour(node);
 
-        this.node.attrs.connection.parent.add(conn);
+        this.parent.parent.makeConnection(conn);
+
+        // this.node.attrs.connection.parent.add(conn);
+
 
         // this.node.attrs.connection.parent.draw();
       }
