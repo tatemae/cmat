@@ -1,5 +1,11 @@
 var MapController = Ember.ObjectController.extend({
 
+  needs: ['toolbar', 'node'],
+  toolbar: null,
+  toolbarBinding: "controllers.toolbar",
+  node: null,
+  nodeBinding: "controllers.node",
+
   act: function(action){
     this[action]();
   },
@@ -10,14 +16,6 @@ var MapController = Ember.ObjectController.extend({
 
   destroy: function(){
     alert('destroying map');
-  },
-
-  toolbar: function() {
-    return this.controllerFor('toolbar');
-  },
-
-  node: function() {
-    return this.controllerFor('node');
   }
 
 });

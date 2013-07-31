@@ -1,0 +1,27 @@
+{{#modal id="edit_node"}}
+  <div class="modal-header">
+    <button type="button" class="close" {{action close target="view"}}>&times;</button>
+    <h3>Edit Node</h3>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label" for="name">Name</label>
+        <div class="controls">
+          {{input type="text" value=name placeholder="Name"}}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="info">Info</label>
+        <div class="controls">
+          {{textarea value=info placeholder="Info"}}
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+        
+        </div>
+      </div>
+    </form>
+  </div>
+{{/modal}}

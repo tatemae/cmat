@@ -1,8 +1,7 @@
 var ToolbarController = Ember.Controller.extend({
 
-  map: null,
-  needs: "map",
-  mapBinding: "controllers.map",
+  needs: ['map'],
+
   mapSearchQuery: null,
   mapSearchResults: null,
 
@@ -20,7 +19,7 @@ var ToolbarController = Ember.Controller.extend({
 
   // Proxy toolbar actions to the map controller
   mapAct: function(action){
-    this.map.act(action);
+    this.get('controllers.map').act(action);
   },
 
   searchMaps: function(){
