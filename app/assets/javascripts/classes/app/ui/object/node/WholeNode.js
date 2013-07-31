@@ -58,10 +58,6 @@ Kinetic.WholeNode = (function() {
       this.mouseOverCatcher.moveUp();
     },
 
-    // attachConnections: function(connections, area) {
-      
-    // },
-
     getConnections: function() {
       return this.attrs.connections;
     },
@@ -105,21 +101,8 @@ Kinetic.WholeNode = (function() {
         attrs.nodes = [ this.node.attrs.id, node.attrs.id ];
         var conn = new Kinetic.Connection(attrs, this.parent.parent.getMarkerRadius());
 
-        // conn.bindChanges([this, node]);
-
-        // this.getConnections().add(conn);
-        // node.getConnections().add(conn);
-        // this.getNeighbours().add(node);
-        // node.getNeighbours().add(this);
-
-        // this._addOwnNeighbour(node);
-
         this.parent.parent.makeConnection(conn);
 
-        // this.node.attrs.connection.parent.add(conn);
-
-
-        // this.node.attrs.connection.parent.draw();
       }
     },
 

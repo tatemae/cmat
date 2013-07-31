@@ -74,88 +74,6 @@ Kinetic.AppNode = (function() {
       this.setOffset(this.getWidth() / 2, this.getHeight() / 2);
     },
 
-    getConnections: function() {
-      return this.attrs.connections;
-    },
-
-    _removeConnection: function(conn) {
-      this.attrs.connections.remove(conn);
-    },
-
-    getNeighbours: function() {
-      return this.attrs.neighbours;
-    },
-
-    _removeNeighbour: function(circle) {
-      this.attrs.neighbours.remove(circle);
-    },
-
-    getOwnNeighbours: function() {
-      return this.attrs.ownNeighbours;
-    },
-
-    _addOwnNeighbour: function(circle) {
-      this.attrs.ownNeighbours.add(circle);
-      this._ownsConnection[circle._id] = true;
-    },
-
-    _removeOwnNeighbour: function(circle) {
-      this.attrs.ownNeighbours.remove(circle);
-      this._ownsConnection[circle._id] = false;
-    },
-
-    connections: function() {
-      return this.getConnections().length;
-    },
-
-    // connect: function(circle) {
-    //   if (circle != this && !this.isConnected(circle)) {
-    //     var conn = new Kinetic.Connection($$$.copy({ circles: [ this, circle ] }, this.attrs.connection));
-
-    //     this.getConnections().add(conn);
-    //     circle.getConnections().add(conn);
-    //     this.getNeighbours().add(circle);
-    //     circle.getNeighbours().add(this);
-
-    //     this._addOwnNeighbour(circle);
-
-    //     this.attrs.connection.parent.add(conn);
-    //   }
-    // },
-
-    // disconnect: function(circle) {
-    //   if (circle != this && this.isConnected(circle)) {
-    //     var delConn;
-
-    //     this.getConnections().forEach(function(conn) {
-    //       if (conn.hasCircle(circle)) {
-    //         delConn = conn;
-    //       }
-    //     });
-
-    //     this._removeConnection(delConn);
-    //     circle._removeConnection(delConn);
-    //     this._removeNeighbour(circle);
-    //     circle._removeNeighbour(this);
-
-    //     if (this.ownsConnectionWith(circle)) {
-    //       this._removeOwnNeighbour(circle);
-    //     } else {
-    //       circle._removeOwnNeighbour(this);
-    //     }
-
-    //     delConn.destroy();
-    //   }
-    // },
-
-    ownsConnectionWith: function(c) {
-      return this._ownsConnection[c._id];
-    },
-
-    isConnected: function(c) {
-      return this.getNeighbours().contains(c);
-    },
-
     _animatePress: function() {
       var tweening = this.isTweening();
       var actualRadius = this._calcRadius();
@@ -181,48 +99,6 @@ Kinetic.AppNode = (function() {
             }
           });
         }
-      });
-    },
-
-    removeCircle: function() {
-      this._removeCircle();
-    },
-
-    _removeCircle: function(pressed) {
-      var neighs = this.getNeighbours().clone();
-      neighs.forEach(function(c) {
-        c.setListening(false);
-      });
-
-      this.setListening(false);
-      this.to({
-        scaleX: 0,
-        scaleY: 0,
-        opacity: 0.1,
-        rotation: Math.PI * 2,
-        duration: this.getScore() > 1 ? LONG_ROTATE_OUT_TIME : FAST_ROTATE_OUT_TIME,
-        callback: function() {
-          var parent = this.getParent();
-
-          neighs.forEach(function(c) {
-            this.disconnect(c);
-            c.setListening(true);
-          }.bind(this));
-
-          this.destroy();
-
-          parent.fire((pressed ? 'pressed' : 'disconnected') + 'Removed', {
-            circle: this,
-            neighbours: neighs
-          });
-        }
-      });
-
-      this.getConnections().forEach(function(conn) {
-        conn.to({
-          opacity: 0.0,
-          duration: FADE_OUT_TIME
-        });
       });
     },
 
