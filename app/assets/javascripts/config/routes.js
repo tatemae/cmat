@@ -5,6 +5,9 @@ App.Router.map(function() {
   this.resource('maps', function(){
     this.resource('map', { path: '/:map_id' }, function(){
       this.route('add');
+      this.resource('node', function(){
+        this.route('edit');
+      });
     });
   });
 

@@ -180,7 +180,8 @@ Kinetic.WholeNode = (function() {
     },
 
     _doubleClick: function(e) {
-      var r2d=2;
+      // HACK. This is ugly since the node now has to know about how it is accessed.
+      this.parent.parent.editNode(this);
     }
 
   });

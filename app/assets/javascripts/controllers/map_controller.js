@@ -14,6 +14,10 @@ var MapController = Ember.ObjectController.extend({
 
   toolbar: function() {
     return this.controllerFor('toolbar');
+  },
+
+  node: function() {
+    return this.controllerFor('node');
   }
 
 });

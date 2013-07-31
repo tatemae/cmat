@@ -1,3 +1,5 @@
+CmatSettings = require('../../../cmat_settings');
+
 Kinetic.CmatApp = (function() {
   var CIRCLE_AREA_TO_SCREEN_REL = 0.005;
 
@@ -47,6 +49,12 @@ Kinetic.CmatApp = (function() {
       // var asdf = this.toJSON();
 
 
+    },
+
+    editNode: function(node){
+      var node = CmatSettings.node;
+      node.set('name', node.name);
+      node.set('state', 'edit');
     },
 
     makeConnection: function(conn) {

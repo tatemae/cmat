@@ -6,7 +6,7 @@ var MapView = Ember.View.extend({
   toolbar: null,
 
   didInsertElement: function(){
-    Cmat.boot(this.get('controller').get('model'), this.get('controller').toolbar());
+    Cmat.boot(this.get('controller').get('model'), this.get('controller').toolbar(), this.get('controller').node());
   }
 
 });
