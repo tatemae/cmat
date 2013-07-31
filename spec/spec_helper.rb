@@ -39,4 +39,17 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
+
+  config.include Devise::TestHelpers, :type => :controller
+  config.extend ControllerMacros, :type => :controller
+
+  config.around(:each) do |example|
+    caching = ActionController::Base.perform_caching
+    ActionController::Base.perform_caching = example.metadata[:caching]
+    example.run
+    Rails.cache.clear
+    ActionController::Base.perform_caching = caching
+  end
+
+  config.color_enabled = true
 end

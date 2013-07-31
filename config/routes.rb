@@ -1,10 +1,19 @@
 Cmat::Application.routes.draw do
+
+  root :to => "default#index"
+
+  devise_for :users
+
   namespace :api do
     resources :maps, except: [:new, :edit]
-    resources :users, except: [:new, :edit] do
+    resources :sessions, only: [:create, :destroy]
+    resources :users, only: [:show, :create, :update] do
       resources :maps, except: [:new, :edit]
     end
   end
 
-  root :to => "default#index"
+  get 'saml', to: 'saml#index'
+  get 'saml/metadata', to: 'saml#metadata'
+  post 'saml/consume', to: 'saml#consume'
+
 end

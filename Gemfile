@@ -1,3 +1,8 @@
+# clean up:
+# rm -rf ~/.bundle/ ~/.gem/; rm -rf $GEM_HOME/bundler/ $GEM_HOME/cache/bundler/; rm -rf .bundle/; rm -rf vendor/cache/; rm -rf Gemfile.lock
+# If bundler hangs try this:
+# http://stackoverflow.com/questions/9467756/bundler-when-attempting-to-update-or-install-will-hang-forever
+
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -20,6 +25,9 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'unicorn'
 
+# User Auth
+gem 'devise', '>=3.0.0'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
@@ -36,6 +44,7 @@ gem 'font-awesome-sass-rails'
 gem 'flatui-rails'
 
 group :development, :test do
+  gem 'factory_girl_rails', '~> 3.2.0'
   gem 'debugger'
   gem 'rspec-rails', '~> 2.0'
   gem 'guard'
