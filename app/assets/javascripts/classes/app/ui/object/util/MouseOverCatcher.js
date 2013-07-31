@@ -7,6 +7,7 @@ Kinetic.MouseOverCatcher = (function() {
 
       this.on('mouseover', config.onMouseOver);
       this.on('mouseout', config.onMouseOut);
+      this.on('dblclick dbltap', config.onDoubleClick);
     }
   });
 

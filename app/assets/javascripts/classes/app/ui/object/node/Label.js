@@ -43,7 +43,6 @@ Kinetic.Label = (function() {
 
     destroy: function() {
       Kinetic.Group.prototype.destroy.call(this);
-      delete Image.text.loading;
     }
   });
 

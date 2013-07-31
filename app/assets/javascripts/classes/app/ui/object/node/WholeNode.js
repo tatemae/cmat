@@ -25,6 +25,7 @@ Kinetic.WholeNode = (function() {
         height: this.node.getHeight() * 2,
         onMouseOver: this._mouseover.bind(this),
         onMouseOut: this._mouseout.bind(this),
+        onDoubleClick: this._doubleClick.bind(this),
         visible: true
       });
     },
@@ -170,12 +171,16 @@ Kinetic.WholeNode = (function() {
       });
     },
 
-     _mouseover: function(evt) {
+     _mouseover: function(e) {
       this._animateMouseover();
     },
 
-    _mouseout: function(evt) {
+    _mouseout: function(e) {
       this._animateMouseout();
+    },
+
+    _doubleClick: function(e) {
+      var r2d=2;
     }
 
   });
