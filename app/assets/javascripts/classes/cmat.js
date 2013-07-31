@@ -5,8 +5,9 @@ var Cmat = {
   boot: function(map, toolbar, node, relationship){
 
     // A bit of a hack but we create a global cmat settings object so that we can get to these values down inside the cmat app.
-    CmatSettings.node = node;
+    CmatSettings.map = map;
     CmatSettings.toolbar = toolbar;
+    CmatSettings.node = node;
     CmatSettings.relationship = relationship;
 
     toolbar.addObserver('showRelationships', this, 'propChange');

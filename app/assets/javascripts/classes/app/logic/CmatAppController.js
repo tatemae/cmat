@@ -19,7 +19,8 @@ AppController = $$$.Class({
   saveLayout: function() {
     //
     // Save map json data here
-    var r2d=2;
+    var map = CmatSettings.map;
+    // var asdf = UI.getStage().toJSON();
   },
 
   addControlPressed: function() {

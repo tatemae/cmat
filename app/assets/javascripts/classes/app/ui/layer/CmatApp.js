@@ -12,6 +12,7 @@ Kinetic.CmatApp = (function() {
       this.connections.moveToBottom();
       this.attrs.nextNodeID = 1;
       this.rescaleWorkspace();
+      this.observeSettings();
     },
 
     _createPressCatcher: function() {
@@ -37,7 +38,7 @@ Kinetic.CmatApp = (function() {
         y: xy.y,
         draggable: true
       }, this.area);
-      // wholeNode.attachConnections(this.connections, this.area);
+
       this.wholeNodes.add(wholeNode);
 
       if (parent !== undefined){
@@ -46,28 +47,43 @@ Kinetic.CmatApp = (function() {
       }
       wholeNode.draw();
 
-      // var asdf = this.toJSON();
-
-
     },
 
-    editNode: function(node){
+    editNode: function(wholeNode){
       var node = CmatSettings.node;
-      node.set('name', node.name);
+      node.set('id', wholeNode.attrs.id);
+      node.set('name', wholeNode.attrs.name);
+      node.set('info', wholeNode.attrs.info);
+      node.set('type', wholeNode.attrs.type);
       node.set('state', 'edit');
     },
 
     makeConnection: function(conn) {
       this.connections.add(conn);
-
-      // this.node.attrs.connection = {
-      //   parent: connections,
-      //   markerRadius: maxRadius * MARKER_TO_MAX_CIRCLE_REL
-      // }
     },
 
     getMarkerRadius: function() {
       return this.maxRadius;
+    },
+
+    observeSettings: function() {
+      return function () {
+        if (CmatSettings.node.get('state') == "save") {
+          // save those attributes
+          var node = CmatSettings.node;
+          wholeNode = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
+          wholeNode.attrs.name = node.get('name');
+          wholeNode.attrs.info = node.get('info');
+          wholeNode.attrs.type = node.get('type');
+        } else if ( CmatSettings.node.get('state') == "cancel" ){
+          // revert those attributes
+          var node = CmatSettings.node;
+          UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
+          node.set('name', wholeNode.attrs.name);
+          node.set('info', wholeNode.attrs.info);
+          node.set('type', wholeNode.attrs.type);
+        }
+      }.observes(CmatSettings.node.get('state'));
     }
 
   });
