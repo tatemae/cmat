@@ -1,6 +1,6 @@
 var Cmat = {
 
-  boot: function(map, toolbar){
+  boot: function(map, toolbar, node, relationship){
 
     toolbar.addObserver('showRelationships', this, 'propChange');
     toolbar.addObserver('showRelationshipLabels', this, 'propChange');
