@@ -74,7 +74,8 @@ ForceDirected = (function() {
             }
 
             // apply repulsive force between every node
-            var repulsiveForce = BASE_VALUE * ag * op.value(v) * op.value(u) / d2;
+            // var repulsiveForce = BASE_VALUE * ag * op.value(v) * op.value(u) / d2;
+            var repulsiveForce = BASE_VALUE * ag / d2;
             var df = (vr + ur) * agr - d;
 
             if (df > 0) {

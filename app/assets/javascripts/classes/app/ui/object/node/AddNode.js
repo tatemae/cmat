@@ -102,7 +102,8 @@ Kinetic.AddNode = (function() {
 
       this.parent.parent.parent._addNode(evt, this.parent);
 
-      this.getParent().fire('addPressed', this);
+      this.getParent().getParent().fire('addPressed', this);
+      // UI.cmat_app.wholeNodes.fire('addPressed', this);
     },
 
     _mouseover: function(evt) {

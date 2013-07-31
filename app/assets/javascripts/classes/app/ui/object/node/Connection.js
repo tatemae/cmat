@@ -38,7 +38,9 @@ Kinetic.Connection = (function() {
       Kinetic.Shape.call(this, config);
 
       this.getNodes().forEach(function(c) {
-        c.on('xChange yChange radiusChange', this.refresh.bind(this));
+        // c.on('xChange yChange radiusChange', this.refresh.bind(this));
+        var node = UI.cmat_app.wholeNodes.get('#'+c)[0].getParent();
+        node.on('xChange yChange radiusChange', this.refresh.bind(this));
       }.bind(this));
 
       this.drawn = true;
@@ -53,7 +55,8 @@ Kinetic.Connection = (function() {
       this._markers = [];
 
       var nodes = this.getNodes();
-      var c1 = nodes[0], c2 = nodes[1];
+      // var c1 = nodes[0], c2 = nodes[1];
+      var c1 = UI.cmat_app.wholeNodes.get('#'+nodes[0])[0].getParent(), c2 = UI.cmat_app.wholeNodes.get('#'+nodes[1])[0].getParent();
       var x1 = c1.getX(), y1 = c1.getY(), r1 = c1.node.getRadius();
       var x2 = c2.getX(), y2 = c2.getY(), r2 = c2.node.getRadius();
       var minMarkers = Math.max(MIN_COUNT, 2);

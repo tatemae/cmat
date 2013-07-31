@@ -117,7 +117,7 @@ UI = (function() {
     // var pause = layer.game.hud.pause;
 
     publicAPI.layoutManager = new Kinetic.LayoutManager({
-      nodes: layer.cmat_app.wholeNodes.getChildren(),
+      wholeNodes: layer.cmat_app.wholeNodes.getChildren(),
       connections: layer.cmat_app.connections.getChildren(),
       // clearCorners: {
       //   tl: {

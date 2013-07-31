@@ -102,18 +102,20 @@ Kinetic.WholeNode = (function() {
 
     connect: function(node) {
       if (node != this && !this.isConnected(node)) {
-        var conn = new Kinetic.Connection($$$.copy({ nodes: [ this, node ] }, this.node.attrs.connection));
+        var conn = new Kinetic.Connection($$$.copy({ nodes: [ this.node.attrs.id, node.attrs.id ] }, this.node.attrs.connection));
 
         // conn.bindChanges([this, node]);
 
-        this.getConnections().add(conn);
-        node.getConnections().add(conn);
-        this.getNeighbours().add(node);
-        node.getNeighbours().add(this);
+        // this.getConnections().add(conn);
+        // node.getConnections().add(conn);
+        // this.getNeighbours().add(node);
+        // node.getNeighbours().add(this);
 
-        this._addOwnNeighbour(node);
+        // this._addOwnNeighbour(node);
 
         this.node.attrs.connection.parent.add(conn);
+
+        // this.node.attrs.connection.parent.draw();
       }
     },
 

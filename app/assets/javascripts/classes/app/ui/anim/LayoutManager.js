@@ -42,7 +42,7 @@ Kinetic.LayoutManager = (function() {
 
       this._wholeNodes = config.wholeNodes;
       this._conns = config.connections;
-      this._corners = config.clearCorners;
+      // this._corners = config.clearCorners;
       this._bounds = config.bounds;
 
       this._initAlgorithm();
@@ -54,44 +54,44 @@ Kinetic.LayoutManager = (function() {
       this._wholeNodes.forEach(function(c) { c.cachedTransform = undefined; });
     },
 
-    _clearFromCorners: function(a, x, y, minXY, maxX, maxY) {
-      for (var c in this._corners) {
-        var v = this._corners[c];
-        var cX = 0, cY = 0;
-        var clear = false;
+    // _clearFromCorners: function(a, x, y, minXY, maxX, maxY) {
+    //   for (var c in this._corners) {
+    //     var v = this._corners[c];
+    //     var cX = 0, cY = 0;
+    //     var clear = false;
 
-        switch (c) {
-          case 'tl':
-            cX = minXY + v.width;
-            cY = minXY + v.height;
-            clear = x < cX && y < cY;
-            break;
-          case 'tr':
-            cX = maxX - v.width;
-            cY = minXY + v.height;
-            clear = x > cX && y < cY;
-            break;
-          case 'bl':
-            cX = minXY + v.width;
-            cY = maxY - v.height;
-            clear = x < cX && y > cY;
-            break;
-          case 'br':
-            cX = maxX - v.width;
-            cY = maxY - v.height;
-            clear = x > cX && y > cY;
-            break;
-        }
+    //     switch (c) {
+    //       case 'tl':
+    //         cX = minXY + v.width;
+    //         cY = minXY + v.height;
+    //         clear = x < cX && y < cY;
+    //         break;
+    //       case 'tr':
+    //         cX = maxX - v.width;
+    //         cY = minXY + v.height;
+    //         clear = x > cX && y < cY;
+    //         break;
+    //       case 'bl':
+    //         cX = minXY + v.width;
+    //         cY = maxY - v.height;
+    //         clear = x < cX && y > cY;
+    //         break;
+    //       case 'br':
+    //         cX = maxX - v.width;
+    //         cY = maxY - v.height;
+    //         clear = x > cX && y > cY;
+    //         break;
+    //     }
 
-        if (clear) {
-          if (Math.abs(x - cX) < Math.abs(y - cY)) {
-            a.attrs.x = cX;
-          } else {
-            a.attrs.y = cY;
-          }
-        }
-      }
-    },
+    //     if (clear) {
+    //       if (Math.abs(x - cX) < Math.abs(y - cY)) {
+    //         a.attrs.x = cX;
+    //       } else {
+    //         a.attrs.y = cY;
+    //       }
+    //     }
+    //   }
+    // },
 
     _keepInBounds: function(a) {
       var r = a.attrs.radius;
@@ -114,7 +114,7 @@ Kinetic.LayoutManager = (function() {
         a.attrs.y = maxY;
       }
 
-      this._clearFromCorners(a, x, y, minXY, maxX, maxY);
+      // this._clearFromCorners(a, x, y, minXY, maxX, maxY);
     },
 
     _initAlgorithm: function() {
