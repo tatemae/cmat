@@ -52,7 +52,7 @@ Kinetic.CmatApp = (function() {
     editNode: function(wholeNode){
       var node = CmatSettings.node;
       node.set('id', wholeNode.attrs.id);
-      node.set('name', wholeNode.attrs.name);
+      node.set('title', wholeNode.attrs.title);
       node.set('info', wholeNode.attrs.info);
       node.set('type', wholeNode.attrs.type);
       node.set('state', 'edit');
@@ -75,8 +75,8 @@ Kinetic.CmatApp = (function() {
         // save those attributes
         var node = CmatSettings.node;
         wholeNode = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
-        wholeNode.attrs.name = node.get('name');
-        wholeNode.label.setAttr('text', wholeNode.attrs.name);
+        wholeNode.attrs.title = node.get('title');
+        wholeNode.label.setAttr('text', wholeNode.attrs.title);
         wholeNode.attrs.info = node.get('info');
         wholeNode.attrs.type = node.get('type');
         this.parent.draw();
@@ -84,7 +84,7 @@ Kinetic.CmatApp = (function() {
         // revert those attributes
         var node = CmatSettings.node;
         wholeNode = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
-        node.set('name', wholeNode.attrs.name);
+        node.set('title', wholeNode.attrs.title);
         node.set('info', wholeNode.attrs.info);
         node.set('type', wholeNode.attrs.type);
       }
