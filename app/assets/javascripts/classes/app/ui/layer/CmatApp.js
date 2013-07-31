@@ -78,7 +78,7 @@ Kinetic.CmatApp = (function() {
         } else if ( CmatSettings.node.get('state') == "cancel" ){
           // revert those attributes
           var node = CmatSettings.node;
-          UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
+          wholeNode = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
           node.set('name', wholeNode.attrs.name);
           node.set('info', wholeNode.attrs.info);
           node.set('type', wholeNode.attrs.type);
