@@ -67,23 +67,25 @@ Kinetic.CmatApp = (function() {
     },
 
     observeSettings: function() {
-      return function () {
-        if (CmatSettings.node.get('state') == "save") {
-          // save those attributes
-          var node = CmatSettings.node;
-          wholeNode = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
-          wholeNode.attrs.name = node.get('name');
-          wholeNode.attrs.info = node.get('info');
-          wholeNode.attrs.type = node.get('type');
-        } else if ( CmatSettings.node.get('state') == "cancel" ){
-          // revert those attributes
-          var node = CmatSettings.node;
-          wholeNode = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
-          node.set('name', wholeNode.attrs.name);
-          node.set('info', wholeNode.attrs.info);
-          node.set('type', wholeNode.attrs.type);
-        }
-      }.observes(CmatSettings.node.get('state'));
+      return Object.observe(CmatSettings.node.get('state'), this.updateSettings());
+    },
+
+    updateSettings: function() {
+      if (CmatSettings.node.get('state') == "save") {
+        // save those attributes
+        var node = CmatSettings.node;
+        wholeNode = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
+        wholeNode.attrs.name = node.get('name');
+        wholeNode.attrs.info = node.get('info');
+        wholeNode.attrs.type = node.get('type');
+      } else if ( CmatSettings.node.get('state') == "cancel" ){
+        // revert those attributes
+        var node = CmatSettings.node;
+        wholeNode = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
+        node.set('name', wholeNode.attrs.name);
+        node.set('info', wholeNode.attrs.info);
+        node.set('type', wholeNode.attrs.type);
+      }
     }
 
   });

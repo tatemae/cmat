@@ -18,6 +18,8 @@ Kinetic.WholeNode = (function() {
       this.attrs.info = '';
       this.attrs.type = '';
 
+      this.observeAttr();
+
       this.addNode(config, area);
     },
 
@@ -186,6 +188,14 @@ Kinetic.WholeNode = (function() {
     _doubleClick: function(e) {
       // HACK. This is ugly since the node now has to know about how it is accessed.
       this.parent.parent.editNode(this);
+    },
+
+    updateName: function() {
+      this.label.setAttr('text', this.attrs.name);
+    },
+
+    observeAttr: function() {
+      return Object.observe(this.attrs.name, this.updateName());
     }
 
   });
