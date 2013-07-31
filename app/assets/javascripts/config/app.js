@@ -31,6 +31,7 @@ require('../classes/app/ui/object/node/Connection');
 require('../classes/app/ui/object/node/WholeNode');
 require('../classes/app/ui/object/node/AppNode');
 require('../classes/app/ui/object/node/AddNode');
+require('../classes/app/ui/object/node/Label');
 require('../classes/app/ui/anim/ExtraEasings');
 require('../classes/app/ui/anim/StepAnimation');
 require('../classes/app/ui/anim/LayoutManager');

@@ -51,6 +51,18 @@ Kinetic.WholeNode = (function() {
         opacity: 0
       }));
 
+      this.add(this.label = new Kinetic.Label({
+        x: -190,
+        y: this.node.getRadius(),
+        text: 'bfcoder FTW',
+        fontSize: 18,
+        fontFamily: 'Calibri',
+        fill: '#555',
+        width: 380,
+        padding: 10,
+        align: 'center'
+      }));
+
       this.node_adder.setY(this.node_adder.getY() - this.node_adder.getHeight() / 2 - 15);
       this.node_adder.setX(this.node_adder.getX() - 15);
       this.add(this.mouseOverCatcher = this._createMouseOverCatcher());
