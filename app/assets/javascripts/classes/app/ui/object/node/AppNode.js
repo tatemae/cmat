@@ -108,45 +108,45 @@ Kinetic.AppNode = (function() {
       return this.getConnections().length;
     },
 
-    connect: function(circle) {
-      if (circle != this && !this.isConnected(circle)) {
-        var conn = new Kinetic.Connection($$$.copy({ circles: [ this, circle ] }, this.attrs.connection));
+    // connect: function(circle) {
+    //   if (circle != this && !this.isConnected(circle)) {
+    //     var conn = new Kinetic.Connection($$$.copy({ circles: [ this, circle ] }, this.attrs.connection));
 
-        this.getConnections().add(conn);
-        circle.getConnections().add(conn);
-        this.getNeighbours().add(circle);
-        circle.getNeighbours().add(this);
+    //     this.getConnections().add(conn);
+    //     circle.getConnections().add(conn);
+    //     this.getNeighbours().add(circle);
+    //     circle.getNeighbours().add(this);
 
-        this._addOwnNeighbour(circle);
+    //     this._addOwnNeighbour(circle);
 
-        this.attrs.connection.parent.add(conn);
-      }
-    },
+    //     this.attrs.connection.parent.add(conn);
+    //   }
+    // },
 
-    disconnect: function(circle) {
-      if (circle != this && this.isConnected(circle)) {
-        var delConn;
+    // disconnect: function(circle) {
+    //   if (circle != this && this.isConnected(circle)) {
+    //     var delConn;
 
-        this.getConnections().forEach(function(conn) {
-          if (conn.hasCircle(circle)) {
-            delConn = conn;
-          }
-        });
+    //     this.getConnections().forEach(function(conn) {
+    //       if (conn.hasCircle(circle)) {
+    //         delConn = conn;
+    //       }
+    //     });
 
-        this._removeConnection(delConn);
-        circle._removeConnection(delConn);
-        this._removeNeighbour(circle);
-        circle._removeNeighbour(this);
+    //     this._removeConnection(delConn);
+    //     circle._removeConnection(delConn);
+    //     this._removeNeighbour(circle);
+    //     circle._removeNeighbour(this);
 
-        if (this.ownsConnectionWith(circle)) {
-          this._removeOwnNeighbour(circle);
-        } else {
-          circle._removeOwnNeighbour(this);
-        }
+    //     if (this.ownsConnectionWith(circle)) {
+    //       this._removeOwnNeighbour(circle);
+    //     } else {
+    //       circle._removeOwnNeighbour(this);
+    //     }
 
-        delConn.destroy();
-      }
-    },
+    //     delConn.destroy();
+    //   }
+    // },
 
     ownsConnectionWith: function(c) {
       return this._ownsConnection[c._id];

@@ -133,7 +133,7 @@ Kinetic.Connection = (function() {
       for (var i = 0, sx = dx / fitsMarkers, sy = dy / fitsMarkers; i < markersShown; i++) {
         var j = i * (1 + padding) + initialPadding;
 
-        this._markers.add([ x1 + j * sx - markerRadius, y1 + j * sy - markerRadius, markerDiameter ]);
+        this._markers.add([ x1 + j * sx, y1 + j * sy, markerDiameter ]);
       }
     },
 
@@ -146,10 +146,10 @@ Kinetic.Connection = (function() {
         context.moveTo(this._markers[0][0], this._markers[0][1]);
         context.lineTo(this._markers[this._markers.length-1][0], this._markers[this._markers.length-1][1]);
         context.closePath();
-        context.strokeStyle = 'blue';
+        context.strokeStyle = this.attrs.strokeStyle;
 
-        context.lineJoin = "round";
-        context.lineWidth = 3;
+        context.lineJoin = this.attrs.lineJoin;
+        context.lineWidth = this.attrs.lineWidth;
         context.stroke();
       }
 

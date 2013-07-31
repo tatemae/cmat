@@ -102,7 +102,11 @@ Kinetic.WholeNode = (function() {
 
     connect: function(node) {
       if (node != this && !this.isConnected(node)) {
-        var conn = new Kinetic.Connection($$$.copy({ nodes: [ this.node.attrs.id, node.attrs.id ] }, this.node.attrs.connection));
+        var config = this.node.attrs.connection;
+        config.strokeStyle = '#34495E';
+        config.lineJoin = 'round';
+        config.lineWidth = 1;
+        var conn = new Kinetic.Connection($$$.copy({ nodes: [ this.node.attrs.id, node.attrs.id ] }, config));
 
         // conn.bindChanges([this, node]);
 
