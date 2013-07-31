@@ -1,16 +1,16 @@
-var NodeController = Ember.Controller.extend({
+var NodeController = Ember.ObjectController.extend({
 
-//  types: ['concept', 'objective'],
-
-  types: function(){
-    return ['concept', 'objective'];
-  }.property(),
+  types: ['concept', 'objective'],
 
   changeState: function(){
     if(this.get('state') == 'edit'){
       this.transitionToRoute('node.edit');
     }
-  }.observes('state')
+  }.observes('state'),
+
+  changeTitle: function(){
+    console.log('Title changed to ' + this.get('title'));
+  }.observes('title')
 
 });
 
