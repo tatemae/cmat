@@ -42,11 +42,11 @@ var Cmat = {
   },
 
   propChange: function(){
-    alert('something changed');
+    console.log('something changed');
   },
 
   modeChange: function(toolbar){
-    alert('editing:' + toolbar.get('isEditing'));
+    console.log('editing:' + toolbar.get('isEditing'));
   }
 
 };

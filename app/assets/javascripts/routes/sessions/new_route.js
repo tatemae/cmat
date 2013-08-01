@@ -1,16 +1,15 @@
 var Session = require('../../models/session');
 
 var SessionsNewRoute = Ember.Route.extend({
+
   beforeModel: function(){
-    var t = 0;
+    if(this.controllerFor('currentUser').isSignedIn){
+      this.transitionTo('index');
+    }
   },
 
   model: function(){
-    if(this.controllerFor('currentUser').isSignedIn){
-      this.transitionTo('index');
-    } else {
-      return Session.createRecord();
-    }
+    return Session.createRecord();
   }
 });
 

@@ -11,7 +11,7 @@ var ApplicationRoute = Ember.Route.extend({
   },
 
   setupController: function(controller, model){
-    this.controllerFor('node').set('content', Node.createRecord());
+    this.controllerFor('node').set('content', Node.find('current'));
     this.controllerFor('toolbar').set('content', Toolbar.find('current'));
   }
 

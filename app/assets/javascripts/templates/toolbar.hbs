@@ -44,8 +44,8 @@
                   </li>
                 </ul>
               <li class="divider"></li>
-              {{#each mapSearchResults}}
-                <li><a href="#" {{action importMap this}}>{{this.title}}</a></li>
+              {{#each objectiveBanks}}
+                <li><a href="#" {{action importObjectiveBank this}}>{{this.title}}</a></li>
               {{/each}}
             </ul>
           </div>
@@ -79,8 +79,6 @@
             {{view Ember.Checkbox checkedBinding="isEditing"}}
           {{/switch}}
           <div class="btn-group">
-            <a href="#" class="btn btn-toolbar name_btn">Kate</a>
-            <div style="display:none;">
             {{#if currentUser.isSignedIn}}
               <a href="#" class="btn btn-toolbar name_btn">{{currentUser.name}}</a>
               {{#linkTo 'sessions.destroy' class="btn btn-toolbar name_btn"}}Logout{{/linkTo}}
@@ -88,7 +86,6 @@
               {{#linkTo 'users.new' class="btn btn-toolbar name_btn"}}Sign Up{{/linkTo}} |
               {{#linkTo 'sessions.new' class="btn btn-toolbar name_btn"}}Login{{/linkTo}}
             {{/if}}
-            </div>
           </div>
         </div>
       </div>

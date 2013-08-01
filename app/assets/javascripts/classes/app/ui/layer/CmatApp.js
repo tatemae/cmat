@@ -14,6 +14,7 @@ Kinetic.CmatApp = (function() {
       this.rescaleWorkspace();
       this.observeSettings();
       this.loadMap();
+      CmatSettings.map.addObserver('content', this, 'loadMap');
     },
 
     _createPressCatcher: function() {
@@ -92,7 +93,20 @@ Kinetic.CmatApp = (function() {
       }
     },
 
-    loadMap: function() {
+    loadMap: function(){
+      if(CmatSettings.map.get('isMc3')){
+        this.loadMc3Map();
+      } else {
+        this.loadKineticMap();
+      }
+    },
+
+    loadMc3Map: function() {
+      var source = CmatSettings.map.get('mc3Source');
+      // TODO parse the mc3 source and add nodes
+    },
+
+    loadKineticMap: function() {
       var map = JSON.parse(CmatSettings.map.get('payload'));
       if (map !== null){
         map.children[0].children.forEach(function(a) {

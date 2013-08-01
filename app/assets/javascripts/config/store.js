@@ -3,5 +3,3 @@ module.exports = DS.Store.extend({
     namespace: 'api'
   })
 });
-
-//DS.Store.registerAdapter(['App.Toolbar'], DS.LSAdapter.create());
