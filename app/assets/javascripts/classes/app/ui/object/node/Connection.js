@@ -37,16 +37,16 @@ Kinetic.Connection = (function() {
 
       Kinetic.Shape.call(this, config);
 
-      if (c1 !== undefined && c2 !== undefined){
-        c1.on('xChange yChange radiusChange', this.refresh.bind(this));
-        c2.on('xChange yChange radiusChange', this.refresh.bind(this));
-      }else{
+      // if (c1 !== undefined && c2 !== undefined){
+      c1.on('xChange yChange radiusChange', this.refresh.bind(this));
+      c2.on('xChange yChange radiusChange', this.refresh.bind(this));
+      // }else{
 
-        this.getNodes().forEach(function(c) {
-          var node = UI.cmat_app.wholeNodes.get('#'+c)[0].getParent();
-          node.on('xChange yChange radiusChange', this.refresh.bind(this));
-        }.bind(this));
-      }
+      //   this.getNodes().forEach(function(c) {
+      //     var node = UI.cmat_app.wholeNodes.get('#'+c)[0].getParent();
+      //     node.on('xChange yChange radiusChange', this.refresh.bind(this));
+      //   }.bind(this));
+      // }
 
       this.markerDiameter = markerRadius * 2;
 

@@ -120,7 +120,7 @@ Kinetic.WholeNode = (function() {
         attrs.lineJoin = 'round';
         attrs.lineWidth = 1;
         attrs.nodes = [ this.node.attrs.id, node.attrs.id ];
-        var conn = new Kinetic.Connection(attrs, this.parent.parent.getMarkerRadius(), this.node, node);
+        var conn = new Kinetic.Connection(attrs, this.parent.parent.getMarkerRadius(), UI.cmat_app.wholeNodes.get('#'+this.node.attrs.id)[0].getParent(), node);
 
         this.parent.parent.makeConnection(conn);
 
