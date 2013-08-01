@@ -6,6 +6,9 @@ var NodeController = Ember.ObjectController.extend({
     if(this.get('state') == 'edit'){
       this.transitionToRoute('node.edit');
     }
+    if(this.get('state') == 'new'){
+      this.transitionToRoute('node.new');
+    }
   }.observes('state')
 
 });

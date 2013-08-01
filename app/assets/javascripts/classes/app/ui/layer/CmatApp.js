@@ -21,7 +21,7 @@ Kinetic.CmatApp = (function() {
       return new Kinetic.PressCatcher({
         width: this.getWidth(),
         height: this.getHeight(),
-        onPress: this._addNode.bind(this),
+        onPress: this._newNode.bind(this),
         visible: true,
         name: 'pressCatcher'
       });
@@ -32,24 +32,16 @@ Kinetic.CmatApp = (function() {
       this.maxRadius = Math.floor(Math.sqrt(this.area * CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
     },
 
-    _addNode: function(e, parent) {
+    _newNode: function(e) {
       var xy = UI.getPos(e);
-
-      var wholeNode = new Kinetic.WholeNode({
-        id: this.attrs.nextNodeID++,
-        x: xy.x,
-        y: xy.y,
-        draggable: true
-      }, this.area);
-
-      this.wholeNodes.add(wholeNode);
-
-      if (parent !== undefined){
-        wholeNode.setY(parent.getY() + 100);
-        parent.connect(wholeNode);
-      }
-      wholeNode.draw();
-
+      var node = CmatSettings.node;
+      node.set('id', '');
+      node.set('title', '');
+      node.set('info', '');
+      node.set('type', '');
+      node.set('x', xy.x);
+      node.set('y', xy.y);
+      node.set('state', 'new');
     },
 
     editNode: function(wholeNode){
@@ -59,6 +51,31 @@ Kinetic.CmatApp = (function() {
       node.set('info', wholeNode.attrs.info);
       node.set('type', wholeNode.attrs.type);
       node.set('state', 'edit');
+    },
+
+    _addNode: function(e, parent) {
+      var xy = UI.getPos(e);
+      this.addNode(xy, parent);
+    },
+
+    addNode: function(args, parent) {
+      var wholeNode = new Kinetic.WholeNode({
+        id: this.attrs.nextNodeID++,
+        x: args.x,
+        y: args.y,
+        draggable: true,
+        title: args.title || '',
+        info: args.info || '',
+        type: args.type || ''
+      }, this.area);
+
+      this.wholeNodes.add(wholeNode);
+
+      if (parent !== undefined){
+        wholeNode.setY(parent.getY() + 100);
+        parent.connect(wholeNode);
+      }
+      wholeNode.draw();
     },
 
     makeConnection: function(conn) {
@@ -75,21 +92,31 @@ Kinetic.CmatApp = (function() {
 
     updateSettings: function() {
       var node = CmatSettings.node;
-      var child = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0];
-      if(!child){ return; }
-      var wholeNode = child.getParent();
-      if (CmatSettings.node.get('state') == "save") {
-        // save those attributes
-        wholeNode.attrs.title = node.get('title');
-        wholeNode.label.setAttr('text', wholeNode.attrs.title);
-        wholeNode.attrs.info = node.get('info');
-        wholeNode.attrs.type = node.get('type');
-        this.parent.draw();
-      } else if ( CmatSettings.node.get('state') == "cancel" ){
-        // revert those attributes
-        node.set('title', wholeNode.attrs.title);
-        node.set('info', wholeNode.attrs.info);
-        node.set('type', wholeNode.attrs.type);
+      if (node.get('state') == 'add') {
+        this.addNode({
+          x: node.get('x'),
+          y: node.get('y'),
+          title: node.get('title'),
+          info: node.get('info'),
+          type: node.get('type')
+        });
+      }else{
+        var child = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0];
+        if(!child){ return; }
+        var wholeNode = child.getParent();
+        if (CmatSettings.node.get('state') == "save") {
+          // save those attributes
+          wholeNode.attrs.title = node.get('title');
+          wholeNode.label.setAttr('text', wholeNode.attrs.title);
+          wholeNode.attrs.info = node.get('info');
+          wholeNode.attrs.type = node.get('type');
+          this.parent.draw();
+        } else if ( CmatSettings.node.get('state') == "cancel" ){
+          // revert those attributes
+          node.set('title', wholeNode.attrs.title);
+          node.set('info', wholeNode.attrs.info);
+          node.set('type', wholeNode.attrs.type);
+        }
       }
     },
 

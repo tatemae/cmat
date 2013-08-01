@@ -1,7 +1,7 @@
-{{#modal id="edit_node"}}
+{{#modal id="new_node" saveLabel="Add"}}
   <div class="modal-header">
     <button type="button" class="close" {{action close target="view"}}>&times;</button>
-    <h3>Edit Node</h3>
+    <h3>New Node</h3>
   </div>
   <div class="modal-body">
     <form {{action save on="submit" target="view"}} class="form-horizontal">
@@ -23,8 +23,5 @@
         </div>
       </div>
     </form>
-  </div>
-  <div class="modal_delete">
-    <a href="#" class="btn" {{action 'do_action' 'destroy_node' target="view"}}>Delete</a>
   </div>
 {{/modal}}

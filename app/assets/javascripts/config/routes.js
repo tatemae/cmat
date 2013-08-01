@@ -7,6 +7,7 @@ App.Router.map(function() {
       this.route('add');
       this.resource('node', function(){
         this.route('edit');
+        this.route('new');
       });
     });
   });
