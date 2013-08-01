@@ -19,9 +19,12 @@
       </div>
       <div class="control-group">
         <div class="controls">
-          {{types}}
+
         </div>
       </div>
     </form>
+  </div>
+  <div class="modal_delete">
+    <a href="#" class="btn" {{action 'do_action' 'destroy_node' target="view"}}>Delete</a>
   </div>
 {{/modal}}

@@ -2,7 +2,10 @@ var ModalView = Ember.View.extend({
   layoutName: 'modal_layout',
 
   didInsertElement: function(){
-    this.$('.modal').modal('show');
+    this.$('.modal').modal({
+      'show': true,
+      'backdrop': 'static'
+    });
   },
 
   close: function(){
@@ -11,6 +14,10 @@ var ModalView = Ember.View.extend({
 
   save: function(){
     this.do_close('modal_save');
+  },
+
+  do_action: function(action){
+    this.do_close(action);
   },
 
   do_close: function(event){
