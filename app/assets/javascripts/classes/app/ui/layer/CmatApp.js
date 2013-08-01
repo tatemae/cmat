@@ -51,7 +51,7 @@ Kinetic.CmatApp = (function() {
 
     editNode: function(wholeNode){
       var node = CmatSettings.node;
-      //node.set('id', wholeNode.attrs.id);
+      node.set('id', wholeNode.attrs.id);
       node.set('title', wholeNode.attrs.title);
       node.set('info', wholeNode.attrs.info);
       node.set('type', wholeNode.attrs.type);
