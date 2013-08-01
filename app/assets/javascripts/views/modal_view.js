@@ -1,5 +1,6 @@
 var ModalView = Ember.View.extend({
   layoutName: 'modal_layout',
+  saveLabel: 'Save',
 
   didInsertElement: function(){
     this.$('.modal').modal({
