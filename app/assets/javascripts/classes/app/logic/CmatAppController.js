@@ -22,6 +22,7 @@ AppController = $$$.Class({
     var map = CmatSettings.map;
     var map_json = UI.getStage().toJSON();
     map.set('payload', map_json);
+    map.save();
   },
 
   addControlPressed: function() {
