@@ -4,6 +4,7 @@ var ToolbarController = Ember.Controller.extend({
 
   mapSearchQuery: null,
   mapSearchResults: null,
+  isEditing: true,
 
   addToMap: function(){
     this.transitionToRoute('map.add');

@@ -52,4 +52,6 @@ var App = Ember.Application.create({
 
 App.Store = require('./store');
 
+require('./initializers/current_user');
+
 module.exports = App;

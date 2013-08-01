@@ -12,7 +12,7 @@ var ApplicationRoute = Ember.Route.extend({
 
   setupController: function(controller, model){
     this.controllerFor('node').set('content', Node.createRecord());
-    this.controllerFor('toolbar').set('content', Toolbar.find(1));
+    this.controllerFor('toolbar').set('content', Toolbar.find('current'));
   }
 
 });

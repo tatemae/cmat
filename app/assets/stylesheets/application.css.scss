@@ -4,7 +4,6 @@ body{padding-top: 40px;}
 @import 'twitter/bootstrap/responsive';
 @import 'bootstrap-switch';
 @import 'font-awesome';
-//@import 'flat-ui';
 
 body{
   overflow: hidden;
@@ -37,6 +36,12 @@ body{
   left: 10px;
   bottom: 14px;
 }
+
+.user_form_container{
+  margin: 50px auto;
+  width: 230px;
+}
+
 ul.menu-list{
   margin: 2px 10px;
   padding: 0;

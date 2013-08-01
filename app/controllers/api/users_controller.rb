@@ -22,7 +22,11 @@ class Api::UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      if params[:id] == 'current'
+        @user = current_user
+      else
+        @user = User.find(params[:id])
+      end
     end
 
     def user_params

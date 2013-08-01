@@ -80,6 +80,15 @@
           {{/switch}}
           <div class="btn-group">
             <a href="#" class="btn btn-toolbar name_btn">Kate</a>
+            <div style="display:none;">
+            {{#if currentUser.isSignedIn}}
+              <a href="#" class="btn btn-toolbar name_btn">{{currentUser.name}}</a>
+              {{#linkTo 'sessions.destroy' class="btn btn-toolbar name_btn"}}Logout{{/linkTo}}
+            {{else}}
+              {{#linkTo 'users.new' class="btn btn-toolbar name_btn"}}Sign Up{{/linkTo}} |
+              {{#linkTo 'sessions.new' class="btn btn-toolbar name_btn"}}Login{{/linkTo}}
+            {{/if}}
+            </div>
           </div>
         </div>
       </div>

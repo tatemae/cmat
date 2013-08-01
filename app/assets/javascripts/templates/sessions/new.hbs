@@ -1,0 +1,18 @@
+<div class="user_form_container">
+  <h1>Login</h1>
+  <form class="form-horizontal user-form">
+    <fieldset>
+      <div class="control-group" {{bindAttr class="errors.email:error"}}>
+        {{view Ember.TextField valueBinding='email' name='email' placeholder='Email'}}
+        <span class="help-inline">
+          {{errors.email}}
+        </span>
+      </div>
+      <div class="control-group" {{bindAttr class="errors.password:error"}}>
+        {{view Ember.TextField type="password" valueBinding='password' placeholder='Password'}}
+      </div>
+      <a href='#' {{action cancel}} class='btn'>Cancel</a>
+      <button type="submit" {{action save}} class='btn btn-large btn-primary'>Login</button>
+    </fieldset>
+  </form>
+</div>
