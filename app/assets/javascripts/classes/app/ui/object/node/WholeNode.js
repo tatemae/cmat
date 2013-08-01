@@ -14,7 +14,7 @@ Kinetic.WholeNode = (function() {
       this.attrs.ownNeighbours = [];
       this._ownsConnection = {};
 
-      this.attrs.title = 'bfcoder FTW';
+      this.attrs.title = '';
       this.attrs.info = '';
       this.attrs.type = '';
 
