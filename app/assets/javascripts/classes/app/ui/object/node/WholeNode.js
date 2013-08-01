@@ -14,7 +14,7 @@ Kinetic.WholeNode = (function() {
       this.attrs.ownNeighbours = [];
       this._ownsConnection = {};
 
-      this.attrs.name = 'bfcoder FTW';
+      this.attrs.title = 'bfcoder FTW';
       this.attrs.info = '';
       this.attrs.type = '';
 
@@ -59,7 +59,7 @@ Kinetic.WholeNode = (function() {
       this.add(this.label = new Kinetic.Label({
         x: -190,
         y: this.node.getRadius(),
-        text: this.attrs.name,
+        text: this.attrs.title,
         fontSize: 18,
         fontFamily: 'Calibri',
         fill: '#555',
