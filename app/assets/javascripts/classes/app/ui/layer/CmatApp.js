@@ -71,10 +71,12 @@ Kinetic.CmatApp = (function() {
     },
 
     updateSettings: function() {
+      var node = CmatSettings.node;
+      var child = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0];
+      if(!child){ return; }
+      var wholeNode = child.getParent();
       if (CmatSettings.node.get('state') == "save") {
         // save those attributes
-        var node = CmatSettings.node;
-        wholeNode = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
         wholeNode.attrs.title = node.get('title');
         wholeNode.label.setAttr('text', wholeNode.attrs.title);
         wholeNode.attrs.info = node.get('info');
@@ -82,8 +84,6 @@ Kinetic.CmatApp = (function() {
         this.parent.draw();
       } else if ( CmatSettings.node.get('state') == "cancel" ){
         // revert those attributes
-        var node = CmatSettings.node;
-        wholeNode = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0].getParent();
         node.set('title', wholeNode.attrs.title);
         node.set('info', wholeNode.attrs.info);
         node.set('type', wholeNode.attrs.type);
