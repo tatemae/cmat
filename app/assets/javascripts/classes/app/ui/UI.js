@@ -95,8 +95,8 @@ UI = (function() {
   }
 
   function buildGroupLayers() {
-    canvas.add(layer.bg = new Kinetic.Background($$$.clone(dims)));
-    canvas.add(layer.cmat_app = new Kinetic.CmatApp($$$.clone(dims)));
+    canvas.add(layer.bg = new Kinetic.Background($$$.copy($$$.clone(dims), { name: 'Background'} )));
+    canvas.add(layer.cmat_app = new Kinetic.CmatApp($$$.copy($$$.clone(dims), { name: 'CmatApp'} )));
     // canvas.add(layer.inactiveDisp = new Kinetic.InactiveDisplay($$$.clone(dims)));
     // canvas.add(layer.menu = new Kinetic.Menu($$$.clone(dims)));
     // canvas.add(layer.gameOver = new Kinetic.GameOver($$$.clone(dims)));
@@ -107,7 +107,7 @@ UI = (function() {
     
     // canvas.add(layer.message = new Kinetic.Message($$$.clone(dims)));
     // canvas.add(layer.quit = new Kinetic.Quit($$$.clone(dims)));
-    canvas.add(layer.fading = new Kinetic.Fading($$$.clone(dims)));
+    canvas.add(layer.fading = new Kinetic.Fading($$$.copy($$$.clone(dims), { name: 'Fading' } )));
 
     $$$.copy(publicAPI, layer);
   }

@@ -14,9 +14,9 @@ Kinetic.WholeNode = (function() {
       this.attrs.ownNeighbours = [];
       this._ownsConnection = {};
 
-      this.attrs.title = '';
-      this.attrs.info = '';
-      this.attrs.type = '';
+      this.attrs.title = config.title || '';
+      this.attrs.info = config.info || '';
+      this.attrs.type = config.type || '';
 
       this.addNode(config, area);
     },
@@ -30,7 +30,8 @@ Kinetic.WholeNode = (function() {
         onMouseOver: this._mouseover.bind(this),
         onMouseOut: this._mouseout.bind(this),
         onDoubleClick: this._doubleClick.bind(this),
-        visible: true
+        visible: true,
+        name: 'mouseOverCatcher'
       });
     },
 
@@ -45,7 +46,8 @@ Kinetic.WholeNode = (function() {
         x: 0,
         y: 0,
         radiusFunc: radiusFunc,
-        draggable: false
+        draggable: false,
+        name: 'AppNode'
       }));
 
       this.add(this.node_adder = new Kinetic.AddNode({
@@ -53,7 +55,8 @@ Kinetic.WholeNode = (function() {
         y: 0,
         radiusFunc: radiusFunc,
         draggable: false,
-        opacity: 0
+        opacity: 0,
+        name: 'AddNode'
       }));
 
       this.add(this.label = new Kinetic.Label({
@@ -65,7 +68,8 @@ Kinetic.WholeNode = (function() {
         fill: '#555',
         width: 380,
         padding: 10,
-        align: 'center'
+        align: 'center',
+        name: 'Label'
       }));
 
       this.node_adder.setY(this.node_adder.getY() - this.node_adder.getHeight() / 2 - 15);
@@ -116,7 +120,7 @@ Kinetic.WholeNode = (function() {
         attrs.lineJoin = 'round';
         attrs.lineWidth = 1;
         attrs.nodes = [ this.node.attrs.id, node.attrs.id ];
-        var conn = new Kinetic.Connection(attrs, this.parent.parent.getMarkerRadius());
+        var conn = new Kinetic.Connection(attrs, this.parent.parent.getMarkerRadius(), this.node, node);
 
         this.parent.parent.makeConnection(conn);
 

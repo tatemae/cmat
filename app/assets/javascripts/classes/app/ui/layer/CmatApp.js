@@ -7,12 +7,13 @@ Kinetic.CmatApp = (function() {
     _init: function(config) {
       Kinetic.Group.call(this, config);
       this.add(this.pressCatcher = this._createPressCatcher());
-      this.add(this.wholeNodes = new Kinetic.Group({ listening: true }));
-      this.add(this.connections = new Kinetic.Group({ listening: false }));
+      this.add(this.wholeNodes = new Kinetic.Group({ name: 'wholeNodes', listening: true }));
+      this.add(this.connections = new Kinetic.Group({ name: 'connections', listening: false }));
       this.connections.moveToBottom();
       this.attrs.nextNodeID = 1;
       this.rescaleWorkspace();
       this.observeSettings();
+      this.loadMap();
     },
 
     _createPressCatcher: function() {
@@ -20,7 +21,8 @@ Kinetic.CmatApp = (function() {
         width: this.getWidth(),
         height: this.getHeight(),
         onPress: this._addNode.bind(this),
-        visible: true
+        visible: true,
+        name: 'pressCatcher'
       });
     },
 
@@ -88,6 +90,36 @@ Kinetic.CmatApp = (function() {
         node.set('info', wholeNode.attrs.info);
         node.set('type', wholeNode.attrs.type);
       }
+    },
+
+    loadMap: function() {
+      var map = JSON.parse(CmatSettings.map.get('payload'));
+      if (map !== null){
+        map.children[0].children.forEach(function(a) {
+          if (a.attrs.name === 'CmatApp') {
+            this.attrs.nextNodeID = a.attrs.nextNodeID;
+
+            a.children.forEach(function(b) {
+              if (b.attrs.name === 'wholeNodes') {
+                b.children.forEach(function(c){
+                  var wholeNode = new Kinetic.WholeNode(c.attrs, this.area);
+                  this.wholeNodes.add(wholeNode);
+                }.bind(this));
+              }
+            }.bind(this));
+
+            a.children.forEach(function(b) {
+               if (b.attrs.name === 'connections') {
+                b.children.forEach(function(c) {
+                  var conn = new Kinetic.Connection(c.attrs, this.getMarkerRadius(), this.wholeNodes.get('#'+c.attrs.nodes[0])[0].getParent(), this.wholeNodes.get('#'+c.attrs.nodes[1])[0].getParent());
+                  this.makeConnection(conn);
+                }.bind(this));
+              }
+            }.bind(this));
+          }
+        }.bind(this));
+      }
+
     }
 
   });

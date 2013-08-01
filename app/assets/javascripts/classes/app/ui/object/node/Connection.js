@@ -32,30 +32,44 @@ Kinetic.Connection = (function() {
   var MAX_STRETCH = 1.5;
 
   var Class = $$$.Class({
-    _init: function(config, markerRadius) {
+    _init: function(config, markerRadius, c1, c2) {
       config.drawFunc = this.drawFunc;
 
       Kinetic.Shape.call(this, config);
 
-      this.getNodes().forEach(function(c) {
-        var node = UI.cmat_app.wholeNodes.get('#'+c)[0].getParent();
-        node.on('xChange yChange radiusChange', this.refresh.bind(this));
-      }.bind(this));
+      if (c1 !== undefined && c2 !== undefined){
+        c1.on('xChange yChange radiusChange', this.refresh.bind(this));
+        c2.on('xChange yChange radiusChange', this.refresh.bind(this));
+      }else{
+
+        this.getNodes().forEach(function(c) {
+          var node = UI.cmat_app.wholeNodes.get('#'+c)[0].getParent();
+          node.on('xChange yChange radiusChange', this.refresh.bind(this));
+        }.bind(this));
+      }
 
       this.markerDiameter = markerRadius * 2;
 
       this.drawn = true;
-      this.refresh();
+      this.refresh(null, c1, c2);
     },
 
-    refresh: function() {
+    refresh: function(values, node1, node2) {
       if (!this.drawn) return;
+
+      var c1, c2;
 
       this.drawn = false;
       this._markers = [];
 
       var nodes = this.getNodes();
-      var c1 = UI.cmat_app.wholeNodes.get('#'+nodes[0])[0].getParent(), c2 = UI.cmat_app.wholeNodes.get('#'+nodes[1])[0].getParent();
+      if (node1 === undefined && node2 === undefined){
+        c1 = UI.cmat_app.wholeNodes.get('#'+nodes[0])[0].getParent();
+        c2 = UI.cmat_app.wholeNodes.get('#'+nodes[1])[0].getParent();
+      } else {
+        c1 = node1;
+        c2 = node2;
+      }
       var x1 = c1.getX(), y1 = c1.getY(), x2 = c2.getX(), y2 = c2.getY();
 
       this._markers.push([x1, y1]);
