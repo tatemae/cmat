@@ -6,11 +6,7 @@ var NodeController = Ember.ObjectController.extend({
     if(this.get('state') == 'edit'){
       this.transitionToRoute('node.edit');
     }
-  }.observes('state'),
-
-  changeTitle: function(){
-    console.log('Title changed to ' + this.get('title'));
-  }.observes('title')
+  }.observes('state')
 
 });
 
