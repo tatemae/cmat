@@ -3,14 +3,7 @@ var Toolbar = DS.Model.extend({
   showRelationships: DS.attr('boolean', { defaultValue: true }),
   showRelationshipLabels: DS.attr('boolean', { defaultValue: true }),
   showNodeLabels: DS.attr('boolean', { defaultValue: true }),
-  showNodeDescriptions: DS.attr('boolean', { defaultValue: true }),
-
-  saveWhenDirty: function(){
-    if(this.get('isDirty')){
-      this.get('store').commit();
-    }
-  }.observes('isDirty')
-
+  showNodeDescriptions: DS.attr('boolean', { defaultValue: true })
 });
 
 App.Store.registerAdapter('App.Toolbar', DS.LSAdapter.create());

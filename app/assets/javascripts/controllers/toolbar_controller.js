@@ -43,9 +43,14 @@ var ToolbarController = Ember.Controller.extend({
     });
   },
 
-  changeTitle: function(){
-    console.log('The title changed to:' + this.get('title'));
-  }.observes('title')
+  map: function(){
+    return this.get('controllers.map');
+  }.property(),
+
+  autoSave: function(){
+    this.get('content').save();
+  }.observes('isEditing', 'showRelationships', 'showRelationshipLabels', 'showNodeLabels', 'showNodeDescriptions')
+
 
 });
 

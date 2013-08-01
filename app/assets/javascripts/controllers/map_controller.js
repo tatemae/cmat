@@ -1,10 +1,15 @@
-var MapController = Ember.ObjectController.extend({
+var AutoSave = require('../mixins/auto_save');
+
+var MapController = Ember.ObjectController.extend(AutoSave, {
 
   needs: ['toolbar', 'node'],
   toolbar: null,
   toolbarBinding: "controllers.toolbar",
   node: null,
   nodeBinding: "controllers.node",
+
+  bufferedFields: ['title'],
+  instaSaveFields: ['payload'],
 
   act: function(action){
     this[action]();
@@ -21,4 +26,3 @@ var MapController = Ember.ObjectController.extend({
 });
 
 module.exports = MapController;
-
