@@ -53,7 +53,8 @@ var App = Ember.Application.create({
 App.Store = require('./store');
 
 // Intializers
+require('./initializers/twitter_bootstrap');
 require('./initializers/current_user');
-//require('./initializers/current_node');
+
 
 module.exports = App;
