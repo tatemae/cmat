@@ -1,4 +1,9 @@
 var ModelBase = require('./model_base');
+DS.rejectionHandler = function(reason) {
+  Ember.Logger.assert([reason, reason.message, reason.stack]);
+
+  throw reason;
+};
 
 var ObjectiveBank = ModelBase.extend({
   current: DS.attr('boolean'),
@@ -23,7 +28,7 @@ var adapter = DS.RESTAdapter.extend({
     $.getJSON('https://oki-dev.mit.edu/handcar/services/learning/objectivebanks').then(function(pre_json){
       json[plural] = pre_json;
       adapter.didFindQuery(store, type, json, recordArray);
-    });
+    }).then(null, DS.rejectionHandler);
   }
 });
 
