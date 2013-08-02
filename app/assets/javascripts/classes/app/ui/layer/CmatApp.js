@@ -54,15 +54,15 @@ Kinetic.CmatApp = (function() {
       node.set('state', 'edit');
     },
 
-    addNode: function(args, parent) {
+    addNode: function(attrs, parent, adjustLayout) {
       var wholeNode = new Kinetic.WholeNode({
-        id: this.attrs.nextNodeID++,
-        x: args.x,
-        y: args.y,
+        id: attrs.id || this.attrs.nextNodeID++,
+        x: attrs.x,
+        y: attrs.y,
         draggable: true,
-        title: args.title || '',
-        info: args.info || '',
-        type: args.type || ''
+        title: attrs.title || '',
+        info: attrs.info || '',
+        type: attrs.type || ''
       }, this.area);
 
       this.wholeNodes.add(wholeNode);
@@ -71,10 +71,46 @@ Kinetic.CmatApp = (function() {
         wholeNode.setY(parent.getY() + 100);
         parent.connect(wholeNode);
       }
-      UI.cmat_app.wholeNodes.fire('addPressed', this);
+      if (adjustLayout) {
+        this.adjustLayout();
+      }
     },
 
-    makeConnection: function(conn) {
+    adjustLayout: function(){
+      this.wholeNodes.fire('nodeAdded', this);
+    },
+
+    addNodes: function(nodesText){
+      var nodeNames = nodesText.split('\n');
+      
+      var workspaceWidth = this.getWidth();
+      var workspaceHeight = this.getHeight();
+      
+      var deltaX = nodeNames.length > 10 ? (workspaceWidth / 11) : (workspaceWidth / (nodeNames.length + 1));
+      var deltaY = workspaceHeight / (Math.round(nodeNames.length/10) + 2);
+      var x = deltaX;
+      var y = deltaY;
+
+      for (var i=0; i<nodeNames.length; i++) {
+        var title = nodeNames[i].trim();
+        var attrs = {title : title, x : x, y : y};
+        console.log(attrs);
+        this.addNode(attrs);
+        x += deltaX;
+        if (x > workspaceWidth) {
+          var remainingNodes = nodeNames.length - i;
+          if (remainingNodes < 10)
+            x = (workspaceWidth - (remainingNodes-2)*deltaX) / 2;
+          else
+            x = deltaX;
+          y += deltaY;
+        }
+      }
+      this.adjustLayout();
+    },
+
+    addConnection: function(attrs, markerRadius, node1, node2){
+      var conn = new Kinetic.Connection(attrs, markerRadius, node1, node2);
       this.connections.add(conn);
     },
 
@@ -95,9 +131,9 @@ Kinetic.CmatApp = (function() {
           title: node.get('title'),
           info: node.get('info'),
           type: node.get('type')
-        }, node.get('parent'));
+        }, node.get('parent'), true);
       } else {
-        var child = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0];
+        var child = this.wholeNodes.get('#'+node.get('id'))[0];
         if(!child){ return; }
         var wholeNode = child.getParent();
         if (CmatSettings.node.get('state') == "save") {
@@ -152,24 +188,25 @@ Kinetic.CmatApp = (function() {
             a.children.forEach(function(b) {
               if (b.attrs.name === 'wholeNodes') {
                 b.children.forEach(function(c){
-                  var wholeNode = new Kinetic.WholeNode(c.attrs, this.area);
-                  this.wholeNodes.add(wholeNode);
+                  console.log(c.attrs);
+                  this.addNode(c.attrs);
                 }.bind(this));
               }
             }.bind(this));
 
+            var markerRadius = this.getMarkerRadius();
             a.children.forEach(function(b) {
                if (b.attrs.name === 'connections') {
                 b.children.forEach(function(c) {
-                  var conn = new Kinetic.Connection(c.attrs, this.getMarkerRadius(), this.wholeNodes.get('#'+c.attrs.nodes[0])[0].getParent(), this.wholeNodes.get('#'+c.attrs.nodes[1])[0].getParent());
-                  this.makeConnection(conn);
+                  var node1 = this.wholeNodes.get('#'+c.attrs.nodes[0])[0].getParent();
+                  var node2 = this.wholeNodes.get('#'+c.attrs.nodes[1])[0].getParent();
+                  this.addConnection(c.attrs, markerRadius, node1, node2);
                 }.bind(this));
               }
             }.bind(this));
           }
         }.bind(this));
       }
-
     }
 
   });

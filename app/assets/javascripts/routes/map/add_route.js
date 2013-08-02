@@ -8,7 +8,7 @@ var MapAddRoute = Ember.Route.extend({
 
     modal_save: function(){
       var content = this.get('controller').get('content');
-      // TODO do stuff with content
+      UI.cmat_app.addNodes(content);
       this.unrender();
     }
   },

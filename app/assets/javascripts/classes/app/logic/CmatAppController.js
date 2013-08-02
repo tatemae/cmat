@@ -2,7 +2,7 @@ AppController = $$$.Class({
   extend: Controller,
   ctrName: 'cmat_app',
   ctrInit: function() {
-    UI.cmat_app.wholeNodes.on('addPressed', this.addControlPressed.bind(this));
+    UI.cmat_app.wholeNodes.on('nodeAdded', this.nodeAdded.bind(this));
 
     UI.layoutManager.onComplete(this.layoutAdjusted.bind(this));
   },
@@ -26,7 +26,7 @@ AppController = $$$.Class({
     map_model.save();
   },
 
-  addControlPressed: function() {
+  nodeAdded: function() {
     UI.layoutManager.adjustLayout();
   },
 
