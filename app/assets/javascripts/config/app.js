@@ -50,6 +50,11 @@ var App = Ember.Application.create({
   LOG_VIEW_LOOKUPS: true
 });
 
+Ember.RSVP.configure('onerror', function(e) {
+  console.log(e.message);
+  console.log(e.stack);
+});
+
 App.Store = require('./store');
 
 // Intializers
