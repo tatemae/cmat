@@ -26,17 +26,8 @@ var ToolbarController = Ember.Controller.extend({
     this.transitionToRoute('map.add');
   },
 
-  newMap: function(){
-    this.transitionToRoute('maps');
-  },
-
   selectMap: function(map){
     this.transitionToRoute('map', map);
-  },
-
-  // Proxy toolbar actions to the map controller
-  mapAct: function(action){
-    this.get('controllers.map').act(action);
   },
 
   searchMaps: function(){

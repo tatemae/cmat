@@ -17,19 +17,7 @@ var MapController = Ember.ObjectController.extend(AutoSave, {
     if(user_id){
       this.get('content').set('user_id', user_id);
     }
-  }.property('controllers.currentUser'),
-
-  act: function(action){
-    this[action]();
-  },
-
-  duplicate: function(){
-    console.log('duplicating map');
-  },
-
-  destroy: function(){
-    console.log('destroying map');
-  }
+  }.property('controllers.currentUser')
 
 });
 

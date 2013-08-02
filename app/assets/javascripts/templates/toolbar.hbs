@@ -16,12 +16,12 @@
             </button>
             <ul class="dropdown-menu menu-list">
               {{#each userMaps}}
-                <li><a href="#" {{action selectMap this}}>1 {{this.title}}</a></li>
+                <li><a href="#" {{action selectMap this}}>{{this.title}}</a></li>
               {{/each}}
               <li class="divider"></li>
-              <li><a href="#" {{action newMap}} title="Create a new map"><i class="icon-file"></i> New</a></li>
-              <li><a href="#" {{action mapAct 'duplicate'}} title="Duplicate the current map"><i class="icon-copy"></i> Duplicate</a></li>
-              <li><a href="#" {{action mapAct 'destroy'}} title="Delete this map map"><i class="icon-trash"></i> Delete</a></li>
+              <li>{{#linkTo 'maps.new' title="Create a new map"}}<i class="icon-file"></i> New{{/linkTo}}</li>
+              <li>{{#linkTo 'map.duplicate' title="Duplicate the current map"}}<i class="icon-copy"></i> Duplicate{{/linkTo}}</li>
+              <li>{{#linkTo 'map.destroy' title="Delete the current map"}}<i class="icon-trash"></i> Delete{{/linkTo}}</li>
             </ul>
           </div>
         </div>
