@@ -98,26 +98,36 @@ Kinetic.CmatApp = (function() {
 
       for (var i=0; i<nodeNames.length; i++) {
         var indents = 0;
+
+        // Find the leading white space
         var match = nodeNames[i].match(LEADING_WHITE_REGEX);
         if (match) {
+          // If the indentGuide hasn't been set yet, go ahead and set it
+          // this will be the guide used for the rest of the node list
           if (indentGuide === 0) {
             indentGuide = match[0].length;
           }
+          // Get the length of the leading whitespace
           indents = match[0].length;
         }
 
         var indent = 0;
 
         if (indentGuide > 0){
+          // Find the number of indents needed
           indent = indents / indentGuide;
         }
 
         var title = nodeNames[i].trim();
         var attrs = {title : title, x : x, y : y};
-        console.log(attrs);
+
+        // check for indentation and if there is even
+        // anything in the node
         if (indent > 0 && nodeNames[i].length > 0) {
+          // the node has a parent, so send that parent in
           parents[indent] = this.addNode(attrs, parents[indent-1]);
         } else if (nodeNames[i].length > 0) {
+          // the node does not have a parent, just create that single node
           parents[indent] = this.addNode(attrs);
         }
         x += deltaX;
