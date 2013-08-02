@@ -71,7 +71,6 @@ Kinetic.CmatApp = (function() {
         wholeNode.setY(parent.getY() + 100);
         parent.connect(wholeNode);
       }
-      // wholeNode.parent.draw();
       UI.cmat_app.wholeNodes.fire('addPressed', this);
     },
 
