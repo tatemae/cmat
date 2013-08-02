@@ -2,6 +2,7 @@ CmatSettings = require('../../../cmat_settings');
 
 Kinetic.CmatApp = (function() {
   var CIRCLE_AREA_TO_SCREEN_REL = 0.005;
+  var LEADING_WHITE_REGEX = /^[ \t]+/;
 
   var Class = $$$.Class({
     _init: function(config) {
@@ -74,6 +75,7 @@ Kinetic.CmatApp = (function() {
       if (adjustLayout) {
         this.adjustLayout();
       }
+      return wholeNode;
     },
 
     adjustLayout: function(){
@@ -91,11 +93,50 @@ Kinetic.CmatApp = (function() {
       var x = deltaX;
       var y = deltaY;
 
+      var indentGuide = 0;
+      var parents = [];
+
       for (var i=0; i<nodeNames.length; i++) {
+        var indents = 0;
+        // var foundNonSpace = false;
+        // var foundWhiteSpace = false;
+        var match = nodeNames[i].match(LEADING_WHITE_REGEX);
+        if (match) {
+          if (indentGuide === 0) {
+            indentGuide = match[0].length;
+          }
+          indents = match[0].length;
+
+          // for (var j=0; j<nodeNames[i].length; j++) {
+          //   if (nodeNames[i][j] === ' ' && !foundWhiteSpace) {
+          //     foundWhiteSpace = true;
+          //   }
+          //   if (nodeNames[i][j] !== ' ' && foundWhiteSpace) {
+          //     foundNonSpace = true;
+          //     if (indentGuide === 0) {
+          //       indentGuide = j;
+          //     }
+          //   }
+          //   if (nodeNames[i][j] === ' ' && !foundNonSpace) {
+          //     indents = j+1;
+          //   }
+          // }
+        }
+
+        var indent = 0;
+
+        if (indentGuide > 0){
+          indent = indents / indentGuide;
+        }
+
         var title = nodeNames[i].trim();
         var attrs = {title : title, x : x, y : y};
         console.log(attrs);
-        this.addNode(attrs);
+        if (indent > 0 && nodeNames[i].length > 0) {
+          parents[indent] = this.addNode(attrs, parents[indent-1]);
+        } else if (nodeNames[i].length > 0) {
+          parents[indent] = this.addNode(attrs);
+        }
         x += deltaX;
         if (x > workspaceWidth) {
           var remainingNodes = nodeNames.length - i;
