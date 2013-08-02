@@ -9,7 +9,11 @@ var ObjectiveBank = ModelBase.extend({
   current: DS.attr('boolean'),
   genusTypeId: DS.attr('string'),
   description: DS.attr('description'),
-  displayName: DS.attr('displayName')
+  displayName: DS.attr('displayName'),
+  name: function() {
+    var name = Em.isNone(displayName) ? 'Empty' : displayName['text'];
+    return name;
+  }.property('displayName')
 });
 
 var adapter = DS.RESTAdapter.extend({

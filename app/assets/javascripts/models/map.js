@@ -16,11 +16,10 @@ var Map = ModelBase.extend({
 
     return new Ember.RSVP.Promise(function(resolve, reject){
       // Go get data from mc3
-
       // // succeed
-      // resolve(value);
+      resolve('results');
       // // or reject
-      // reject(error);
+      reject('error');
     });
   }
 
