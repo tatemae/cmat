@@ -1,9 +1,5 @@
 var ModelBase = require('./model_base');
-DS.rejectionHandler = function(reason) {
-  Ember.Logger.assert([reason, reason.message, reason.stack]);
 
-  throw reason;
-};
 
 var ObjectiveBank = ModelBase.extend({
   current: DS.attr('boolean'),
