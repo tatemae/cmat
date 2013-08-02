@@ -55,6 +55,12 @@ Ember.RSVP.configure('onerror', function(e) {
   console.log(e.stack);
 });
 
+DS.rejectionHandler = function(reason) {
+  Ember.Logger.assert([reason, reason.message, reason.stack]);
+
+  throw reason;
+};
+
 App.Store = require('./store');
 
 // Intializers
