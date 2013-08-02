@@ -32,7 +32,7 @@ Kinetic.CmatApp = (function() {
       this.maxRadius = Math.floor(Math.sqrt(this.area * CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
     },
 
-    _newNode: function(e) {
+    _newNode: function(e, parent) {
       var xy = UI.getPos(e);
       var node = CmatSettings.node;
       node.set('id', '');
@@ -41,6 +41,7 @@ Kinetic.CmatApp = (function() {
       node.set('type', '');
       node.set('x', xy.x);
       node.set('y', xy.y);
+      node.set('parent', parent);
       node.set('state', 'new');
     },
 
@@ -51,11 +52,6 @@ Kinetic.CmatApp = (function() {
       node.set('info', wholeNode.attrs.info);
       node.set('type', wholeNode.attrs.type);
       node.set('state', 'edit');
-    },
-
-    _addNode: function(e, parent) {
-      var xy = UI.getPos(e);
-      this.addNode(xy, parent);
     },
 
     addNode: function(args, parent) {
@@ -75,7 +71,8 @@ Kinetic.CmatApp = (function() {
         wholeNode.setY(parent.getY() + 100);
         parent.connect(wholeNode);
       }
-      wholeNode.draw();
+      // wholeNode.parent.draw();
+      UI.cmat_app.wholeNodes.fire('addPressed', this);
     },
 
     makeConnection: function(conn) {
@@ -99,7 +96,7 @@ Kinetic.CmatApp = (function() {
           title: node.get('title'),
           info: node.get('info'),
           type: node.get('type')
-        });
+        }, node.get('parent'));
       } else {
         var child = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0];
         if(!child){ return; }

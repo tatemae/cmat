@@ -95,22 +95,19 @@ Kinetic.AddNode = (function() {
       });
     },
 
-    _pressed: function(evt) {
-      evt.cancelBubble = true;
+    _pressed: function(e) {
+      e.cancelBubble = true;
 
       this._animatePress();
 
-      this.parent.parent.parent._addNode(evt, this.parent);
-
-      this.getParent().getParent().fire('addPressed', this);
-      // UI.cmat_app.wholeNodes.fire('addPressed', this);
+      UI.cmat_app._newNode(e, this.parent);
     },
 
-    _mouseover: function(evt) {
+    _mouseover: function(e) {
       this._animateMouseover();
     },
 
-    _mouseout: function(evt) {
+    _mouseout: function(e) {
       this._animateMouseout();
     },
     
