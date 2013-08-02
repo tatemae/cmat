@@ -17,12 +17,40 @@ body{
     height: $add_map_text_height;
   }
   .modal-body{
-     max-height:$add_map_text_height + 188;
+     max-height: $add_map_text_height + 188;
   }
   .modal{
-     height:$add_map_text_height + 188;
-     width:$add_map_width;
+     height: $add_map_text_height + 188;
+     width: $add_map_width;
      margin-left: -$add_map_width/2;
+  }
+  @media (max-height: 650px) {
+   .map_adder{
+      width: 98%;
+      height: $add_map_text_height - 100;
+    }
+    .modal-body{
+       max-height: $add_map_text_height + 88;
+    }
+    .modal{
+       height: $add_map_text_height + 88;
+       width: $add_map_width;
+       margin-left: -$add_map_width/2;
+    }
+  }
+  @media (max-height: 550px) {
+   .map_adder{
+      width: 98%;
+      height: $add_map_text_height - 200;
+    }
+    .modal-body{
+       max-height: $add_map_text_height - 12;
+    }
+    .modal{
+       height: $add_map_text_height - 12;
+       width: $add_map_width;
+       margin-left: -$add_map_width/2;
+    }
   }
   @media (max-width: 768px) {
      .modal{
