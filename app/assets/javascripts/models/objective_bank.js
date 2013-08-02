@@ -7,10 +7,22 @@ var ObjectiveBank = ModelBase.extend({
   displayName: DS.attr('displayName')
 });
 
-var adapter = DS.Adapter.extend({
+var adapter = DS.RESTAdapter.extend({
   find: function(store, type, id) {
     $.getJSON('https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+id).then( function(json) {
       store.load(type, json);
+    });
+  },
+  findQuery: function(store, type, query, recordArray) {
+    var adapter = this;
+
+    var json   = {},
+        root   = this.rootForType(type),
+        plural = this.pluralize(root);
+
+    $.getJSON('https://oki-dev.mit.edu/handcar/services/learning/objectivebanks').then(function(pre_json){
+      json[plural] = pre_json;
+      adapter.didFindQuery(store, type, json, recordArray);
     });
   }
 });
