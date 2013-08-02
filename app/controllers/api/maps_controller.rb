@@ -8,7 +8,7 @@ class Api::MapsController < ApplicationController
 
   def index
     if params[:user_id]
-      @maps = User.find(params[:user_id]).maps
+      @maps = User.find(params[:user_id]).maps.by_newest
     else
       @maps = Map.all
     end
@@ -20,7 +20,11 @@ class Api::MapsController < ApplicationController
   end
 
   def create
-    @map = Map.create(map_params)
+    if current_user
+      @map = current_user.maps.create(map_params)
+    else
+      @map = Map.create(map_params)
+    end
     respond_with(:api, @map)
   end
 
@@ -41,7 +45,7 @@ class Api::MapsController < ApplicationController
     end
 
     def map_params
-      params.require(:map).permit(:title, :payload)
+      params.require(:map).permit(:title, :payload, :user_id)
     end
 
 end

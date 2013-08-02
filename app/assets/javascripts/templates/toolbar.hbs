@@ -15,8 +15,9 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu menu-list">
-              <li><a href="#" {{action selectMap}} title="Create a new map">Hydrodynamics</a></li>
-              <li><a href="#" {{action selectMap}} title="Create a new map">Micro-nano things</a></li>
+              {{#each userMaps}}
+                <li><a href="#" {{action selectMap this}}>1 {{this.title}}</a></li>
+              {{/each}}
               <li class="divider"></li>
               <li><a href="#" {{action newMap}} title="Create a new map"><i class="icon-file"></i> New</a></li>
               <li><a href="#" {{action mapAct 'duplicate'}} title="Duplicate the current map"><i class="icon-copy"></i> Duplicate</a></li>

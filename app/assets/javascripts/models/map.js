@@ -2,6 +2,7 @@ var ModelBase = require('./model_base');
 
 var Map = ModelBase.extend({
 
+  user_id: DS.attr('number'),
   title: DS.attr('string'),
   payload: DS.attr('string'),
   mc3Source: DS.attr('string'),

@@ -1,8 +1,9 @@
 var ObjectiveBank = require('../models/objective_bank');
+var MapModel = require('../models/map');
 
 var ToolbarController = Ember.Controller.extend({
 
-  needs: ['map'],
+  needs: ['map', 'currentUser'],
 
   mapSearchQuery: null,
   objectiveBanks: null,
@@ -11,6 +12,15 @@ var ToolbarController = Ember.Controller.extend({
     this._super();
     //this.objectiveBanks = ObjectiveBank.find({});
   },
+
+  userMaps: function(){
+    var user_id = this.get('controllers.currentUser').get('id');
+    if(user_id){
+      return MapModel.find({user_id: user_id});
+    } else {
+      return MapModel.find({});
+    }
+  }.property('controllers.currentUser'),
 
   addToMap: function(){
     this.transitionToRoute('map.add');
