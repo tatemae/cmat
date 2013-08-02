@@ -64,8 +64,15 @@ Kinetic.Connection = (function() {
 
       var nodes = this.getNodes();
       if (node1 === undefined && node2 === undefined){
-        c1 = UI.cmat_app.wholeNodes.get('#'+nodes[0])[0].getParent();
-        c2 = UI.cmat_app.wholeNodes.get('#'+nodes[1])[0].getParent();
+        var tmp1, tmp2;
+        tmp1 = UI.cmat_app.wholeNodes.get('#'+nodes[0])[0];
+        tmp2 = UI.cmat_app.wholeNodes.get('#'+nodes[1])[0];
+        if (tmp1 === undefined || tmp2 === undefined){
+          this.destroy(); // cleanup left over connection objects after a connection has already been destroyed by a node being deleted
+          return;
+        }
+        c1 = tmp1.getParent();
+        c2 = tmp2.getParent();
       } else {
         c1 = node1;
         c2 = node2;
@@ -99,10 +106,10 @@ Kinetic.Connection = (function() {
       return this.attrs.nodes;
     },
 
-    hasNode: function(c) {
+    hasNode: function(wholeNode) {
       var nodes = this.getNodes();
 
-      return nodes[0] === c.id || nodes[1] === c.id;
+      return nodes[0] === wholeNode.attrs.id || nodes[1] === wholeNode.attrs.id;
     }
   });
 

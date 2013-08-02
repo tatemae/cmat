@@ -92,7 +92,7 @@ Kinetic.CmatApp = (function() {
 
     updateSettings: function() {
       var node = CmatSettings.node;
-      if (node.get('state') == 'add') {
+      if (node.get('state') === 'add') {
         this.addNode({
           x: node.get('x'),
           y: node.get('y'),
@@ -100,7 +100,7 @@ Kinetic.CmatApp = (function() {
           info: node.get('info'),
           type: node.get('type')
         });
-      }else{
+      } else {
         var child = UI.cmat_app.wholeNodes.get('#'+node.get('id'))[0];
         if(!child){ return; }
         var wholeNode = child.getParent();
@@ -116,12 +116,25 @@ Kinetic.CmatApp = (function() {
           node.set('title', wholeNode.attrs.title);
           node.set('info', wholeNode.attrs.info);
           node.set('type', wholeNode.attrs.type);
+        } else if (node.get('state') === 'destroy') {
+          this.deleteNode(wholeNode);
         }
       }
     },
 
-    loadMap: function(){
-      if(CmatSettings.map.get('isMc3')){
+    deleteNode: function(wholeNode) {
+      for (var i = 0; i < this.connections.children.length; i++) {
+        if (this.connections.children[i].hasNode(wholeNode)) {
+          this.connections.children[i].destroy();
+          i--; // the array is now one shorter, gotta go back one
+        }
+      }
+      wholeNode.destroy();
+      this.parent.draw();
+    },
+
+    loadMap: function() {
+      if(CmatSettings.map.get('isMc3')) {
         this.loadMc3Map();
       } else {
         this.loadKineticMap();
