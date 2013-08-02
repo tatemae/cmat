@@ -98,29 +98,12 @@ Kinetic.CmatApp = (function() {
 
       for (var i=0; i<nodeNames.length; i++) {
         var indents = 0;
-        // var foundNonSpace = false;
-        // var foundWhiteSpace = false;
         var match = nodeNames[i].match(LEADING_WHITE_REGEX);
         if (match) {
           if (indentGuide === 0) {
             indentGuide = match[0].length;
           }
           indents = match[0].length;
-
-          // for (var j=0; j<nodeNames[i].length; j++) {
-          //   if (nodeNames[i][j] === ' ' && !foundWhiteSpace) {
-          //     foundWhiteSpace = true;
-          //   }
-          //   if (nodeNames[i][j] !== ' ' && foundWhiteSpace) {
-          //     foundNonSpace = true;
-          //     if (indentGuide === 0) {
-          //       indentGuide = j;
-          //     }
-          //   }
-          //   if (nodeNames[i][j] === ' ' && !foundNonSpace) {
-          //     indents = j+1;
-          //   }
-          // }
         }
 
         var indent = 0;
