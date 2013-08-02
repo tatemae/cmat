@@ -8,6 +8,7 @@ var ModalView = Ember.View.extend({
       'backdrop': 'static'
     });
     this.$('.modal').find('.name-input').focus();
+    this.$('.modal-body').find('.map_adder').focus()
   },
 
   close: function(){
