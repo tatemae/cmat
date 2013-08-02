@@ -50,7 +50,7 @@ ForceDirected = (function() {
           if (!op.equals(v, u)) {
             var vx = op.getX(v) * k, vy = op.getY(v) * k;
             var ux = op.getX(u) * k, uy = op.getY(u) * k;
-            var vr = op.radius(v) * k, ur = op.radius(u) * k;
+            var vr = op.radius(v.node) * k, ur = op.radius(u.node) * k;
 
             var dx = vx - ux;
             var dy = vy - uy;

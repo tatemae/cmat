@@ -94,7 +94,7 @@ Kinetic.LayoutManager = (function() {
     // },
 
     _keepInBounds: function(a) {
-      var r = a.attrs.radius;
+      var r = a.node.attrs.radius;
       var x = a.attrs.x;
       var y = a.attrs.y;
       var p = this._bounds.padding;
