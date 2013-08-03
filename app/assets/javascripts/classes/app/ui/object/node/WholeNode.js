@@ -59,7 +59,7 @@ Kinetic.WholeNode = (function() {
         name: 'AddNode'
       }));
 
-      this.add(this.label = new Kinetic.Label({
+      this.add(this.title = new Kinetic.Label({
         x: -190,
         y: this.node.getRadius(),
         text: this.attrs.title,

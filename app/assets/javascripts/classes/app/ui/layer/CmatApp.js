@@ -258,7 +258,7 @@ Kinetic.CmatApp = (function() {
 
     toggleNodeLabels: function(show) {
       this.wholeNodes.children.forEach(function(wholeNode){
-        wholeNode.label.setVisible(show);
+        wholeNode.title.setVisible(show);
       });
       UI.getStage().draw();
     },
