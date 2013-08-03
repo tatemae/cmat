@@ -199,7 +199,14 @@ Kinetic.CmatApp = (function() {
       this.parent.draw();
     },
 
+    clearMap: function() {
+      this.connections.removeChildren();
+      this.wholeNodes.removeChildren();
+      UI.getStage().draw();
+    },
+
     loadMap: function() {
+      this.clearMap();
       if(CmatSettings.map.get('isMc3')) {
         this.loadMc3Map();
       } else {
@@ -241,6 +248,7 @@ Kinetic.CmatApp = (function() {
           }
         }.bind(this));
       }
+      UI.getStage().draw();
     }
 
   });
