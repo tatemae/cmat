@@ -261,6 +261,12 @@ Kinetic.CmatApp = (function() {
         wholeNode.label.setVisible(show);
       });
       UI.getStage().draw();
+    },
+
+    toggleEditing: function(isEditing) {
+      this.wholeNodes.setAttr('listening', isEditing);
+      this.pressCatcher.setAttr('visible', isEditing);
+      UI.getStage().draw();
     }
 
   });

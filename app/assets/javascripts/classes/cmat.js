@@ -41,24 +41,24 @@ var Cmat = {
     });
   },
 
-  toggleShowRelationships: function() {
-    UI.cmat_app.toggleRelationships(CmatSettings.toolbar.get('showRelationships'));
+  toggleShowRelationships: function(toolbar) {
+    UI.cmat_app.toggleRelationships(toolbar.get('showRelationships'));
   },
 
-  toggleShowNodeDescriptions: function() {
-    console.log('relationship labels toggled to '+ CmatSettings.toolbar.get('showRelationshipLabels'));
+  toggleShowNodeDescriptions: function(toolbar) {
+    console.log('relationship labels toggled to '+ toolbar.get('showRelationshipLabels'));
   },
 
-  toggleShowNodeLabels: function() {
-    UI.cmat_app.toggleNodeLabels(CmatSettings.toolbar.get('showNodeLabels'));
+  toggleShowNodeLabels: function(toolbar) {
+    UI.cmat_app.toggleNodeLabels(toolbar.get('showNodeLabels'));
   },
 
-  toggleShowRelationshipLabels: function() {
-    console.log('node descriptions toggled to '+ CmatSettings.toolbar.get('showNodeDescriptions'));
+  toggleShowRelationshipLabels: function(toolbar) {
+    console.log('node descriptions toggled to '+ toolbar.get('showNodeDescriptions'));
   },
 
   modeChange: function(toolbar){
-    console.log('editing:' + toolbar.get('isEditing'));
+    UI.cmat_app.toggleEditing(toolbar.get('isEditing'));
   }
 
 };
