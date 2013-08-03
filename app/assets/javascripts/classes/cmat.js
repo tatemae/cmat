@@ -10,10 +10,10 @@ var Cmat = {
     CmatSettings.node = node;
     CmatSettings.relationship = relationship;
 
-    toolbar.addObserver('showRelationships', this, 'propChange');
-    toolbar.addObserver('showRelationshipLabels', this, 'propChange');
-    toolbar.addObserver('showNodeLabels', this, 'propChange');
-    toolbar.addObserver('showNodeDescriptions', this, 'propChange');
+    toolbar.addObserver('showRelationships', this, 'toggleShowRelationships');
+    toolbar.addObserver('showRelationshipLabels', this, 'toggleShowRelationshipLabels');
+    toolbar.addObserver('showNodeLabels', this, 'toggleShowNodeLabels');
+    toolbar.addObserver('showNodeDescriptions', this, 'toggleShowNodeDescriptions');
     toolbar.addObserver('isEditing', this, 'modeChange');
 
     ImageLoader.isXDPI(function() {
@@ -41,8 +41,20 @@ var Cmat = {
     });
   },
 
-  propChange: function(){
-    console.log('something changed');
+  toggleShowRelationships: function() {
+    UI.cmat_app.toggleRelationships(CmatSettings.toolbar.get('showRelationships'));
+  },
+
+  toggleShowNodeDescriptions: function() {
+    console.log('relationship labels toggled to '+ CmatSettings.toolbar.get('showRelationshipLabels'));
+  },
+
+  toggleShowNodeLabels: function() {
+    console.log('node labels toggled to '+ CmatSettings.toolbar.get('showNodeLabels'));
+  },
+
+  toggleShowRelationshipLabels: function() {
+    console.log('node descriptions toggled to '+ CmatSettings.toolbar.get('showNodeDescriptions'));
   },
 
   modeChange: function(toolbar){

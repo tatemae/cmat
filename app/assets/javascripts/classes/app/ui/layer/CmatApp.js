@@ -249,6 +249,15 @@ Kinetic.CmatApp = (function() {
         }.bind(this));
       }
       UI.getStage().draw();
+    },
+
+    toggleRelationships: function(show) {
+      if (show){
+        this.connections.show();
+      } else {
+        this.connections.hide();
+      }
+      UI.getStage().draw();
     }
 
   });

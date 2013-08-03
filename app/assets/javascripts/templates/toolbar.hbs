@@ -51,9 +51,9 @@
             </ul>
           </div>
 
-          <div class="btn-group">
+          {{! <div class="btn-group">
             <a class="btn btn-toolbar icon_th" href="#"></a>
-          </div>
+          </div> }}
 
           <div class="btn-group">
             <a class="btn btn-toolbar icon_list" href="#" {{action addToMap}} title="Enter a map as a hierarchy"></a>
@@ -68,9 +68,9 @@
                 <div class="controls">
                   <ul class="menu-list">
                     <li><label class="checkbox">{{view Ember.Checkbox checkedBinding="showRelationships"}} Show Relationships</label></li>
-                    <li><label class="checkbox">{{view Ember.Checkbox checkedBinding="showRelationshipLabels"}} Show Relationship Labels</label></li>
+                    {{! <li><label class="checkbox">view Ember.Checkbox checkedBinding="showRelationshipLabels" Show Relationship Labels</label></li> }}
                     <li><label class="checkbox">{{view Ember.Checkbox checkedBinding="showNodeLabels"}} Show Node Labels</label></li>
-                    <li><label class="checkbox">{{view Ember.Checkbox checkedBinding="showNodeDescriptions"}} Show Node Descriptions</label></li>
+                    {{! <li><label class="checkbox">view Ember.Checkbox checkedBinding="showNodeDescriptions" Show Node Descriptions</label></li> }}
                   </ul>
                 </div>
               </div>
