@@ -252,11 +252,14 @@ Kinetic.CmatApp = (function() {
     },
 
     toggleRelationships: function(show) {
-      if (show){
-        this.connections.show();
-      } else {
-        this.connections.hide();
-      }
+      this.connections.setVisible(show);
+      UI.getStage().draw();
+    },
+
+    toggleNodeLabels: function(show) {
+      this.wholeNodes.children.forEach(function(wholeNode){
+        wholeNode.label.setVisible(show);
+      });
       UI.getStage().draw();
     }
 

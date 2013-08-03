@@ -50,7 +50,7 @@ var Cmat = {
   },
 
   toggleShowNodeLabels: function() {
-    console.log('node labels toggled to '+ CmatSettings.toolbar.get('showNodeLabels'));
+    UI.cmat_app.toggleNodeLabels(CmatSettings.toolbar.get('showNodeLabels'));
   },
 
   toggleShowRelationshipLabels: function() {
