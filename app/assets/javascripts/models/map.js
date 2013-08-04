@@ -26,21 +26,21 @@ var Map = ModelBase.extend({
         for( var objective_index = 0; objective_index < objectives.length; objective_index++ ) {
           parent = UI.cmat_app.addNode({id: objectives[objective_index]['id'], title: objectives[objective_index]['displayName']['text'], x: 0, y: 0}, null, true);
           nodes[objectives[objective_index]['id']] = parent;
-          // App.Objective.findQuery({objectivebank: objectiveBank.get('id'), objective: objectives[objective_index]['id'], children: true}).then(function(children){
-          //   for( var child_index = 0; child_index < children.length; child_index++ ) {
-          //     if( nodes[children[child_index]['id']] )
-          //     {
-          //       child = nodes[children[child_index]['id']];
-          //     }
-          //     else
-          //     {
-          //       nodes[children[child_index]['id']] = UI.cmat_app.addNode({id: children[child_index]['id'], title: children[child_index]['displayName']['text'], x: 0, y: 0}, null, true);
-          //       child = nodes[children[child_index]['id']];
-          //     }
+          App.Objective.findQuery({objectivebank: objectiveBank.get('id'), objective: objectives[objective_index]['id'], children: true}).then(function(children){
+            for( var child_index = 0; child_index < children.length; child_index++ ) {
+              if( nodes[children[child_index]['id']] )
+              {
+                child = nodes[children[child_index]['id']];
+              }
+              else
+              {
+                nodes[children[child_index]['id']] = UI.cmat_app.addNode({id: children[child_index]['id'], title: children[child_index]['displayName']['text'], x: 0, y: 0}, null, true);
+                child = nodes[children[child_index]['id']];
+              }
 
-          //     UI.cmat_app.addConnection({}, markerRadius, parent, child);
-          //   }
-          // });
+              UI.cmat_app.addConnection({}, markerRadius, parent, child);
+            }
+          });
         }
 
         resolve(_self);
