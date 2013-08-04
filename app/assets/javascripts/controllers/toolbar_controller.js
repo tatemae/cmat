@@ -7,6 +7,9 @@ var ToolbarController = Ember.Controller.extend({
 
   mapSearchQuery: null,
   objectiveBanks: null,
+  isEditing: true,
+  showRelationships: true,
+  showNodeLabels: true,
 
   init: function() {
     this._super();
