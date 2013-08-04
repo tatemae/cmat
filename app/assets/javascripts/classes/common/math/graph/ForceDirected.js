@@ -87,7 +87,7 @@ ForceDirected = (function() {
           }
         }.bind(this));
 
-        op.keepInBounds(v);
+        // op.keepInBounds(v);
       }.bind(this));
     }
   });

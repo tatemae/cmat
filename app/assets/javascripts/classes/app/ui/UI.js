@@ -84,7 +84,30 @@ UI = (function() {
       height: screenHeight - toolbar_height
     });
 
-    stage.add(canvas = new Kinetic.Layer());
+    canvas = new Kinetic.Layer();
+    canvas.setDraggable("draggable");
+    //a large transparent background to make everything draggable
+    var panZoombackground = new Kinetic.Rect({
+      x: -10000,
+      y: -10000,
+      width: 20000,
+      height: 20000,
+      fill: "#000000",
+      opacity: 0
+    });
+
+    canvas.add(panZoombackground);
+
+
+    var zoom = function(e) {
+    var zoomAmount = e.wheelDeltaY*0.001;
+      canvas.setScale(canvas.getScale().x+zoomAmount)
+      canvas.draw();
+    }
+
+    document.addEventListener("mousewheel", zoom, false)
+
+    stage.add(canvas);
   }
 
   function calcGameDimensions() {
