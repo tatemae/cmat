@@ -17,12 +17,14 @@ var ToolbarController = Ember.Controller.extend({
   },
 
   userMaps: function(){
-    var user_id = this.get('controllers.currentUser').get('id');
-    if(user_id){
-      return MapModel.find({user_id: user_id});
-    } else {
-      return MapModel.find({});
+    var currentUser = this.get('controllers.currentUser');
+    if(!Ember.isNone(currentUser)){
+      var user_id = currentUser.get('id');
+      if(!Ember.isNone(user_id)){
+        return MapModel.find({user_id: user_id});
+      }
     }
+    return MapModel.find({});
   }.property('controllers.currentUser'),
 
   addToMap: function(){
