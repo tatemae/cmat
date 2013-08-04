@@ -53,11 +53,14 @@ UI = (function() {
       canvas.getChildren().forEach(function(c) {
         c.destroy();
       });
-
+      stage.getChildren().forEach(function(c) {
+        c.destroy();
+      });
+      stage.destroy();
       loading = null;
-    } else {
-      initStage(params);
     }
+
+    initStage(params);
 
     buildGroupLayers();
     buildLayoutManager();
