@@ -1,57 +1,19 @@
 var ModelBase = require('./model_base');
 
+var ObjectiveBank = Ember.Object.extend({
 
-var ObjectiveBank = ModelBase.extend({
-  current: DS.attr('boolean'),
-  genusTypeId: DS.attr('string'),
-  description: DS.attr('description'),
-  displayName: DS.attr('displayName'),
-  name: function() {
-    var name = Em.isNone(displayName) ? 'Empty' : displayName['text'];
-    return name;
-  }.property('displayName')
 });
 
-var adapter = DS.RESTAdapter.extend({
-  find: function(store, type, id) {
-    $.getJSON('https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+id).then( function(json) {
-      store.load(type, json);
+ObjectiveBank.reopenClass({
+  findAll: function(){
+    var banks = Em.A();
+    $.getJSON('https://oki-dev.mit.edu/handcar/services/learning/objectivebanks').then(function(response){
+      response.forEach(function (bank) {
+        banks.pushObject(App.ObjectiveBank.create(bank));
+      });
     });
-  },
-  findQuery: function(store, type, query, recordArray) {
-    var adapter = this;
-
-    var json   = {},
-        root   = this.rootForType(type),
-        plural = this.pluralize(root);
-
-    $.getJSON('https://oki-dev.mit.edu/handcar/services/learning/objectivebanks').then(function(pre_json){
-      json[plural] = pre_json;
-      adapter.didFindQuery(store, type, json, recordArray);
-    }).then(null, DS.rejectionHandler);
+    return banks;
   }
 });
-
-adapter.registerTransform('description', {
-  serialize: function(value) {
-    return Em.isNone(value) ? {} : value;
-  },
-
-  deserialize: function(value) {
-    return Em.isNone(value) ? {} : value;
-  }
-});
-
-adapter.registerTransform('displayName', {
-  serialize: function(value) {
-    return Em.isNone(value) ? {} : value;
-  },
-
-  deserialize: function(value) {
-    return Em.isNone(value) ? {} : value;
-  }
-});
-
-App.Store.registerAdapter('App.ObjectiveBank', adapter);
 
 module.exports = ObjectiveBank;

@@ -13,7 +13,7 @@ var ToolbarController = Ember.Controller.extend({
 
   init: function() {
     this._super();
-    this.set('objectiveBanks', App.ObjectiveBank.find({}));
+    this.set('objectiveBanks', App.ObjectiveBank.findAll());
   },
 
   userMaps: function(){
@@ -40,9 +40,9 @@ var ToolbarController = Ember.Controller.extend({
 
   importObjectiveBank: function(objectiveBank){
     var map = App.Map.createRecord();
-    map.set('title', objectiveBank.get('genusTypeId'));
-    map.load_from_mc3().then(function(value){
-      console.log('last');
+    map.set('title', objectiveBank.get('displayName')['text']);
+    map.load_from_mc3(objectiveBank).then(function(value){
+      console.log('loaded from mc3 now setup map');
       //this.get('controllers.map').set('content', map);
     }).then(function(error){
       console.log(error);
