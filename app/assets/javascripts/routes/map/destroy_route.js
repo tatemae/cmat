@@ -1,13 +1,13 @@
 var MapModel = require('../../models/map');
 
 var MapDestroyRoute = Ember.Route.extend({
-  enter: function(){
+  activate: function(){
     var map = this.controllerFor('map').get('content');
-    if(map){
+    if(!Ember.isEmpty(map)){
       map.deleteRecord();
       map.get("transaction").commit();
     }
-    this.transitionTo('maps.index');
+    this.transitionTo('maps');
   }
 });
 
