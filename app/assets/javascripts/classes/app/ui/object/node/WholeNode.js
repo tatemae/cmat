@@ -3,6 +3,7 @@ Kinetic.WholeNode = (function() {
   var MARKER_TO_MAX_CIRCLE_REL = 0.1;
   var EXPAND_TIME = 0.2;
   var TO_NORMAL_TIME = 0.15;
+  var TEXT_WIDTH = 200;
 
   var Class = $$$.Class({
     _init: function(config, area) {
@@ -60,13 +61,13 @@ Kinetic.WholeNode = (function() {
       }));
 
       this.add(this.title = new Kinetic.Label({
-        x: -190,
+        x: TEXT_WIDTH / 2 * -1,
         y: this.node.getRadius(),
         text: this.attrs.title,
         fontSize: 18,
         fontFamily: 'Calibri',
         fill: '#555',
-        width: 380,
+        width: TEXT_WIDTH,
         padding: 10,
         align: 'center',
         name: 'Label'

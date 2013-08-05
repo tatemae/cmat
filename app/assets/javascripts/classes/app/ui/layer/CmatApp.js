@@ -82,11 +82,19 @@ Kinetic.CmatApp = (function() {
       this.wholeNodes.fire('nodeAdded', this);
     },
 
+    canvasWidth: function() {
+      return this.getWidth();
+    },
+
+    canvasHeight: function() {
+      return this.getHeight();
+    },
+
     addNodes: function(nodesText){
       var nodeNames = nodesText.split('\n');
 
-      var workspaceWidth = this.getWidth();
-      var workspaceHeight = this.getHeight();
+      var workspaceWidth = this.canvasWidth();
+      var workspaceHeight = this.canvasHeight();
 
       var deltaX = nodeNames.length > 10 ? (workspaceWidth / 11) : (workspaceWidth / (nodeNames.length + 1));
       var deltaY = workspaceHeight / (Math.round(nodeNames.length/10) + 2);
