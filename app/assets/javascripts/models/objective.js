@@ -25,7 +25,7 @@ Objective.reopenClass({
         response.forEach(function (objective) {
           objectives.pushObject(App.Objective.create(objective));
         });
-        return objectives;
+        return [objectives, query['parent']];
       }));
 
     });
