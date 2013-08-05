@@ -37,6 +37,10 @@ Kinetic.CmatApp = (function() {
 
     _newNode: function(e, parent) {
       var xy = UI.getPos(e);
+      xy.x = xy.x + UI.offsetX();
+      xy.y = xy.y + UI.offsetY();
+      xy.x = xy.x / UI.canvasScale();
+      xy.y = xy.y / UI.canvasScale();
       var node = CmatSettings.node;
       node.set('id', '');
       node.set('title', '');

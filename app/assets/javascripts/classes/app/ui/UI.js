@@ -7,6 +7,7 @@ UI = (function() {
   var stage;
   var canvas;
   var panZoomBackground;
+  var scale = 1;
   var loading;
 
   var screenWidth, screenHeight;
@@ -101,8 +102,9 @@ UI = (function() {
 
 
     var zoom = function(e) {
-    var zoomAmount = e.wheelDeltaY*0.001;
-      canvas.setScale(canvas.getScale().x+zoomAmount)
+      var zoomAmount = e.wheelDeltaY*0.001;
+      scale = canvas.getScale().x+zoomAmount;
+      canvas.setScale(scale)
       canvas.draw();
     }
 
@@ -187,6 +189,18 @@ UI = (function() {
     return panZoomBackground.getY();
   }
 
+  function canvasScale() {
+    return scale;
+  }
+
+  function offsetX() {
+    return canvas.getX() * -1;
+  }
+
+  function offsetY() {
+    return canvas.getY() * -1;
+  }
+
   publicAPI.build = build;
   publicAPI.showLoading = showLoading;
   publicAPI.trackLoading = trackLoading;
@@ -196,6 +210,9 @@ UI = (function() {
   publicAPI.layerHeight = layerHeight;
   publicAPI.layerX = layerX;
   publicAPI.layerY = layerY;
+  publicAPI.canvasScale = canvasScale;
+  publicAPI.offsetX = offsetX;
+  publicAPI.offsetY = offsetY;
 
   return publicAPI;
 })();
