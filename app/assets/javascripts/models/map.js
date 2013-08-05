@@ -21,7 +21,8 @@ var Map = ModelBase.extend({
     _self = this;
 
     return new Ember.RSVP.Promise(function(resolve, reject){
-      App.Objective.findQuery({objectivebank: objectiveBank.get('id'), roots: true}).then(function(objectives){
+      App.Objective.findQuery({objectivebank: objectiveBank.get('id'), roots: true}).then(function(data){
+        var objectives = data[0];
         var nodes = [];
         var markerRadius = 2;
         var children = [];
@@ -49,21 +50,23 @@ var Map = ModelBase.extend({
         for( var objective_index = 0; objective_index < objectives.length; objective_index++ ) {
           parent = UI.cmat_app.addNode(_self.mc3_to_cmat(objectives[objective_index], x, y), null, false);
           nodes[objectives[objective_index]['id']] = parent;
-          // App.Objective.findQuery({objectivebank: objectiveBank.get('id'), objective: objectives[objective_index]['id'], children: true}).then(function(children){
-          //   for( var child_index = 0; child_index < children.length; child_index++ ) {
-          //     if( nodes[children[child_index]['id']] )
-          //     {
-          //       child = nodes[children[child_index]['id']];
-          //     }
-          //     else
-          //     {
-          //       nodes[children[child_index]['id']] = UI.cmat_app.addNode(_self.mc3_to_cmat(children[child_index], x, y+100), null, true);
-          //       child = nodes[children[child_index]['id']];
-          //     }
+          App.Objective.findQuery({objectivebank: objectiveBank.get('id'), objective: objectives[objective_index]['id'], children: true, parent: parent}).then(function(data){
+            var children = data[0],
+                childs_parent = data[1];
+            if(children.length == 0)
+            {
+              return;
+            }
 
-          //     UI.cmat_app.addConnection({}, markerRadius, parent, child);
-          //   }
-          // });
+            var child_y = childs_parent.attrs['y']+deltaY;
+            var children_width = (children.length-1)*deltaX;
+            var child_x = childs_parent.attrs['x']-children_width/2;
+            for( var child_index = 0; child_index < children.length; child_index++ ) {
+              UI.cmat_app.addNode(_self.mc3_to_cmat(children[child_index], child_x, child_y), childs_parent, false);
+              child_x += deltaX;
+            }
+            UI.getStage().draw();
+          });
           x += deltaX;
           if (x > workspaceWidth) {
             even_row = !even_row;
@@ -76,20 +79,20 @@ var Map = ModelBase.extend({
             if (even_row) {
               x += deltaX / 2;
             }
-            y += deltaY;
+            y += deltaY*2;
           }
         }
 
-        App.Activity.findQuery({objectivebank: objectiveBank.get('id')}).then(function(activities){
-          var activity;
-          var activity_attrs;
+        // App.Activity.findQuery({objectivebank: objectiveBank.get('id')}).then(function(activities){
+        //   var activity;
+        //   var activity_attrs;
 
-          for( var activity_index = 0; activity_index < activities.length; activity_index++ ) {
-            activity_attrs = _self.mc3_to_cmat(activities[activity_index], x, y)
-            activity_parent = nodes[activities[activity_index]['objectiveId']];
-            activity = UI.cmat_app.addNode(activity_attrs, activity_parent, false);
-          }
-        });
+        //   for( var activity_index = 0; activity_index < activities.length; activity_index++ ) {
+        //     activity_attrs = _self.mc3_to_cmat(activities[activity_index], x, y)
+        //     activity_parent = nodes[activities[activity_index]['objectiveId']];
+        //     activity = UI.cmat_app.addNode(activity_attrs, activity_parent, false);
+        //   }
+        // });
 
         console.log(number_of_nodes);
 
