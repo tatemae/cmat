@@ -4,6 +4,7 @@ MapsRoute = Ember.Route.extend({
 
   afterModel: function(model, transition){
     if(transition.targetName == "maps.index"){
+      transition.abort();
       var _self = this;
       var current_user = this.controllerFor('currentUser');
       if(current_user){
@@ -14,6 +15,7 @@ MapsRoute = Ember.Route.extend({
             if(map){
               _self.transitionTo('map', map);
             } else {
+              console.log('no map found creating map');
               _self.transitionToNewMap();
             }
           });
@@ -24,12 +26,13 @@ MapsRoute = Ember.Route.extend({
   },
 
   transitionToNewMap: function(){
+    var _self = this;
     var map = MapModel.createRecord({
       title: 'New Map'
     });
     map.save().then(function(){
-      this.transitionTo('map', map);
-    }.bind(this));
+      _self.transitionTo('map', map);
+    });
   }
 
 });
