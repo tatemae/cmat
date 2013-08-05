@@ -177,3 +177,10 @@ ul.menu-list{
     background:$dark_gray;
   }
 }
+
+#toolbar{
+  .user_maps{
+    max-height: 500px;
+    overflow: auto;
+  }
+}

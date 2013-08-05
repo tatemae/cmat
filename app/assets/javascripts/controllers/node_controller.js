@@ -1,7 +1,6 @@
 var NodeController = Ember.ObjectController.extend({
 
   types: ['topic', 'outcome', 'activity'],
-  type: 'outcome',
 
   changeState: function(){
     if(this.get('state') == 'edit'){
