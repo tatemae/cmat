@@ -20,8 +20,10 @@ Kinetic.CmatApp = (function() {
 
     _createPressCatcher: function() {
       return new Kinetic.PressCatcher({
-        width: this.getWidth(),
-        height: this.getHeight(),
+        x: UI.layerX(),
+        y: UI.layerY(),
+        width: UI.layerWidth(),
+        height: UI.layerHeight(),
         onPress: this._newNode.bind(this),
         visible: true,
         name: 'pressCatcher'

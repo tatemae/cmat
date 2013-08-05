@@ -6,6 +6,7 @@ UI = (function() {
 
   var stage;
   var canvas;
+  var panZoomBackground;
   var loading;
 
   var screenWidth, screenHeight;
@@ -87,7 +88,7 @@ UI = (function() {
     canvas = new Kinetic.Layer();
     canvas.setDraggable("draggable");
     //a large transparent background to make everything draggable
-    var panZoombackground = new Kinetic.Rect({
+    panZoomBackground = new Kinetic.Rect({
       x: -10000,
       y: -10000,
       width: 20000,
@@ -96,7 +97,7 @@ UI = (function() {
       opacity: 0
     });
 
-    canvas.add(panZoombackground);
+    canvas.add(panZoomBackground);
 
 
     var zoom = function(e) {
@@ -170,11 +171,31 @@ UI = (function() {
     return stage;
   }
 
+  function layerWidth() {
+    return panZoomBackground.getWidth();
+  }
+
+  function layerHeight() {
+    return panZoomBackground.getHeight();
+  }
+
+  function layerX() {
+    return panZoomBackground.getX();
+  }
+
+  function layerY() {
+    return panZoomBackground.getY();
+  }
+
   publicAPI.build = build;
   publicAPI.showLoading = showLoading;
   publicAPI.trackLoading = trackLoading;
   publicAPI.getPos = getPos;
   publicAPI.getStage = getStage;
+  publicAPI.layerWidth = layerWidth;
+  publicAPI.layerHeight = layerHeight;
+  publicAPI.layerX = layerX;
+  publicAPI.layerY = layerY;
 
   return publicAPI;
 })();
