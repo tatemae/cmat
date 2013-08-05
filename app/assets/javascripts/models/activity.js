@@ -22,7 +22,7 @@ Activity.reopenClass({
         response.forEach(function (activity) {
           activities.pushObject(App.Activity.create(activity));
         });
-        return activities;
+        return [activities, query['parent']];
       }));
 
     });
