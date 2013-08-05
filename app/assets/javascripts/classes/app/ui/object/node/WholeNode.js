@@ -17,7 +17,7 @@ Kinetic.WholeNode = (function() {
 
       this.attrs.title = config.title || '';
       this.attrs.info = config.info || '';
-      this.attrs.type = config.type || '';
+      this.attrs.type = config.type || 'outcome';
 
       this.addNode(config, area);
     },
@@ -48,7 +48,8 @@ Kinetic.WholeNode = (function() {
         y: 0,
         radiusFunc: radiusFunc,
         draggable: false,
-        name: 'AppNode'
+        name: 'AppNode',
+        type: config.type
       }));
 
       this.add(this.node_adder = new Kinetic.AddNode({

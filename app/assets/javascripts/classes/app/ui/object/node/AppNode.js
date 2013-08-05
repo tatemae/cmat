@@ -57,7 +57,13 @@ Kinetic.AppNode = (function() {
     },
 
     _updateImage: function() {
-      this.setImage(Image.node.node_red);
+      if (this.attrs.type === "topic") {
+        this.setImage(Image.node.node_square);
+      } else if (this.attrs.type === "activity") {
+        this.setImage(Image.node.node_triangle);
+      } else {
+        this.setImage(Image.node.node_circle);
+      }
     },
 
     _syncRadiusWithImageSize: function() {

@@ -63,7 +63,7 @@ Kinetic.CmatApp = (function() {
         draggable: true,
         title: attrs.title || '',
         info: attrs.info || '',
-        type: attrs.type || ''
+        type: attrs.type || 'outcome'
       }, this.area);
 
       this.wholeNodes.add(wholeNode);

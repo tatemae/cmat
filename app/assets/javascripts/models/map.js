@@ -2,6 +2,11 @@ var ModelBase = require('./model_base');
 
 var Map = ModelBase.extend({
 
+  cmat_types: {
+    "mc3-objective%3Amc3.learning.topic%40MIT-OEIT": "topic",
+    "mc3-objective%3Amc3.learning.outcome%40MIT-OEIT": "outcome"
+  },
+
   user_id: DS.attr('number'),
   title: DS.attr('string'),
   payload: DS.attr('string'),
@@ -88,11 +93,10 @@ var Map = ModelBase.extend({
     return {
       id: objective['id'],
       title: objective['displayName']['text'],
-      type: objective['genusTypeId'],
+      type: this.cmat_types[objective['genusTypeId']],
       x: x,
       y: y
     };
-
   }
 });
 
