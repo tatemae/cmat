@@ -4,7 +4,8 @@ var Map = ModelBase.extend({
 
   cmat_types: {
     "mc3-objective%3Amc3.learning.topic%40MIT-OEIT": "topic",
-    "mc3-objective%3Amc3.learning.outcome%40MIT-OEIT": "outcome"
+    "mc3-objective%3Amc3.learning.outcome%40MIT-OEIT": "outcome",
+    "mc3-activity%3Amc3.learning.activity.asset.based%40MIT-OEIT": "activity"
   },
 
   user_id: DS.attr('number'),
@@ -65,7 +66,8 @@ var Map = ModelBase.extend({
             var cmat_child;
             for( var child_index = 0; child_index < children.length; child_index++ ) {
               cmat_child = _self.mc3_to_cmat(children[child_index], child_x, child_y);
-              if(nodes[cmat_child['id']] )
+              child = nodes[cmat_child['id']];
+              if( child )
               {
                 UI.cmat_app.addConnection({}, markerRadius, childs_parent, nodes[cmat_child['id']]);
               }
@@ -77,17 +79,23 @@ var Map = ModelBase.extend({
 
               child_x += deltaX;
 
-            // App.Activity.findQuery({objectivebank: objectiveBank.get('id'), objective: childs}).then(function(activities){
-            //   var activity;
-            //   var activity_attrs;
+              App.Activity.findQuery({objectivebank: objectiveBank.get('id'), objective: cmat_child['id'], parent: child}).then(function(data){
+                var activities = data[0];
+                var activity;
+                var activity_parent = data[1];
+                var activity_attrs;
 
-            //   for( var activity_index = 0; activity_index < activities.length; activity_index++ ) {
-            //     activity_attrs = _self.mc3_to_cmat(activities[activity_index], x, y)
-            //     activity_parent = nodes[activities[activity_index]['objectiveId']];
-            //     activity = UI.cmat_app.addNode(activity_attrs, activity_parent, false);
-            //   }
-            // });
+                var activity_y = activity_parent.attrs['y']+deltaY;
+                var activity_width = (activities.length-1)*deltaX;
+                var activity_x = activity_parent.attrs['x']-activity_width/2;
 
+                for( var activity_index = 0; activity_index < activities.length; activity_index++ ) {
+                  activity_attrs = _self.mc3_to_cmat(activities[activity_index], activity_x, activity_y)
+                  activity = UI.cmat_app.addNode(activity_attrs, activity_parent, false);
+                }
+
+                UI.getStage().draw();
+              });
             }
 
             UI.getStage().draw();
