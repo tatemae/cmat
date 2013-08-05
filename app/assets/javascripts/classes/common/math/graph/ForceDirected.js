@@ -86,8 +86,6 @@ ForceDirected = (function() {
             op.setY(v, (vy + repulsiveForce * dyd) / k);
           }
         }.bind(this));
-
-        // op.keepInBounds(v);
       }.bind(this));
     }
   });

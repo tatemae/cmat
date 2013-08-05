@@ -54,69 +54,6 @@ Kinetic.LayoutManager = (function() {
       this._wholeNodes.forEach(function(c) { c.cachedTransform = undefined; });
     },
 
-    // _clearFromCorners: function(a, x, y, minXY, maxX, maxY) {
-    //   for (var c in this._corners) {
-    //     var v = this._corners[c];
-    //     var cX = 0, cY = 0;
-    //     var clear = false;
-
-    //     switch (c) {
-    //       case 'tl':
-    //         cX = minXY + v.width;
-    //         cY = minXY + v.height;
-    //         clear = x < cX && y < cY;
-    //         break;
-    //       case 'tr':
-    //         cX = maxX - v.width;
-    //         cY = minXY + v.height;
-    //         clear = x > cX && y < cY;
-    //         break;
-    //       case 'bl':
-    //         cX = minXY + v.width;
-    //         cY = maxY - v.height;
-    //         clear = x < cX && y > cY;
-    //         break;
-    //       case 'br':
-    //         cX = maxX - v.width;
-    //         cY = maxY - v.height;
-    //         clear = x > cX && y > cY;
-    //         break;
-    //     }
-
-    //     if (clear) {
-    //       if (Math.abs(x - cX) < Math.abs(y - cY)) {
-    //         a.attrs.x = cX;
-    //       } else {
-    //         a.attrs.y = cY;
-    //       }
-    //     }
-    //   }
-    // },
-
-    _keepInBounds: function(a) {
-      var r = a.node.attrs.radius;
-      var x = a.attrs.x;
-      var y = a.attrs.y;
-      var p = this._bounds.padding;
-      var minXY = r + p;
-      var maxX = this._bounds.width - r - p;
-      var maxY = this._bounds.height - r - p;
-
-      if (x < minXY) {
-        a.attrs.x = minXY;
-      } else if (x > maxX) {
-        a.attrs.x = maxX;
-      }
-
-      if (y < minXY) {
-        a.attrs.y = minXY;
-      } else if (y > maxY) {
-        a.attrs.y = maxY;
-      }
-
-      // this._clearFromCorners(a, x, y, minXY, maxX, maxY);
-    },
-
     _initAlgorithm: function() {
       this._algorithm = new ForceDirected({
         wholeNodes: this._wholeNodes,
@@ -129,8 +66,7 @@ Kinetic.LayoutManager = (function() {
           setX:         function(a, v)  { a.attrs.x = v; },
           setY:         function(a, v)  { a.attrs.y = v; },
           ownsEdgeTo:   function(a, b)  { return a.ownsConnectionWith(b); },
-          owningEdges:  function(a)     { return a.connections(); },
-          keepInBounds: this._keepInBounds.bind(this)
+          owningEdges:  function(a)     { return a.connections(); }
         },
         maxDim: this._bounds.width,
         antiGravity: ANTI_GRAVITY,
