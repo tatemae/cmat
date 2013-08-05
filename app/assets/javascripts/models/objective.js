@@ -15,6 +15,11 @@ Objective.reopenClass({
         url = url + '/' + query['objective'] + '/children'
       }
 
+      if(query['roots'])
+      {
+        url = url + '/roots'
+      }
+
       resolve($.getJSON(url).then(function(response){
         var objectives = Em.A();
         response.forEach(function (objective) {

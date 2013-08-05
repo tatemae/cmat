@@ -21,7 +21,7 @@ var Map = ModelBase.extend({
     _self = this;
 
     return new Ember.RSVP.Promise(function(resolve, reject){
-      App.Objective.findQuery({objectivebank: objectiveBank.get('id')}).then(function(objectives){
+      App.Objective.findQuery({objectivebank: objectiveBank.get('id'), roots: true}).then(function(objectives){
         var nodes = [];
         var markerRadius = 2;
         var children = [];
