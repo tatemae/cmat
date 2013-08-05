@@ -48,7 +48,7 @@ var Map = ModelBase.extend({
 
         for( var objective_index = 0; objective_index < objectives.length; objective_index++ ) {
           parent = UI.cmat_app.addNode(_self.mc3_to_cmat(objectives[objective_index], x, y), null, false);
-          // nodes[objectives[objective_index]['id']] = parent;
+          nodes[objectives[objective_index]['id']] = parent;
           // App.Objective.findQuery({objectivebank: objectiveBank.get('id'), objective: objectives[objective_index]['id'], children: true}).then(function(children){
           //   for( var child_index = 0; child_index < children.length; child_index++ ) {
           //     if( nodes[children[child_index]['id']] )
@@ -79,6 +79,17 @@ var Map = ModelBase.extend({
             y += deltaY;
           }
         }
+
+        App.Activity.findQuery({objectivebank: objectiveBank.get('id')}).then(function(activities){
+          var activity;
+          var activity_attrs;
+
+          for( var activity_index = 0; activity_index < activities.length; activity_index++ ) {
+            activity_attrs = _self.mc3_to_cmat(activities[activity_index], x, y)
+            activity_parent = nodes[activities[activity_index]['objectiveId']];
+            activity = UI.cmat_app.addNode(activity_attrs, activity_parent, false);
+          }
+        });
 
         console.log(number_of_nodes);
 
