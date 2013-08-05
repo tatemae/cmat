@@ -33,7 +33,7 @@ Kinetic.PressCatcher = (function() {
 
       Kinetic.Rect.call(this, config);
 
-      this.on('tap click', config.onPress);
+      this.on('dbltap dblclick', config.onPress);
     }
   });
 
