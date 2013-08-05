@@ -181,9 +181,10 @@ Kinetic.CmatApp = (function() {
         if (CmatSettings.node.get('state') == "save") {
           // save those attributes
           wholeNode.attrs.title = node.get('title');
-          wholeNode.label.setAttr('text', wholeNode.attrs.title);
+          wholeNode.title.setAttr('text', wholeNode.attrs.title);
           wholeNode.attrs.info = node.get('info');
           wholeNode.attrs.type = node.get('type');
+          wholeNode.node.attrs.type = node.get('type');
           this.parent.draw();
         } else if ( CmatSettings.node.get('state') == "cancel" ){
           // revert those attributes
