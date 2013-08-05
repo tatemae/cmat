@@ -32,18 +32,17 @@
             <a class="btn btn-toolbar dropdown-toggle icon_download" data-toggle="dropdown" href="#"></a>
             <ul class="dropdown-menu">
               <li class="nav-header">Import MC3 Collection</li>
-              <li class="divider"></li>
-              <li>
-                <ul class="menu-list">
+              {{! <li class="divider"></li> }}
+{{!                 <ul class="menu-list">
                   <li>
                     <form class="stop-click-close">
                       <div class="input-append">
-                        {{view Ember.TextField valueBinding="mapSearchQuery" class="span2 toolbar-input" placeholder="Search Maps" }}
-                        <button {{action "search"}} class="btn"><i class="icon-search"></i></button>
+                        {{view Ember.TextField valueBinding="mapSearchQuery" class="span2 toolbar-input" placeholder="Search Maps" 
+                        <button {{action "search" class="btn"><i class="icon-search"></i></button>
                       </div>
                     </form>
                   </li>
-                </ul>
+                </ul> }}
               <li class="divider"></li>
               {{#each objectiveBanks}}
                 <li><a href="#" {{action importObjectiveBank this}}>{{this.displayName.text}}</a></li>
