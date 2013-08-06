@@ -192,7 +192,7 @@ Kinetic.CmatApp = (function() {
           wholeNode.attrs.type = node.get('type');
           wholeNode.node.attrs.type = node.get('type');
           wholeNode.node._updateImage();
-          // console.log('type: ' + node.get('type'));
+          console.log('type: ' + node.get('type'));
           this.parent.draw();
         } else if ( CmatSettings.node.get('state') == "cancel" ){
           // revert those attributes
