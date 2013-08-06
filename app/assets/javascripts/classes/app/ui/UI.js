@@ -104,8 +104,10 @@ UI = (function() {
     var zoom = function(e) {
       var zoomAmount = e.wheelDeltaY*0.001;
       scale = canvas.getScale().x+zoomAmount;
-      canvas.setScale(scale)
-      canvas.draw();
+      if (scale > 0.16) {
+        canvas.setScale(scale)
+        canvas.draw();
+      }
     }
 
     document.addEventListener("mousewheel", zoom, false)
