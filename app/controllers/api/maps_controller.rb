@@ -10,7 +10,7 @@ class Api::MapsController < ApplicationController
     if params[:user_id]
       @maps = User.find(params[:user_id]).maps.by_newest
     else
-      @maps = Map.all
+      @maps = []
     end
     respond_with(:api, @maps)
   end
