@@ -12,6 +12,7 @@ var Map = ModelBase.extend({
   title: DS.attr('string'),
   payload: DS.attr('string'),
   mc3Source: DS.attr('string'),
+  objective_bank_id: DS.attr('string'),
   isMc3: DS.attr('boolean'),
   parsed_payload: function(){
     return $.parseJSON(this.get('payload') || '');
