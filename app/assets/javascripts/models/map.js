@@ -131,6 +131,7 @@ var Map = ModelBase.extend({
     return {
       id: objective['id'],
       title: objective['displayName']['text'],
+      info: objective['description']['text'],
       type: this.cmat_types[objective['genusTypeId']],
       x: x,
       y: y
