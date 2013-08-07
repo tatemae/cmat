@@ -1,5 +1,3 @@
-var ModelBase = require('./model_base');
-
 var ObjectiveBank = Ember.Object.extend({
 
 });
