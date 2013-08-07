@@ -1,7 +1,30 @@
-var ModelBase = require('./model_base');
-
 var Objective = Ember.Object.extend({
+  saveNew: function() {
+    var objective = this;
+    return new Ember.RSVP.Promise(function(resolve, reject){
+      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objective['objectiveBankId']+'/objectives';
+      // An objective requires the following fields:
+      // description.text
+      // displayName.text
+      // genusTypeID - must be a valid type
+      // objectiveBankId
+      resolve($.ajax({type: "POST", url: url, data: JSON.stringify(objective), contentType: "application/json", dataType: 'json'}).then(function(response){
+        console.log(response);
+        return response;
+      }));
+    });
+  },
+  saveChanges: function() {
+    var objective = this;
+    return new Ember.RSVP.Promise(function(resolve, reject){
+      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objective['objectiveBankId']+'/objectives';
 
+      resolve($.ajax({type: "POST", url: url, data: JSON.stringify(objective), contentType: "application/json", dataType: 'json'}).then(function(response){
+        return response;
+      }));
+    });
+
+  }
 });
 
 Objective.reopenClass({
