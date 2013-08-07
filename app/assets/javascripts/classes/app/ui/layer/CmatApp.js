@@ -61,6 +61,25 @@ Kinetic.CmatApp = (function() {
       node.set('state', 'edit');
     },
 
+    cmat_types: {
+     "topic": "mc3-objective%3Amc3.learning.topic%40MIT-OEIT",
+     "outcome": "mc3-objective%3Amc3.learning.outcome%40MIT-OEIT",
+     "activity": "mc3-activity%3Amc3.learning.activity.asset.based%40MIT-OEIT"
+    },
+
+    cmat_to_mc3: function(title, description, type, objectiveBankId) {
+      return {
+        displayName:{
+          text: title || ''
+        },
+        description: {
+          text: description || ''
+        },
+        genusTypeId: this.cmat_types[type] || 'mc3-objective%3Amc3.learning.outcome%40MIT-OEIT',
+        objectiveBankId: objectiveBankId
+      };
+    },
+
     addNode: function(attrs, parent, adjustLayout) {
       var wholeNode = new Kinetic.WholeNode({
         id: attrs.id || this.attrs.nextNodeID++,
@@ -73,6 +92,10 @@ Kinetic.CmatApp = (function() {
       }, this.area);
 
       this.wholeNodes.add(wholeNode);
+
+      if (Em.isNone(attrs.id)){
+        App.Objective.saveNew(this.cmat_to_mc3(wholeNode.title, wholeNode.info, wholeNode.type, CmatSettings.map.get('objective_bank_id')));
+      }
 
       if (!Em.isNone(parent)){
         wholeNode.setY(parent.getY() + 100);
