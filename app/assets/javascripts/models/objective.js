@@ -50,7 +50,15 @@ Objective.reopenClass({
         return response;
       }));
     });
+  },
+  delete: function(query){
+    return new Ember.RSVP.Promise(function(resolve, reject){
+      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+query['objectiveBankId']+'/objectives/'+query['objectiveId'];
 
+      resolve($.ajax({type: "DELETE", url: url, contentType: "application/json", dataType: 'json'}).then(function(response){
+        return response;
+      }));
+    });
   }
 });
 

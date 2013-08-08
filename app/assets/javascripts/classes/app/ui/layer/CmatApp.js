@@ -241,6 +241,7 @@ Kinetic.CmatApp = (function() {
         }
       }
       wholeNode.destroy();
+      App.Objective.deleteNode({objectiveBankId: CmatSettings.map.get('objective_bank_id'), objectiveId: wholeNode.id});
       this.parent.draw();
     },
 
