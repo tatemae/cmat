@@ -62,6 +62,7 @@ Kinetic.WholeNode = (function() {
 
       this.on('dragstart', function(){
         UI.cmat_app.node_adder.attrs.opacity = 0;
+        UI.cmat_app.node_connector.hideConnection();
       });
 
       this.on('dragend', function(){
