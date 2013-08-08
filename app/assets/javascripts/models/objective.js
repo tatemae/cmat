@@ -51,7 +51,7 @@ Objective.reopenClass({
       }));
     });
   },
-  delete: function(query){
+  deleteNode: function(query){
     return new Ember.RSVP.Promise(function(resolve, reject){
       var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+query['objectiveBankId']+'/objectives/'+query['objectiveId'];
 
