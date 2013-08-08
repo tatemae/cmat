@@ -37,18 +37,11 @@ Kinetic.Connection = (function() {
 
       Kinetic.Shape.call(this, config);
 
-      // if (c1 !== undefined && c2 !== undefined){
       c1.on('xChange yChange radiusChange', this.refresh.bind(this));
       c2.on('xChange yChange radiusChange', this.refresh.bind(this));
-      // }else{
-
-      //   this.getNodes().forEach(function(c) {
-      //     var node = UI.cmat_app.wholeNodes.get('#'+c)[0].getParent();
-      //     node.on('xChange yChange radiusChange', this.refresh.bind(this));
-      //   }.bind(this));
-      // }
 
       this.markerDiameter = markerRadius * 2;
+      this._markers = [];
 
       this.drawn = true;
       this.refresh(null, c1, c2);
@@ -63,20 +56,29 @@ Kinetic.Connection = (function() {
       this._markers = [];
 
       var nodes = this.getNodes();
-      if (node1 === undefined && node2 === undefined){
+      if (node1 === undefined && node2 === undefined) {
         var tmp1, tmp2;
         tmp1 = UI.cmat_app.wholeNodes.get('#'+nodes[0])[0];
         tmp2 = UI.cmat_app.wholeNodes.get('#'+nodes[1])[0];
-        if (tmp1 === undefined || tmp2 === undefined){
+        if ((tmp1 === undefined || tmp2 === undefined) && nodes[0] !== "NodeConnector"){
           this.destroy(); // cleanup left over connection objects after a connection has already been destroyed by a node being deleted
           return;
         }
-        c1 = tmp1.getParent();
-        c2 = tmp2.getParent();
+        if (tmp1 === undefined && nodes[0] === "NodeConnector") {
+          c1 = UI.cmat_app.node_connector;
+        } else {
+          c1 = tmp1.getParent();
+        }
+        if (tmp2 === undefined && nodes[1] === "NodeConnector") {
+          c2 = UI.cmat_app.node_connector;
+        } else {
+          c2 = tmp2.getParent();
+        }
       } else {
         c1 = node1;
         c2 = node2;
       }
+
       var x1 = c1.getX(), y1 = c1.getY(), x2 = c2.getX(), y2 = c2.getY();
 
       this._markers.push([x1, y1]);
@@ -87,7 +89,7 @@ Kinetic.Connection = (function() {
     drawFunc: function(canvas) {
       var context = canvas.getContext();
 
-      if (this._markers.length > 1){
+      if (this._markers.length > 1) {
         context.beginPath();
         context.moveTo(this._markers[0][0], this._markers[0][1]);
         context.lineTo(this._markers[this._markers.length-1][0], this._markers[this._markers.length-1][1]);

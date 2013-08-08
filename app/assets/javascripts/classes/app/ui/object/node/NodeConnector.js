@@ -1,4 +1,4 @@
-Kinetic.NodeAdder = (function() {
+Kinetic.NodeConnector = (function() {
   var EXPAND = 1.2;
   var COLLAPSE = 0.95;
   var EXPAND_TIME = 0.2;
@@ -12,7 +12,8 @@ Kinetic.NodeAdder = (function() {
 
       this.current_node_over = null;
 
-      this.on('click tap', this._pressed);
+      this.on('dragend', this._dragEnd.bind(this));
+      // this.on('click tap', this._pressed);
       this.on('mouseover', this._mouseover);
       this.on('mouseout', this._mouseout);
       this.on('radiusChange', this._syncRadiusWithImageSize);
@@ -23,7 +24,7 @@ Kinetic.NodeAdder = (function() {
     },
 
     _updateImage: function() {
-      this.setImage(Image.node.node_adder);
+      this.setImage(Image.node.node_connector);
     },
 
     _syncRadiusWithImageSize: function() {
@@ -69,6 +70,7 @@ Kinetic.NodeAdder = (function() {
     },
 
     _animateMouseover: function() {
+      this.showConnection();
       var tweening = this.isTweening();
       var actualRadius = this._calcRadius();
       var currRadius = this.getRadius();
@@ -98,7 +100,7 @@ Kinetic.NodeAdder = (function() {
 
       this._animatePress();
 
-      UI.cmat_app._newNode(e, this.current_node_over);
+      // UI.cmat_app._newNode(e, this.current_node_over);
     },
 
     _mouseover: function(e) {
@@ -111,6 +113,36 @@ Kinetic.NodeAdder = (function() {
     
     simulatePress: function() {
       this._pressed({});
+    },
+
+    updateConnection: function() {
+      if (this.node_connector_connection === undefined) {
+        var attrs = {};
+        attrs.strokeStyle = 'red';
+        attrs.lineJoin = 'round';
+        attrs.lineWidth = 1;
+        attrs.nodes = [ this.attrs.id, this.current_node_over.attrs.id ];
+        UI.cmat_app.add(this.node_connector_connection = new Kinetic.Connection(attrs, UI.cmat_app.getMarkerRadius(), this, this.current_node_over));
+      }
+      this.showConnection();
+    },
+
+    _dragEnd: function() {
+      this.hideConnection();
+    },
+
+    showConnection: function() {
+      this.node_connector_connection.attrs.nodes = [this.attrs.id, this.current_node_over.attrs.id]
+      this.show();
+      this.node_connector_connection.show();
+      UI.getStage().draw();
+    },
+
+    hideConnection: function() {
+      this.hide();
+      this.node_connector_connection.hide();
+      this.node_connector_connection.attrs.nodes = [this.attrs.id, this.attrs.id]
+      UI.getStage().draw();
     }
   });
 

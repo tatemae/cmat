@@ -158,7 +158,16 @@ Kinetic.WholeNode = (function() {
       UI.cmat_app.node_adder.setX(this.getX() + this.node.getWidth() / 2);
       UI.cmat_app.node_adder.setY(this.getY() + this.node.getWidth() / 2);
       UI.cmat_app.node_adder.current_node_over = this;
+      UI.cmat_app.node_connector.setX(this.getX() - this.node.getWidth() / 2);
+      UI.cmat_app.node_connector.setY(this.getY() - this.node.getWidth() / 2);
+      UI.cmat_app.node_connector.current_node_over = this;
+      UI.cmat_app.node_connector.updateConnection();
       UI.cmat_app.node_adder.to({
+        opacity: 1,
+        duration: EXPAND_TIME,
+        easing: 'EaseIn'
+      });
+      UI.cmat_app.node_connector.to({
         opacity: 1,
         duration: EXPAND_TIME,
         easing: 'EaseIn'
@@ -167,7 +176,13 @@ Kinetic.WholeNode = (function() {
     },
 
     _animateMouseout: function() {
+      UI.cmat_app.node_connector.hideConnection();
       UI.cmat_app.node_adder.to({
+        opacity: 0,
+        duration: TO_NORMAL_TIME,
+        easing: 'BackEaseOut'
+      });
+      UI.cmat_app.node_connector.to({
         opacity: 0,
         duration: TO_NORMAL_TIME,
         easing: 'BackEaseOut'
