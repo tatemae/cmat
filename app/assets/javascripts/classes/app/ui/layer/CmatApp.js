@@ -97,7 +97,7 @@ Kinetic.CmatApp = (function() {
         title: attrs.title || '',
         info: attrs.info || '',
         type: attrs.type || 'outcome'
-      }, this.area);
+      });
 
       this.wholeNodes.add(wholeNode);
 

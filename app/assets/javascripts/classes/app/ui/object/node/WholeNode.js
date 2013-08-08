@@ -6,7 +6,7 @@ Kinetic.WholeNode = (function() {
   var TEXT_WIDTH = 200;
 
   var Class = $$$.Class({
-    _init: function(config, area) {
+    _init: function(config) {
       Kinetic.Group.call(this, config);
 
       this.attrs.connections = [];
@@ -19,7 +19,7 @@ Kinetic.WholeNode = (function() {
       this.attrs.info = config.info || '';
       this.attrs.type = config.type || 'outcome';
 
-      this.addNode(config, area);
+      this.addNode(config);
     },
 
     _createMouseOverCatcher: function(){
@@ -36,7 +36,7 @@ Kinetic.WholeNode = (function() {
       });
     },
 
-    addNode: function(config, area) {
+    addNode: function(config) {
 
       this.add(this.node = new Kinetic.AppNode({
         id: config.id,
@@ -59,6 +59,14 @@ Kinetic.WholeNode = (function() {
         align: 'center',
         name: 'Label'
       }));
+
+      this.on('dragstart', function(){
+        UI.cmat_app.node_adder.attrs.opacity = 0;
+      });
+
+      this.on('dragend', function(){
+        this._animateMouseover();
+      });
 
       this.add(this.mouseOverCatcher = this._createMouseOverCatcher());
       this.mouseOverCatcher.moveToBottom();
