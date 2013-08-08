@@ -36,7 +36,7 @@ Kinetic.AppNode = (function() {
   var FADE_OUT_TIME = 0.3;
   var FAST_ROTATE_OUT_TIME = 0.3;
   var LONG_ROTATE_OUT_TIME = 0.6;
-  var PERCENT_RADIUS = 4;
+  var MAX_RADIUS = 30;
 
   var Class = $$$.Class({
     _init: function(config) {
@@ -72,8 +72,8 @@ Kinetic.AppNode = (function() {
       this.setSize(d, d);
     },
 
-    _calcRadius: function(s) {
-      return this.attrs.radiusFunc(1, PERCENT_RADIUS);
+    _calcRadius: function() {
+      return MAX_RADIUS;
     },
 
     _syncSizeWithOffset: function() {

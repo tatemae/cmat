@@ -1,18 +1,16 @@
-Kinetic.AddNode = (function() {
-  var MAX_SCORE = 5;
+Kinetic.NodeAdder = (function() {
   var EXPAND = 1.2;
   var COLLAPSE = 0.95;
   var EXPAND_TIME = 0.2;
   var COLLAPSE_TIME = 0.5;
   var TO_NORMAL_TIME = 0.15;
-  var FADE_OUT_TIME = 0.3;
-  var FAST_ROTATE_OUT_TIME = 0.3;
-  var LONG_ROTATE_OUT_TIME = 0.6;
-  var PERCENT_RADIUS = 17;
+  var MAX_RADIUS = 10;
 
   var Class = $$$.Class({
     _init: function(config) {
       Kinetic.Image.call(this, config);
+
+      this.current_node_over = null;
 
       this.on('click tap', this._pressed);
       this.on('mouseover', this._mouseover);
@@ -34,8 +32,8 @@ Kinetic.AddNode = (function() {
       this.setSize(d, d);
     },
 
-    _calcRadius: function(s) {
-      return this.attrs.radiusFunc(1, PERCENT_RADIUS);
+    _calcRadius: function() {
+      return MAX_RADIUS;
     },
 
     _syncSizeWithOffset: function() {
@@ -100,7 +98,7 @@ Kinetic.AddNode = (function() {
 
       this._animatePress();
 
-      UI.cmat_app._newNode(e, this.parent);
+      UI.cmat_app._newNode(e, this.current_node_over);
     },
 
     _mouseover: function(e) {

@@ -10,6 +10,13 @@ Kinetic.CmatApp = (function() {
       this.add(this.pressCatcher = this._createPressCatcher());
       this.add(this.wholeNodes = new Kinetic.Group({ name: 'wholeNodes', listening: true }));
       this.add(this.connections = new Kinetic.Group({ name: 'connections', listening: false }));
+      this.add(this.node_adder = new Kinetic.NodeAdder({
+        x: 100,
+        y: 100,
+        draggable: false,
+        opacity: 0,
+        name: 'NodeAdder'
+      }));
       this.connections.moveToBottom();
       this.attrs.nextNodeID = 1;
       this.rescaleWorkspace();
@@ -36,6 +43,7 @@ Kinetic.CmatApp = (function() {
     },
 
     _newNode: function(e, parent) {
+      this.node_adder.attrs.opacity = 0;
       var xy = UI.getPos(e);
       xy.x = xy.x + UI.offsetX();
       xy.y = xy.y + UI.offsetY();

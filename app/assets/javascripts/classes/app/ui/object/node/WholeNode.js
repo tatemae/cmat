@@ -37,28 +37,14 @@ Kinetic.WholeNode = (function() {
     },
 
     addNode: function(config, area) {
-      var maxRadius = Math.floor(Math.sqrt(area * CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
-      var radiusFunc = function(s, max) {
-        return maxRadius * Math.sqrt(s / max);
-      };
 
       this.add(this.node = new Kinetic.AppNode({
         id: config.id,
         x: 0,
         y: 0,
-        radiusFunc: radiusFunc,
         draggable: false,
         name: 'AppNode',
         type: config.type
-      }));
-
-      this.add(this.node_adder = new Kinetic.AddNode({
-        x: 0 + this.node.getWidth(),
-        y: 0,
-        radiusFunc: radiusFunc,
-        draggable: false,
-        opacity: 0,
-        name: 'AddNode'
       }));
 
       this.add(this.title = new Kinetic.Label({
@@ -74,8 +60,6 @@ Kinetic.WholeNode = (function() {
         name: 'Label'
       }));
 
-      this.node_adder.setY(this.node_adder.getY() - this.node_adder.getHeight() / 2 - 15);
-      this.node_adder.setX(this.node_adder.getX() - 15);
       this.add(this.mouseOverCatcher = this._createMouseOverCatcher());
       this.mouseOverCatcher.moveToBottom();
       this.mouseOverCatcher.moveUp();
@@ -163,7 +147,10 @@ Kinetic.WholeNode = (function() {
     },
 
     _animateMouseover: function() {
-      this.node_adder.to({
+      UI.cmat_app.node_adder.setX(this.getX() + this.node.getWidth() / 2);
+      UI.cmat_app.node_adder.setY(this.getY() + this.node.getWidth() / 2);
+      UI.cmat_app.node_adder.current_node_over = this;
+      UI.cmat_app.node_adder.to({
         opacity: 1,
         duration: EXPAND_TIME,
         easing: 'EaseIn'
@@ -172,7 +159,7 @@ Kinetic.WholeNode = (function() {
     },
 
     _animateMouseout: function() {
-      this.node_adder.to({
+      UI.cmat_app.node_adder.to({
         opacity: 0,
         duration: TO_NORMAL_TIME,
         easing: 'BackEaseOut'
