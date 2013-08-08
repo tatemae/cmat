@@ -20,8 +20,10 @@
               {{/each}}
               <li class="divider"></li>
               <li>{{#linkTo 'maps.new' title="Create a new map"}}<i class="icon-file"></i> New{{/linkTo}}</li>
-              <li>{{#linkTo 'map.duplicate' title="Duplicate the current map"}}<i class="icon-copy"></i> Duplicate{{/linkTo}}</li>
-              <li>{{#linkTo 'map.destroy' title="Delete the current map"}}<i class="icon-trash"></i> Delete{{/linkTo}}</li>
+              {{#if map}}
+                <li>{{#linkTo 'map.duplicate' title="Duplicate the current map"}}<i class="icon-copy"></i> Duplicate{{/linkTo}}</li>
+                <li>{{#linkTo 'map.destroy' title="Delete the current map"}}<i class="icon-trash"></i> Delete{{/linkTo}}</li>
+              {{/if}}
             </ul>
           </div>
         </div>
