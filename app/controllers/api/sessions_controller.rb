@@ -22,8 +22,7 @@ class Api::SessionsController < ApplicationController
   end
 
   def destroy
-    sign_out
-    #sign_out :user
+    sign_out :user
     render json: {}, status: :accepted
   end
 
