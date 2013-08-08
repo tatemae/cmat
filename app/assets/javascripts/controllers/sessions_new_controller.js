@@ -1,10 +1,15 @@
 var SessionsNewController = Ember.ObjectController.extend({
   needs: ['currentUser'],
 
-  save: function() {
+  save: function(){
     var _self = this;
 
-    this.content.save().then(function() {
+    this.set('errorMessage', null);
+
+    this.content.save().then(function(){
+
+      //_self.set('errorMessage', response.message);
+
       var userJSON = _self.content.toJSON();
       userJSON.id = 'current';
       var object = _self.store.load(App.User, userJSON);

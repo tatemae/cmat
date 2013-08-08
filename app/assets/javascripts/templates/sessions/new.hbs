@@ -2,6 +2,9 @@
   <h1>Login</h1>
   <form class="form-horizontal user-form">
     <fieldset>
+      {{#if errorMessage}}
+        <div class="alert alert-error">{{errorMessage}}</div>
+      {{/if}}
       <div class="control-group" {{bindAttr class="errors.email:error"}}>
         {{view Ember.TextField valueBinding='email' name='email' placeholder='Email'}}
         <span class="help-inline">

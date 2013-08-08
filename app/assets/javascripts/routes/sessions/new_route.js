@@ -1,16 +1,12 @@
 var Session = require('../../models/session');
+var AuthenticatedUser = require('../../mixins/authenticated_user');
 
-var SessionsNewRoute = Ember.Route.extend({
-
-  beforeModel: function(){
-    if(this.controllerFor('currentUser').isSignedIn){
-      this.transitionTo('index');
-    }
-  },
+var SessionsNewRoute = Ember.Route.extend(AuthenticatedUser, {
 
   model: function(){
     return Session.createRecord();
   }
+
 });
 
 

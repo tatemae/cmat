@@ -68,5 +68,4 @@ App.Store = require('./store');
 require('./initializers/twitter_bootstrap');
 require('./initializers/current_user');
 
-
 module.exports = App;

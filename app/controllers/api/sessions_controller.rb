@@ -1,9 +1,8 @@
 class Api::SessionsController < ApplicationController
 
-  respond_to :json
-
   skip_before_filter :verify_authenticity_token
-  before_action :set_user, only: [:show, :update, :destroy]
+
+  respond_to :json
 
   def create
     user = User.find_for_database_authentication(email: session_params[:email])
@@ -23,15 +22,12 @@ class Api::SessionsController < ApplicationController
   end
 
   def destroy
-    sign_out :user
+    sign_out
+    #sign_out :user
     render json: {}, status: :accepted
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
     def session_params
       params.require(:session).permit(:email, :password)
