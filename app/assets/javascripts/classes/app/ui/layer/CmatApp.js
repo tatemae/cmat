@@ -102,7 +102,8 @@ Kinetic.CmatApp = (function() {
       this.wholeNodes.add(wholeNode);
 
       if (Em.isNone(attrs.id)){
-        App.Objective.saveNew(this.cmat_to_mc3(wholeNode.title, wholeNode.info, wholeNode.type, CmatSettings.map.get('objective_bank_id')));
+        var cmat_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'));
+        App.Objective.saveNew(cmat_node);
       }
 
       if (!Em.isNone(parent)){
