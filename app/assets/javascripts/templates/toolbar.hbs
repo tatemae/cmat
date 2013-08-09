@@ -81,7 +81,7 @@
             {{view Ember.Checkbox checkedBinding="isEditing"}}
           {{/switch}}
           <div class="btn-group">
-            {{#if currentUser.isSignedIn}}
+            {{#if controllers.currentUser.isSignedIn}}
               <a href="#" class="btn btn-toolbar name_btn">{{currentUser.name}}</a>
               {{#linkTo 'sessions.destroy' class="btn btn-toolbar name_btn"}}Logout{{/linkTo}}
             {{else}}
