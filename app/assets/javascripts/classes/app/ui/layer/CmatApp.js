@@ -97,15 +97,18 @@ Kinetic.CmatApp = (function() {
 
       this.wholeNodes.add(wholeNode);
 
-      if (Em.isNone(attrs.id)){
-        var cmat_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'));
-        App.Objective.saveNew(cmat_node);
-      }
-
       if (!Em.isNone(parent)){
         wholeNode.setY(parent.getY() + 100);
         parent.connect(wholeNode);
       }
+
+      if((!Em.isEmpty(CmatSettings.map.get('objective_bank_id'))) && Em.isNone(attrs.id)){
+        var cmat_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'));
+        App.Objective.saveNew(cmat_node, parent).then(function(node){
+          wholeNode.attrs.id = node['id']; //TODO: Set ID
+        });
+      }
+
       if (adjustLayout) {
         this.adjustLayout();
       }
