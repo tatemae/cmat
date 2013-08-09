@@ -116,7 +116,7 @@ var Map = ModelBase.extend({
           // }
         }
 
-        console.log(number_of_nodes);
+        console.log("number of nodes: " + number_of_nodes);
 
         UI.getStage().draw();
 

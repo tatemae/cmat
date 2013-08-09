@@ -46,7 +46,7 @@ var ToolbarController = Ember.Controller.extend({
     map.set('objective_bank_id', objectiveBank.get('id'));
     map.load_from_mc3(objectiveBank).then(function(value){
     }).then(function(error){
-      console.log(error);
+      console.log("import Objective Bank error: " + error);
     });
   },
 
