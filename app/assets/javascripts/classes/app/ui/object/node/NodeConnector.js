@@ -71,7 +71,7 @@ Kinetic.NodeConnector = (function() {
     },
 
     _animateMouseover: function() {
-      this.showConnection();
+      this.showConnector();
       var tweening = this.isTweening();
       var actualRadius = this._calcRadius();
       var currRadius = this.getRadius();
@@ -122,11 +122,14 @@ Kinetic.NodeConnector = (function() {
         attrs.lineWidth = 1;
         attrs.nodes = [ this.attrs.id, this.current_node_over.attrs.id ];
         UI.cmat_app.add(this.node_connector_connection = new Kinetic.Connection(attrs, UI.cmat_app.getMarkerRadius(), this, this.current_node_over));
+        this.node_connector_connection.moveDown();
+        this.node_connector_connection.hide();
       }
-      this.showConnection();
+      this.showConnector();
     },
 
     _dragMove: function() {
+      this.showConnection();
     },
 
     _dragEnd: function(e) {
@@ -138,11 +141,14 @@ Kinetic.NodeConnector = (function() {
       this.hideConnection();
     },
 
-    showConnection: function() {
+    showConnector: function() {
       this.node_connector_connection.attrs.nodes = [this.attrs.id, this.current_node_over.attrs.id]
       this.show();
-      this.node_connector_connection.show();
       UI.getStage().draw();
+    },
+
+    showConnection: function() {
+      this.node_connector_connection.show();
     },
 
     hideConnection: function() {
