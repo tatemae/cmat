@@ -28,7 +28,7 @@ Objective.reopenClass({
 
     });
   },
-  saveNew: function(objective) {
+  saveNew: function(objective, parent) {
     return new Ember.RSVP.Promise(function(resolve, reject){
       var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objective['objectiveBankId']+'/objectives';
       // An objective requires the following fields:
@@ -37,6 +37,11 @@ Objective.reopenClass({
       // genusTypeID - must be a valid type
       // objectiveBankId
       resolve($.ajax({type: "POST", url: url, data: JSON.stringify(objective), contentType: "application/json", dataType: 'json'}).then(function(response){
+        if(!Em.isNone(parent)){
+          var relationship = [parent.attrs.id]
+          var relationship_url = 'handcar/services/learning/objectivebanks/'+objective['objectiveBankId']+'/objectives/'+response['id']+'/parentids'
+          $.ajax({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'})
+        }
         return response;
       }));
     });
