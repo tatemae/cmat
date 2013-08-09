@@ -249,6 +249,10 @@ Kinetic.CmatApp = (function() {
       this.parent.draw();
     },
 
+    cleanUp: function() {
+      CmatSettings.node.removeObserver('state', this, 'updateSettings');
+    },
+
     clearMap: function() {
       this.connections.removeChildren();
       this.wholeNodes.removeChildren();
