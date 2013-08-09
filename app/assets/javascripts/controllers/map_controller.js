@@ -17,7 +17,7 @@ var MapController = Ember.ObjectController.extend(AutoSave, {
     if(user_id){
       this.get('content').set('user_id', user_id);
     }
-  }.property('controllers.currentUser')
+  }.property('currentUser')
 
 });
 

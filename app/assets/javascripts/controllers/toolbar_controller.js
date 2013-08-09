@@ -25,7 +25,7 @@ var ToolbarController = Ember.Controller.extend({
       }
     }
     return MapModel.find({});
-  }.property('controllers.currentUser', 'controllers.map.content'),
+  }.property('controllers.currentUser.content', 'controllers.map.content'),
 
   addToMap: function(){
     this.transitionToRoute('map.add');

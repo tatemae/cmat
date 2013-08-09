@@ -8,12 +8,7 @@ class Api::MapsController < ApplicationController
 
   def index
     if params[:user_id]
-      if params[:user_id] == 'current'
-        user = current_user
-      else
-        user = User.find(params[:user_id])
-      end
-      @maps = user.maps.by_newest
+      @maps = User.find(params[:user_id]).maps.by_newest
     else
       @maps = []
     end
@@ -25,7 +20,7 @@ class Api::MapsController < ApplicationController
   end
 
   def create
-    if current_user
+    if user_signed_in?
       @map = current_user.maps.create(map_params)
     else
       @map = Map.create(map_params)
