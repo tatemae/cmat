@@ -10,7 +10,7 @@ Ember.Application.initializer({
       var object = store.load(User, JSON.parse(attributes));
       var user = User.find(object.id);
       container.lookup('controller:currentUser').set('content', user);
-      container.typeInjection('controller', 'currentUser', 'controller:currentUser');
+      container.typeInjection('controller', 'currentUser', 'controller:currentUser'); // Add currentUser to all controllers
     }
   }
 });
