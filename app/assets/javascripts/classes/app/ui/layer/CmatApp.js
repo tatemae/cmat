@@ -198,7 +198,10 @@ Kinetic.CmatApp = (function() {
     },
 
     observeSettings: function() {
-      return CmatSettings.node.addObserver('state', this, 'updateSettings');
+      if (!CmatSettings.state_observer){
+        CmatSettings.state_observer = true;
+        return CmatSettings.node.addObserver('state', this, 'updateSettings');
+      }
     },
 
     updateSettings: function() {
