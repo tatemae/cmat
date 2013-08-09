@@ -50,7 +50,7 @@ class Api::MapsController < ApplicationController
     end
 
     def map_params
-      params.require(:map).permit(:title, :payload, :user_id)
+      params.require(:map).permit(:title, :payload, :user_id, :objective_bank_id)
     end
 
 end
