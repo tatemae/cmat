@@ -254,15 +254,16 @@ Kinetic.CmatApp = (function() {
 
     loadMap: function() {
       this.clearMap();
-      if(CmatSettings.map.get('isMc3')) {
-        this.loadMc3Map();
-      } else {
+      // TODO: set objective id
+      // if(CmatSettings.map.get('isMc3')) {
+      //   this.loadMc3Map();
+      // } else {
         this.loadKineticMap();
-      }
+      // }
     },
 
     loadMc3Map: function() {
-      var source = CmatSettings.map.get('mc3Source');
+      // var source = CmatSettings.map.get('mc3Source');
       // TODO parse the mc3 source and add nodes
     },
 

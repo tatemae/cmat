@@ -37,7 +37,6 @@ Objective.reopenClass({
       // genusTypeID - must be a valid type
       // objectiveBankId
       resolve($.ajax({type: "POST", url: url, data: JSON.stringify(objective), contentType: "application/json", dataType: 'json'}).then(function(response){
-        console.log(response);
         return response;
       }));
     });

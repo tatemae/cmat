@@ -11,15 +11,14 @@ var Map = ModelBase.extend({
   user_id: DS.attr('number'),
   title: DS.attr('string'),
   payload: DS.attr('string'),
-  mc3Source: DS.attr('string'),
+  // mc3Source: DS.attr('string'),
   objective_bank_id: DS.attr('string'),
-  isMc3: DS.attr('boolean'),
+  // isMc3: DS.attr('boolean'),
   parsed_payload: function(){
     return $.parseJSON(this.get('payload') || '');
   }.property('payload'),
 
   load_from_mc3: function(objectiveBank){
-    this.set('isMc3', true);
     _self = this;
 
     return new Ember.RSVP.Promise(function(resolve, reject){
@@ -116,8 +115,6 @@ var Map = ModelBase.extend({
             y += deltaY*3;
           // }
         }
-
-
 
         console.log(number_of_nodes);
 
