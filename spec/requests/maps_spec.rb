@@ -2,10 +2,11 @@ require 'spec_helper'
 
 describe "Maps" do
   describe "GET /maps" do
+    let(:user) { User.create! email: 'user@example.com', password: 'asdfasdf' }
     it "retrieves an collection of maps" do
-      Map.create! title: 'foo1'
-      Map.create! title: 'foo2'
-      get api_maps_path format: :json
+      Map.create! title: 'foo1', user: user
+      Map.create! title: 'foo2', user: user
+      get api_maps_path format: :json, user_id: user.id
       expect(JSON.parse(response.body)['maps'].count).to eq(2)
     end
   end
