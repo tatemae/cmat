@@ -12,6 +12,7 @@ Kinetic.NodeConnector = (function() {
 
       this.current_node_over = null;
 
+      this.on('dragmove', this._dragMove.bind(this));
       this.on('dragend', this._dragEnd.bind(this));
       // this.on('click tap', this._pressed);
       this.on('mouseover', this._mouseover);
@@ -99,8 +100,6 @@ Kinetic.NodeConnector = (function() {
       e.cancelBubble = true;
 
       this._animatePress();
-
-      // UI.cmat_app._newNode(e, this.current_node_over);
     },
 
     _mouseover: function(e) {
@@ -127,7 +126,15 @@ Kinetic.NodeConnector = (function() {
       this.showConnection();
     },
 
-    _dragEnd: function() {
+    _dragMove: function() {
+    },
+
+    _dragEnd: function(e) {
+      var xy = {x: this.attrs.x, y: this.attrs.y};
+      var node_over = UI.findIntersection(xy);
+      if (node_over) {
+        this.current_node_over.connect(node_over);
+      }
       this.hideConnection();
     },
 

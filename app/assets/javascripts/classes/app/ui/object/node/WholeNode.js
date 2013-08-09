@@ -95,13 +95,11 @@ Kinetic.WholeNode = (function() {
     },
 
     _addOwnNeighbour: function(node) {
-      this.attrs.ownNeighbours.add(node);
-      this._ownsConnection[node._id] = true;
+      this._ownsConnection[node.attrs.id] = true;
     },
 
     _removeOwnNeighbour: function(node) {
-      this.attrs.ownNeighbours.remove(node);
-      this._ownsConnection[node._id] = false;
+      this._ownsConnection[node.attrs.id] = false;
     },
 
     connections: function() {
@@ -109,7 +107,7 @@ Kinetic.WholeNode = (function() {
     },
 
     connect: function(node) {
-      if (node != this && !this.isConnected(node)) {
+      if (node != this && !this.ownsConnectionWith(node)) {
         var attrs = {};
         attrs.strokeStyle = '#34495E';
         attrs.lineJoin = 'round';
@@ -147,12 +145,12 @@ Kinetic.WholeNode = (function() {
       }
     },
 
-    ownsConnectionWith: function(c) {
-      return this._ownsConnection[c._id];
+    ownsConnectionWith: function(node) {
+      return this._ownsConnection[node.attrs.id];
     },
 
-    isConnected: function(c) {
-      return this.getNeighbours().contains(c);
+    isConnected: function(node) {
+      return this.getNeighbours().contains(node);
     },
 
     _animateMouseover: function() {

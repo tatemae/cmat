@@ -203,6 +203,20 @@ UI = (function() {
     return canvas.getY() * -1;
   }
 
+  function findIntersection(xy) {
+    var node_over;
+    this.cmat_app.wholeNodes.children.forEach(function(wholeNode){
+      var x = wholeNode.getX();
+      var y = wholeNode.getY();
+      var width = wholeNode.node.getWidth();
+      var height = wholeNode.node.getHeight();
+      if (xy.x > x - width / 2 && xy.x < x + width / 2 && xy.y > y - height / 2 && xy.y < y + height / 2) {
+        node_over = wholeNode;
+      }
+    });
+    return node_over;
+  }
+
   publicAPI.build = build;
   publicAPI.showLoading = showLoading;
   publicAPI.trackLoading = trackLoading;
@@ -215,6 +229,7 @@ UI = (function() {
   publicAPI.canvasScale = canvasScale;
   publicAPI.offsetX = offsetX;
   publicAPI.offsetY = offsetY;
+  publicAPI.findIntersection = findIntersection;
 
   return publicAPI;
 })();
