@@ -9,10 +9,10 @@ Kinetic.WholeNode = (function() {
     _init: function(config) {
       Kinetic.Group.call(this, config);
 
-      this.attrs.connections = [];
-      this.attrs._connections = [];
-      this.attrs.neighbours = [];
-      this.attrs.ownNeighbours = [];
+      // this.attrs.connections = [];
+      // this.attrs._connections = [];
+      // this.attrs.neighbours = [];
+      // this.attrs.ownNeighbours = [];
       this._ownsConnection = {};
 
       this.attrs.title = config.title || '';
@@ -74,25 +74,25 @@ Kinetic.WholeNode = (function() {
       this.mouseOverCatcher.moveUp();
     },
 
-    getConnections: function() {
-      return this.attrs.connections;
-    },
+    // getConnections: function() {
+    //   return this.attrs.connections;
+    // },
 
-    _removeConnection: function(conn) {
-      this.attrs.connections.remove(conn);
-    },
+    // _removeConnection: function(conn) {
+    //   this.attrs.connections.remove(conn);
+    // },
 
-    getNeighbours: function() {
-      return this.attrs.neighbours;
-    },
+    // getNeighbours: function() {
+    //   return this.attrs.neighbours;
+    // },
 
-    _removeNeighbour: function(node) {
-      this.attrs.neighbours.remove(node);
-    },
+    // _removeNeighbour: function(node) {
+    //   this.attrs.neighbours.remove(node);
+    // },
 
-    getOwnNeighbours: function() {
-      return this.attrs.ownNeighbours;
-    },
+    // getOwnNeighbours: function() {
+    //   return this.attrs.ownNeighbours;
+    // },
 
     _addOwnNeighbour: function(node) {
       this._ownsConnection[node.attrs.id] = true;
@@ -102,8 +102,12 @@ Kinetic.WholeNode = (function() {
       this._ownsConnection[node.attrs.id] = false;
     },
 
-    connections: function() {
-      return this.getConnections().length;
+    // connections: function() {
+    //   return this.getConnections().length;
+    // },
+
+    numberConnections: function() {
+      return Object.size(this._ownsConnection);
     },
 
     connect: function(node) {
@@ -116,34 +120,33 @@ Kinetic.WholeNode = (function() {
         this.parent.parent.addConnection(attrs, this.parent.parent.getMarkerRadius(), 
           UI.cmat_app.wholeNodes.get('#'+this.node.attrs.id)[0].getParent(), 
           node);
-
       }
     },
 
-    disconnect: function(node) {
-      if (node != this && this.isConnected(node)) {
-        var delConn;
+    // disconnect: function(node) {
+    //   if (node != this && this.isConnected(node)) {
+    //     var delConn;
 
-        this.getConnections().forEach(function(conn) {
-          if (conn.hasNode(node)) {
-            delConn = conn;
-          }
-        });
+    //     this.getConnections().forEach(function(conn) {
+    //       if (conn.hasNode(node)) {
+    //         delConn = conn;
+    //       }
+    //     });
 
-        this._removeConnection(delConn);
-        node._removeConnection(delConn);
-        this._removeNeighbour(node);
-        node._removeNeighbour(this);
+    //     this._removeConnection(delConn);
+    //     node._removeConnection(delConn);
+    //     this._removeNeighbour(node);
+    //     node._removeNeighbour(this);
 
-        if (this.ownsConnectionWith(node)) {
-          this._removeOwnNeighbour(node);
-        } else {
-          node._removeOwnNeighbour(this);
-        }
+    //     if (this.ownsConnectionWith(node)) {
+    //       this._removeOwnNeighbour(node);
+    //     } else {
+    //       node._removeOwnNeighbour(this);
+    //     }
 
-        delConn.destroy();
-      }
-    },
+    //     delConn.destroy();
+    //   }
+    // },
 
     ownsConnectionWith: function(node) {
       return this._ownsConnection[node.attrs.id];

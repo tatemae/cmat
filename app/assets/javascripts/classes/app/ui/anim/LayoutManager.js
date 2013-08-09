@@ -30,7 +30,7 @@
 Kinetic.LayoutManager = (function() {
   var ANTI_GRAVITY = 4;
   var ANTI_GRAVITY_REACH = 4;
-  var GRAVITY = 2;
+  var GRAVITY = 0.5;
   var CIRCLE_PADDING = 0.2;
   var READJUST_LAYOUT_STEPS = 15;
 
@@ -66,7 +66,7 @@ Kinetic.LayoutManager = (function() {
           setX:         function(a, v)  { a.attrs.x = v; },
           setY:         function(a, v)  { a.attrs.y = v; },
           ownsEdgeTo:   function(a, b)  { return a.ownsConnectionWith(b); },
-          owningEdges:  function(a)     { return a.connections(); }
+          owningEdges:  function(a)     { return a.numberConnections(); }
         },
         maxDim: this._bounds.width,
         antiGravity: ANTI_GRAVITY,
