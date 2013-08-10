@@ -42,12 +42,6 @@ Kinetic.AppNode = (function() {
     _init: function(config) {
       Kinetic.Image.call(this, config);
 
-      this.attrs.connections = [];
-      this.attrs._connections = [];
-      this.attrs.neighbours = [];
-      this.attrs.ownNeighbours = [];
-      this._ownsConnection = {};
-
       this.on('dblclick dbltap', this._pressed);
       this.on('radiusChange', this._syncRadiusWithImageSize);
       this.on('widthChange heightChange', this._syncSizeWithOffset);
@@ -112,8 +106,6 @@ Kinetic.AppNode = (function() {
       evt.cancelBubble = true;
 
       this._animatePress();
-
-      // this.getParent().fire('onePressed', this);
     },
     
     simulatePress: function() {

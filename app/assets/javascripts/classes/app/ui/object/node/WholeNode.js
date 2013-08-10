@@ -117,8 +117,8 @@ Kinetic.WholeNode = (function() {
         attrs.lineJoin = 'round';
         attrs.lineWidth = 1;
         attrs.nodes = [ this.node.attrs.id, node.attrs.id ];
-        this.parent.parent.addConnection(attrs, this.parent.parent.getMarkerRadius(), 
-          UI.cmat_app.wholeNodes.get('#'+this.node.attrs.id)[0].getParent(), 
+        UI.cmat_app.addConnection(attrs, UI.cmat_app.getMarkerRadius(),
+          UI.cmat_app.wholeNodes.get('#'+this.node.attrs.id)[0].getParent(),
           node);
       }
     },
@@ -200,8 +200,7 @@ Kinetic.WholeNode = (function() {
     },
 
     _doubleClick: function(e) {
-      // HACK. This is ugly since the node now has to know about how it is accessed.
-      this.parent.parent.editNode(this);
+      UI.cmat_app.editNode(this);
     }
 
   });
