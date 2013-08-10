@@ -42,7 +42,6 @@ Kinetic.AppNode = (function() {
     _init: function(config) {
       Kinetic.Image.call(this, config);
 
-      this.on('dblclick dbltap', this._pressed);
       this.on('radiusChange', this._syncRadiusWithImageSize);
       this.on('widthChange heightChange', this._syncSizeWithOffset);
 
@@ -73,44 +72,6 @@ Kinetic.AppNode = (function() {
     _syncSizeWithOffset: function() {
       this.setOffset(this.getWidth() / 2, this.getHeight() / 2);
     },
-
-    _animatePress: function() {
-      var tweening = this.isTweening();
-      var actualRadius = this._calcRadius();
-      var currRadius = this.getRadius();
-      var expandRadius = !tweening ? currRadius : actualRadius;
-      var normalRadius = tweening ? actualRadius : currRadius;
-
-      this.to({
-        radius: expandRadius * EXPAND,
-        duration: EXPAND_TIME,
-        easing: 'StrongEaseOut',
-        callback: function() {
-          this.to({
-            radius: normalRadius * COLLAPSE,
-            duration: COLLAPSE_TIME,
-            easing: 'BackEaseInOut',
-            callback: function() {
-              this.to({
-                radius: normalRadius,
-                duration: TO_NORMAL_TIME,
-                easing: 'BackEaseOut'
-              });
-            }
-          });
-        }
-      });
-    },
-
-    _pressed: function(evt) {
-      evt.cancelBubble = true;
-
-      this._animatePress();
-    },
-    
-    simulatePress: function() {
-      this._pressed({});
-    }
 
   });
 
