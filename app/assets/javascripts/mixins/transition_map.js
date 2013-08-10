@@ -1,8 +1,8 @@
 var MapModel = require('../models/map');
 
-var CurrentMap = Ember.Mixin.create({
+var TransitionMap = Ember.Mixin.create({
 
-  transitionToCurrentMap: function(){
+  transitionToTransitionMap: function(){
     var _self = this;
     var current_user = this.controllerFor('currentUser');
     if(!Ember.isEmpty(current_user)){
@@ -32,4 +32,4 @@ var CurrentMap = Ember.Mixin.create({
 
 });
 
-module.exports = CurrentMap;
+module.exports = TransitionMap;

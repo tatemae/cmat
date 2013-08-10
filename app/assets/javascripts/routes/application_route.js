@@ -2,6 +2,12 @@ var Toolbar = require('../models/toolbar');
 var Node = require('../models/node');
 var ApplicationRoute = Ember.Route.extend({
 
+  events: {
+    error: function(error, transition) {
+      console.log('**** Error:' + error.message);
+    }
+  },
+
   renderTemplate: function() {
     this.render();
     this.render("toolbar", { outlet: "toolbar", into: "application" });

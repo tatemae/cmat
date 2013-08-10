@@ -12,12 +12,12 @@ var MapController = Ember.ObjectController.extend(AutoSave, {
   instaSaveFields: ['payload'],
 
   userLogin: function(){
-    console.log('userLogin called because of controllers.currentUser');
     var user_id = this.get('controllers.currentUser').get('id');
     if(user_id){
       this.get('content').set('user_id', user_id);
+      this.content.save();
     }
-  }.property('currentUser')
+  }.observes('controllers.currentUser.isSignedIn')
 
 });
 

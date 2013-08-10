@@ -1,4 +1,6 @@
-var SessionsNewController = Ember.ObjectController.extend({
+var TransitionBack = require('../mixins/transition_back');
+
+var SessionsNewController = Ember.ObjectController.extend(TransitionBack, {
   needs: ['map', 'currentUser'],
 
   save: function(){
@@ -14,15 +16,6 @@ var SessionsNewController = Ember.ObjectController.extend({
   cancel: function() {
     this.content.deleteRecord();
     this.transitionBack();
-  },
-
-  transitionBack: function(){
-    var map = this.get('controllers.map').get('content');
-    if(Ember.isNone(map)){
-      this.transitionToRoute('index');
-    } else {
-      this.transitionToRoute('map', map);
-    }
   }
 
 });

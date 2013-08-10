@@ -1,7 +1,7 @@
 var Session = require('../../models/session');
-var AuthenticatedUser = require('../../mixins/authenticated_user');
+var TransitionSignedIn = require('../../mixins/transition_signed_in');
 
-var SessionsNewRoute = Ember.Route.extend(AuthenticatedUser, {
+var SessionsNewRoute = Ember.Route.extend(TransitionSignedIn, {
 
   model: function(){
     return Session.createRecord();

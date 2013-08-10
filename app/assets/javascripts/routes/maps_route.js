@@ -1,11 +1,11 @@
-var CurrentMap = require('../mixins/current_map');
+var TransitionMap = require('../mixins/transition_map');
 
-MapsRoute = Ember.Route.extend(CurrentMap, {
+MapsRoute = Ember.Route.extend(TransitionMap, {
 
   afterModel: function(model, transition){
     if(transition.targetName == "maps.index"){
       transition.abort();
-      this.transitionToCurrentMap();
+      this.transitionToTransitionMap();
     }
   }
 

@@ -1,5 +1,5 @@
 
-var AuthenticatedUser = Ember.Mixin.create({
+var TransitionSignedIn = Ember.Mixin.create({
 
   beforeModel: function(){
     if(this.controllerFor('currentUser').get('isSignedIn')){
@@ -9,4 +9,4 @@ var AuthenticatedUser = Ember.Mixin.create({
 
 });
 
-module.exports = AuthenticatedUser;
+module.exports = TransitionSignedIn;
