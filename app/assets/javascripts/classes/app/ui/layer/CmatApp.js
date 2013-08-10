@@ -41,10 +41,12 @@ Kinetic.CmatApp = (function() {
     _newNode: function(e, parent) {
       this.node_adder.attrs.opacity = 0;
       var xy = UI.getPos(e);
-      xy.x = xy.x + UI.offsetX();
-      xy.y = xy.y + UI.offsetY();
       xy.x = xy.x / UI.canvasScale();
       xy.y = xy.y / UI.canvasScale();
+      xy.x = xy.x + UI.getStage().getOffset().x;
+      xy.y = xy.y + UI.getStage().getOffset().y;
+      xy.x = xy.x + UI.offsetX();
+      xy.y = xy.y + UI.offsetY();
       var node = CmatSettings.node;
       node.set('id', '');
       node.set('title', '');

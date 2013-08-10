@@ -8,6 +8,8 @@ UI = (function() {
   var canvas;
   var panZoomBackground;
   var scale = 1;
+  var zoomFactor = 1.1;
+  var origin = { x: 0, y: 0 };
   var loading;
 
   var screenWidth, screenHeight;
@@ -102,15 +104,26 @@ UI = (function() {
 
 
     var zoom = function(e) {
-      var zoomAmount = e.wheelDeltaY*0.001;
-      scale = canvas.getScale().x+zoomAmount;
-      if (scale > 0.16) {
-        canvas.setScale(scale)
-        canvas.draw();
-      }
+
+      e.preventDefault();
+      var evt = e.originalEvent;
+      var mx = evt.clientX /* - canvas.offsetLeft */;
+      var my = evt.clientY /* - canvas.offsetTop */;
+      var wheel = evt.wheelDelta / 120;
+      var zoom = (zoomFactor - (evt.wheelDelta < 0 ? 0.2 : 0));
+      var newscale = scale * zoom;
+      origin.x = mx / scale + origin.x - mx / newscale;
+      origin.y = my / scale + origin.y - my / newscale;
+
+      canvas.getStage().setOffset(origin.x, origin.y);
+      canvas.getStage().setScale(newscale);
+      canvas.getStage().draw();
+
+      scale *= zoom;
+
     }
 
-    document.addEventListener("mousewheel", zoom, false)
+    $(UI.getStage().content).on('mousewheel', zoom);
 
     stage.add(canvas);
   }
@@ -128,38 +141,16 @@ UI = (function() {
   function buildGroupLayers() {
     canvas.add(layer.bg = new Kinetic.Background($$$.copy($$$.clone(dims), { name: 'Background'} )));
     canvas.add(layer.cmat_app = new Kinetic.CmatApp($$$.copy($$$.clone(dims), { name: 'CmatApp'} )));
-    // canvas.add(layer.inactiveDisp = new Kinetic.InactiveDisplay($$$.clone(dims)));
-    // canvas.add(layer.menu = new Kinetic.Menu($$$.clone(dims)));
-    // canvas.add(layer.gameOver = new Kinetic.GameOver($$$.clone(dims)));
-    
-    // if (DAO.isIntroNeeded()) {
-    //   canvas.add(layer.intro = new Kinetic.Intro($$$.clone(dims)));
-    // }
-    
-    // canvas.add(layer.message = new Kinetic.Message($$$.clone(dims)));
-    // canvas.add(layer.quit = new Kinetic.Quit($$$.clone(dims)));
     canvas.add(layer.fading = new Kinetic.Fading($$$.copy($$$.clone(dims), { name: 'Fading' } )));
 
     $$$.copy(publicAPI, layer);
   }
 
   function buildLayoutManager() {
-    // var turns = layer.game.hud.turns;
-    // var pause = layer.game.hud.pause;
 
     publicAPI.layoutManager = new Kinetic.LayoutManager({
       wholeNodes: layer.cmat_app.wholeNodes.getChildren(),
       connections: layer.cmat_app.connections.getChildren(),
-      // clearCorners: {
-      //   tl: {
-      //     width: turns.getSizeWidth(),
-      //     height: turns.getHeight()
-      //   },
-      //   tr: {
-      //     width: pause.getWidth(),
-      //     height: pause.getHeight()
-      //   }
-      // },
       redrawNode: canvas,
       bounds: $$$.clone(dims)
     });
