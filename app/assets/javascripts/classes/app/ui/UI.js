@@ -1,6 +1,8 @@
 UI = (function() {
   var PADDING = 0.016;
   var MAX_RATIO = 15 / 9;
+  var MIN_ZOOM_OUT = 0.1;
+  var MAX_ZOOM_IN = 2.0;
 
   var dims;
 
@@ -112,14 +114,16 @@ UI = (function() {
       var wheel = evt.wheelDelta / 120;
       var zoom = (zoomFactor - (evt.wheelDelta < 0 ? 0.2 : 0));
       var newscale = scale * zoom;
-      origin.x = mx / scale + origin.x - mx / newscale;
-      origin.y = my / scale + origin.y - my / newscale;
+      if (newscale > MIN_ZOOM_OUT && newscale < MAX_ZOOM_IN) {
+        origin.x = mx / scale + origin.x - mx / newscale;
+        origin.y = my / scale + origin.y - my / newscale;
 
-      canvas.getStage().setOffset(origin.x, origin.y);
-      canvas.getStage().setScale(newscale);
-      canvas.getStage().draw();
+        canvas.getStage().setOffset(origin.x, origin.y);
+        canvas.getStage().setScale(newscale);
+        canvas.getStage().draw();
 
-      scale *= zoom;
+        scale *= zoom;
+      }
 
     }
 
