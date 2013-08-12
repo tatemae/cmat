@@ -226,6 +226,9 @@ Kinetic.CmatApp = (function() {
           wholeNode.attrs.type = node.get('type');
           wholeNode.node.attrs.type = node.get('type');
           wholeNode.node._updateImage();
+          var cmat_node = this.cmat_to_mc3(wholeNode.attrs.title, wholeNode.attrs.info, wholeNode.attrs.type, CmatSettings.map.get('objective_bank_id'));
+          cmat_node['id'] = wholeNode.attrs.id
+          App.Objective.saveChanges(cmat_node).then(function(node){});
           console.log('type: ' + node.get('type'));
           this.parent.draw();
         } else if ( CmatSettings.node.get('state') == "cancel" ){

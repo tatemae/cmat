@@ -50,7 +50,7 @@ Objective.reopenClass({
     return new Ember.RSVP.Promise(function(resolve, reject){
       var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objective['objectiveBankId']+'/objectives';
 
-      resolve($.ajax({type: "POST", url: url, data: JSON.stringify(objective), contentType: "application/json", dataType: 'json'}).then(function(response){
+      resolve($.ajax({type: "PUT", url: url, data: JSON.stringify(objective), contentType: "application/json", dataType: 'json'}).then(function(response){
         return response;
       }));
     });
