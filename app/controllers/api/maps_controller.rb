@@ -16,8 +16,7 @@ class Api::MapsController < ApplicationController
   end
 
   def show
-    render json: @map
-    # respond_with(:api, @map)
+    respond_with(:api, @map)
   end
 
   def create
@@ -26,8 +25,7 @@ class Api::MapsController < ApplicationController
     else
       @map = Map.create(map_params)
     end
-    render json: @map
-    # respond_with(:api, @map)
+    respond_with(:api, @map)
   end
 
   def update
