@@ -20,23 +20,32 @@ Objective.reopenClass({
         url = url + '/rootids'
       }
 
-      console.log(url);
-      resolve($.getJSON(url).always(function(response, status, error){
-        if(status == 'error')
-        {
+      resolve($.ajax(url, {
+        success: function(response){
+          if(query['children'] || query['roots'])
+          {
+            return response;
+          }
+          else
+          {
+            var objectives = Em.A();
+            response.forEach(function (objective) {
+              objectives.pushObject(App.Objective.create(objective));
+            });
+            return objectives;
+          }
+        },
+        error: function(data){
           return {ids: []};
-        }
-        if(query['children'] || query['roots'])
-        {
-          return response;
-        }
-        else
-        {
-          var objectives = Em.A();
-          response.forEach(function (objective) {
-            objectives.pushObject(App.Objective.create(objective));
-          });
-          return objectives;
+        },
+        fail: function(data){
+          return {ids: []};
+        },
+
+        statusCode: {
+          404: function(data){
+            return {ids: []};
+          }
         }
       }));
     });
