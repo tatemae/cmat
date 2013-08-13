@@ -21,7 +21,11 @@ Objective.reopenClass({
       }
 
       console.log(url);
-      resolve($.getJSON(url).then(function(response){
+      resolve($.getJSON(url).always(function(response, status, error){
+        if(status == 'error')
+        {
+          return {ids: []};
+        }
         if(query['children'] || query['roots'])
         {
           return response;
@@ -35,7 +39,6 @@ Objective.reopenClass({
           return objectives;
         }
       }));
-
     });
   },
   saveNew: function(objective, parent) {
