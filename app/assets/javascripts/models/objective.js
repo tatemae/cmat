@@ -13,21 +13,27 @@ Objective.reopenClass({
 
       if(query['children'])
       {
-        url = url + '/' + query['objective'] + '/children'
+        url = url + '/' + query['objective'] + '/childrenids'
       }
-
-      if(query['roots'])
+      else if(query['roots'])
       {
-        url = url + '/roots'
+        url = url + '/rootids'
       }
 
       console.log(url);
       resolve($.getJSON(url).then(function(response){
-        var objectives = Em.A();
-        response.forEach(function (objective) {
-          objectives.pushObject(App.Objective.create(objective));
-        });
-        return objectives;
+        if(query['children'] || query['roots'])
+        {
+          return response;
+        }
+        else
+        {
+          var objectives = Em.A();
+          response.forEach(function (objective) {
+            objectives.pushObject(App.Objective.create(objective));
+          });
+          return objectives;
+        }
       }));
 
     });
