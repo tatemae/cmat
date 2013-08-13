@@ -49,7 +49,7 @@ Objective.reopenClass({
     var relationship_url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objectiveBankId+'/objectives/'+childId+'/parentids';
     console.log({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'});
     // There seems to be a bug in the api
-    // $.ajax({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'})
+    $.ajax({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'})
   },
   saveChanges: function(objective) {
     return new Ember.RSVP.Promise(function(resolve, reject){
