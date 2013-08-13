@@ -6,7 +6,10 @@ Objective.reopenClass({
   findQuery: function(query){
     return new Ember.RSVP.Promise(function(resolve, reject){
 
-      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+query['objectivebank']+'/objectives'
+      var params = query['params'];
+      var objective_bank_id = query['objective_bank_id'];
+
+      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objective_bank_id+'/objectives'
 
       if(query['children'])
       {
@@ -18,12 +21,13 @@ Objective.reopenClass({
         url = url + '/roots'
       }
 
+      console.log(url);
       resolve($.getJSON(url).then(function(response){
         var objectives = Em.A();
         response.forEach(function (objective) {
           objectives.pushObject(App.Objective.create(objective));
         });
-        return [objectives, query['parent']];
+        return objectives;
       }));
 
     });

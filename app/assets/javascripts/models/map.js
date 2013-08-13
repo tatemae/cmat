@@ -8,6 +8,8 @@ var Map = ModelBase.extend({
     "mc3-activity%3Amc3.learning.activity.asset.based%40MIT-OEIT": "activity"
   },
 
+  promises: 0,
+
   user_id: DS.attr('number'),
   title: DS.attr('string'),
   payload: DS.attr('string'),
@@ -18,7 +20,91 @@ var Map = ModelBase.extend({
     return $.parseJSON(this.get('payload') || '');
   }.property('payload'),
 
+  _load_children: function(objective_bank_id, objectives, tree, parent){
+    var _self = this;
+
+    // retrieve the node's children
+    _self.inc_promises();
+    App.Objective.findQuery({objective_bank_id: objective_bank_id, objective: parent['id'], children: true}).then(function(children){
+      
+      if(children.length == 0) return;
+
+      // add the children
+      for (var i=0; i<children.length; i++) {
+        var node = children[i];
+        if (!parent.children) parent.children = [];
+        parent.children.push(node);
+        _self._load_children(objective_bank_id, objectives, tree, node);
+      }
+    });
+  },
+
+  _extract_params: function(params) {
+    return params, params['objective_bank_id'], params['objectives'], params['tree'], params['parent'];
+  },
+
   load_from_mc3: function(objectiveBank){
+    var _self = this;
+    var tree = [];
+    var objective_bank_id = objectiveBank.get('id')
+    var objectives = [];
+
+    return new Ember.RSVP.Promise(function(resolve, reject){
+
+      // get all of the objectives
+      App.Objective.findQuery({objective_bank_id: objective_bank_id, roots: false}).then(function(all){
+
+        // build a list of all objectives, indexed by their id
+        for (var i=0; i<all.length; i++) {
+          var node = all[i];
+          objectives[node['id']] = node;
+        }
+
+        // get the root node ids
+        App.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true, only_ids: true}).then(function(roots){
+
+          // build the first layer of the tree
+          for (var i=0; i<roots.length; i++) {
+            var node = roots[i];
+            tree.push(node);
+            _self._load_children(objective_bank_id, objectives, tree, node);
+          }
+        });
+      });
+      resolve(_self);
+    });
+  },
+
+  inc_promises: function() {
+    this.promises++;
+    console.log("inc promises: " + this.promises);
+  },
+
+  dec_promises: function(tree){
+    this.promises--;
+    console.log("dec promises: " + this.promises);
+    if (promises == 0) {
+      this._render_tree(tree, 0);
+    }
+  },
+
+  _indent: function(spaces){
+    var indent = "";
+    for(var j=0; j<spaces; j++){
+      indent = indent + " ";
+    }
+    return indent;
+  },
+
+  _render_tree: function(tree, depth) {
+    for(var i=0; i<tree.length; i++){
+      var node = tree[i];
+      console.log(this.indent(depth) + node['title']);
+      this._render_tree(tree, depth+1);
+    }
+  },
+
+  load_from_mc3_old: function(objectiveBank){
     _self = this;
 
     return new Ember.RSVP.Promise(function(resolve, reject){
