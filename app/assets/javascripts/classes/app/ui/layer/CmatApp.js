@@ -194,6 +194,11 @@ Kinetic.CmatApp = (function() {
     addConnection: function(attrs, markerRadius, node1, node2){
       var conn = new Kinetic.Connection(attrs, markerRadius, node1, node2);
       this.connections.add(conn);
+      if((!Em.isEmpty(CmatSettings.map.get('objective_bank_id'))) ) {
+        var parentIds = Object.keys(node1._ownsConnection);
+        //TODO: how to detect on new node
+        App.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node1.id, parentIds );
+      }
     },
 
     getMarkerRadius: function() {

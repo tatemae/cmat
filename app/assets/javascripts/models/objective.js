@@ -42,13 +42,18 @@ Objective.reopenClass({
       // objectiveBankId
       resolve($.ajax({type: "POST", url: url, data: JSON.stringify(objective), contentType: "application/json", dataType: 'json'}).then(function(response){
         if(!Em.isNone(parent)){
-          var relationship = [parent.attrs.id]
-          var relationship_url = 'handcar/services/learning/objectivebanks/'+objective['objectiveBankId']+'/objectives/'+response['id']+'/parentids'
-          $.ajax({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'})
+          saveParentRelationship(objective['objectiveBankId'], objective['id'], [parent.attrs.id]);
         }
         return response;
       }));
     });
+  },
+  saveParentRelationship: function(objectiveBankId, childId, parentIds) {
+    var relationship = {ids: parentIds};
+    var relationship_url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objectiveBankId+'/objectives/'+childId+'/parentids';
+    console.log({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'});
+    // There seems to be a bug in the api
+    $.ajax({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'})
   },
   saveChanges: function(objective) {
     return new Ember.RSVP.Promise(function(resolve, reject){
