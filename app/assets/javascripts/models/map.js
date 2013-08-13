@@ -24,18 +24,23 @@ var Map = ModelBase.extend({
     var _self = this;
 
     // retrieve the node's children
-    _self.inc_promises();
+    _self.inc_promises(_self);
     App.Objective.findQuery({objective_bank_id: objective_bank_id, objective: parent['id'], children: true}).then(function(children){
-      
-      if(children.length == 0) return;
+      var childrenids = children['ids'];
+      if(childrenids.length == 0)
+      {
+        _self.dec_promises(_self, tree);
+        return;
+      }
 
-      // add the children
-      for (var i=0; i<children.length; i++) {
-        var node = children[i];
+      // add the childrenids
+      for (var i=0; i<childrenids.length; i++) {
+        var node = objectives[childrenids[i]];
         if (!parent.children) parent.children = [];
         parent.children.push(node);
         _self._load_children(objective_bank_id, objectives, tree, node);
       }
+      _self.dec_promises(_self, tree);
     });
   },
 
@@ -52,7 +57,8 @@ var Map = ModelBase.extend({
     return new Ember.RSVP.Promise(function(resolve, reject){
 
       // get all of the objectives
-      App.Objective.findQuery({objective_bank_id: objective_bank_id, roots: false}).then(function(all){
+      _self.inc_promises(_self);
+      App.Objective.findQuery({objective_bank_id: objective_bank_id}).then(function(all){
 
         // build a list of all objectives, indexed by their id
         for (var i=0; i<all.length; i++) {
@@ -61,30 +67,33 @@ var Map = ModelBase.extend({
         }
 
         // get the root node ids
-        App.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true, only_ids: true}).then(function(roots){
-
+        _self.inc_promises(_self);
+        App.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true}).then(function(data){
+          var rootids = data['ids'];
           // build the first layer of the tree
-          for (var i=0; i<roots.length; i++) {
-            var node = roots[i];
+          for (var i=0; i<rootids.length; i++) {
+            var node = objectives[rootids[i]];
             tree.push(node);
             _self._load_children(objective_bank_id, objectives, tree, node);
           }
+          _self.dec_promises(_self, tree);
         });
+        _self.dec_promises(_self, tree);
       });
       resolve(_self);
     });
   },
 
-  inc_promises: function() {
-    this.promises++;
-    console.log("inc promises: " + this.promises);
+  inc_promises: function(self) {
+    self.promises++;
+    console.log("inc promises: " + self.promises);
   },
 
-  dec_promises: function(tree){
-    this.promises--;
-    console.log("dec promises: " + this.promises);
-    if (promises == 0) {
-      this._render_tree(tree, 0);
+  dec_promises: function(self, tree){
+    self.promises--;
+    console.log("dec promises: " + self.promises);
+    if (self.promises == 0) {
+      self._render_tree(self, tree, 0);
     }
   },
 
@@ -96,11 +105,11 @@ var Map = ModelBase.extend({
     return indent;
   },
 
-  _render_tree: function(tree, depth) {
+  _render_tree: function(self, tree, depth) {
     for(var i=0; i<tree.length; i++){
       var node = tree[i];
-      console.log(this.indent(depth) + node['title']);
-      this._render_tree(tree, depth+1);
+      console.log(self._indent(depth) + node['displayName']['text']);
+      self._render_tree(tree, depth+1);
     }
   },
 
