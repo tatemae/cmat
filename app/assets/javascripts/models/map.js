@@ -53,6 +53,7 @@ var Map = ModelBase.extend({
     var tree = [];
     var objective_bank_id = objectiveBank.get('id')
     var objectives = [];
+    _self.promises = 0;
 
     return new Ember.RSVP.Promise(function(resolve, reject){
 
