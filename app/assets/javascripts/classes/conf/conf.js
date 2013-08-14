@@ -1,7 +1,8 @@
 Config = {
   settings: {
     canvas_element: 'map_canvas',
-    toolbar_element: 'toolbar'
+    toolbar_element: 'toolbar',
+    cmat_base_url: 'http://mc3-demo.mit.edu/handcar'
   },
   resources: {
     images: {
