@@ -11,7 +11,7 @@ Objective.reopenClass({
 
       if(query['children'])
       {
-        url = url + '/' + query['objective'] + '/childrenids'
+        url = url + '/' + query['objective'] + '/childids'
       }
       else if(query['roots'])
       {
@@ -19,55 +19,6 @@ Objective.reopenClass({
       }
 
       return $.getJSON(url);
-/*    return new Ember.RSVP.Promise(function(resolve, reject){
-      var res = resolve;
-
-      var params = query['params'];
-      var objective_bank_id = query['objective_bank_id'];
-
-      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objective_bank_id+'/objectives'
-
-      if(query['children'])
-      {
-        url = url + '/' + query['objective'] + '/childrenids'
-      }
-      else if(query['roots'])
-      {
-        url = url + '/rootids'
-      }
-      var weHaveFailure = true;
-      resolve($.getJSON(url).done(function(response){
-        console.log('=== done callback');
-        weHaveFailure = false;
-        if(query['children'] || query['roots'])
-        {
-          return response;
-        }
-        else
-        {
-          var objectives = Em.A();
-          response.forEach(function (objective) {
-            objectives.pushObject(App.Objective.create(objective));
-          });
-          return objectives;
-        }
-      }).fail(function(xhr, status, error){
-        console.log('=== fail callback');
-        console.log(status);
-        console.log(error);
-        console.log('=== fail callback after reserve');
-        return {ids: []};
-      }).complete(function(){
-        console.log('=== complete callback');
-        if(weHaveFailure)
-        {
-          console.log('=== complete callback if');
-          return {ids: []};
-        }
-        console.log('=== complete callback after if');
-      }));
-
-    });*/
   },
   saveNew: function(objective, parent) {
     return new Ember.RSVP.Promise(function(resolve, reject){
