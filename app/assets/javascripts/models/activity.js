@@ -6,7 +6,7 @@ Activity.reopenClass({
   findQuery: function(query){
     return new Ember.RSVP.Promise(function(resolve, reject){
 
-      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+query['objectivebank']
+      var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+query['objectivebank']
 
       if( query['objective'] )
       {

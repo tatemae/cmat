@@ -7,7 +7,7 @@ Objective.reopenClass({
       var params = query['params'];
       var objective_bank_id = query['objective_bank_id'];
 
-      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objective_bank_id+'/objectives'
+      var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+objective_bank_id+'/objectives'
 
       if(query['children'])
       {
@@ -22,7 +22,7 @@ Objective.reopenClass({
   },
   saveNew: function(objective, parent) {
     return new Ember.RSVP.Promise(function(resolve, reject){
-      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objective['objectiveBankId']+'/objectives';
+      var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+objective['objectiveBankId']+'/objectives';
       // An objective requires the following fields:
       // description.text
       // displayName.text
@@ -38,14 +38,14 @@ Objective.reopenClass({
   },
   saveParentRelationship: function(objectiveBankId, childId, parentIds) {
     var relationship = {ids: parentIds};
-    var relationship_url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objectiveBankId+'/objectives/'+childId+'/parentids';
+    var relationship_url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+objectiveBankId+'/objectives/'+childId+'/parentids';
     //console.log({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'});
     // There seems to be a bug in the api
     $.ajax({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'})
   },
   saveChanges: function(objective) {
     return new Ember.RSVP.Promise(function(resolve, reject){
-      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objective['objectiveBankId']+'/objectives';
+      var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+objective['objectiveBankId']+'/objectives';
 
       resolve($.ajax({type: "PUT", url: url, data: JSON.stringify(objective), contentType: "application/json", dataType: 'json'}).then(function(response){
         return response;
@@ -54,7 +54,7 @@ Objective.reopenClass({
   },
   deleteNode: function(query){
     return new Ember.RSVP.Promise(function(resolve, reject){
-      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+query['objectiveBankId']+'/objectives/'+query['objectiveId'];
+      var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+query['objectiveBankId']+'/objectives/'+query['objectiveId'];
 
       resolve($.ajax({type: "DELETE", url: url, contentType: "application/json", dataType: 'json'}).then(function(response){
         return response;
