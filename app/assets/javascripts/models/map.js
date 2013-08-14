@@ -53,6 +53,7 @@ var Map = ModelBase.extend({
     var _self = this;
     var tree = [];
     var objective_bank_id = objectiveBank.get('id');
+    _self.obj_bank_id = objective_bank_id;
     var objectives = [];
     _self.promises = 0;
 
@@ -60,11 +61,11 @@ var Map = ModelBase.extend({
 
       // get all of the objectives
       _self.inc_promises(_self);
-      App.Objective.findQuery({objective_bank_id: objective_bank_id}).then(function(response){
-        var all = Em.A();
-        response.forEach(function (objective) {
-          all.pushObject(App.Objective.create(objective));
-        });
+      App.Objective.findQuery({objective_bank_id: objective_bank_id}).then(function(all){
+        // var all = Em.A();
+        // response.forEach(function (objective) {
+        //   all.pushObject(App.Objective.create(objective));
+        // });
 
         // build a list of all objectives, indexed by their id
         for (var i=0; i<all.length; i++) {
@@ -76,8 +77,6 @@ var Map = ModelBase.extend({
         _self.inc_promises(_self);
 
         App.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true}).then(function(data){
-          console.log("=== roots");
-          console.log(data);
           var rootids = data['ids'];
           // build the first layer of the tree
           for (var i=0; i<rootids.length; i++) {
@@ -98,15 +97,17 @@ var Map = ModelBase.extend({
 
   inc_promises: function(self) {
     self.promises++;
-    console.log("=== inc promises: " + self.promises);
   },
 
   dec_promises: function(self, tree){
     self.promises--;
-    console.log("=== dec promises: " + self.promises);
     if (self.promises == 0) {
-      self._render_tree(self, tree, 0);
+      var nodes = [];
+      self._render_tree(self, tree, 0, nodes);
+      UI.cmat_app.addNodes(nodes);
+      self.set('objective_bank_id', self.obj_bank_id);
     }
+
   },
 
   _indent: function(spaces){
@@ -117,14 +118,17 @@ var Map = ModelBase.extend({
     return indent;
   },
 
-  _render_tree: function(self, tree, depth) {
-          console.log('==== render tree');
+  _render_tree: function(self, tree, depth, nodes) {
     for(var i=0; i<tree.length; i++){
       var node = tree[i];
 
-      console.log(self._indent(depth) + node['displayName']['text']);
-      self._render_tree(tree, depth+1);
+      nodes.push(self._indent(depth) + node['displayName']['text']);
+      if(node.children)
+      {
+        self._render_tree(self, node.children, depth+1, nodes);
+      }
     }
+
   },
 
   load_from_mc3_old: function(objectiveBank){
