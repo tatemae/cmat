@@ -4,8 +4,6 @@ var Objective = Ember.Object.extend({
 
 Objective.reopenClass({
   findQuery: function(query){
-    return new Ember.RSVP.Promise(function(resolve, reject){
-
       var params = query['params'];
       var objective_bank_id = query['objective_bank_id'];
 
@@ -20,35 +18,56 @@ Objective.reopenClass({
         url = url + '/rootids'
       }
 
-      resolve($.ajax(url, {
-        success: function(response){
-          if(query['children'] || query['roots'])
-          {
-            return response;
-          }
-          else
-          {
-            var objectives = Em.A();
-            response.forEach(function (objective) {
-              objectives.pushObject(App.Objective.create(objective));
-            });
-            return objectives;
-          }
-        },
-        error: function(data){
-          return {ids: []};
-        },
-        fail: function(data){
-          return {ids: []};
-        },
+      return $.getJSON(url);
+/*    return new Ember.RSVP.Promise(function(resolve, reject){
+      var res = resolve;
 
-        statusCode: {
-          404: function(data){
-            return {ids: []};
-          }
+      var params = query['params'];
+      var objective_bank_id = query['objective_bank_id'];
+
+      var url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objective_bank_id+'/objectives'
+
+      if(query['children'])
+      {
+        url = url + '/' + query['objective'] + '/childrenids'
+      }
+      else if(query['roots'])
+      {
+        url = url + '/rootids'
+      }
+      var weHaveFailure = true;
+      resolve($.getJSON(url).done(function(response){
+        console.log('=== done callback');
+        weHaveFailure = false;
+        if(query['children'] || query['roots'])
+        {
+          return response;
         }
+        else
+        {
+          var objectives = Em.A();
+          response.forEach(function (objective) {
+            objectives.pushObject(App.Objective.create(objective));
+          });
+          return objectives;
+        }
+      }).fail(function(xhr, status, error){
+        console.log('=== fail callback');
+        console.log(status);
+        console.log(error);
+        console.log('=== fail callback after reserve');
+        return {ids: []};
+      }).complete(function(){
+        console.log('=== complete callback');
+        if(weHaveFailure)
+        {
+          console.log('=== complete callback if');
+          return {ids: []};
+        }
+        console.log('=== complete callback after if');
       }));
-    });
+
+    });*/
   },
   saveNew: function(objective, parent) {
     return new Ember.RSVP.Promise(function(resolve, reject){
@@ -69,7 +88,7 @@ Objective.reopenClass({
   saveParentRelationship: function(objectiveBankId, childId, parentIds) {
     var relationship = {ids: parentIds};
     var relationship_url = 'https://oki-dev.mit.edu/handcar/services/learning/objectivebanks/'+objectiveBankId+'/objectives/'+childId+'/parentids';
-    console.log({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'});
+    //console.log({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'});
     // There seems to be a bug in the api
     $.ajax({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'})
   },

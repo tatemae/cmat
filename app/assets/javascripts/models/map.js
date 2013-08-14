@@ -13,9 +13,8 @@ var Map = ModelBase.extend({
   user_id: DS.attr('number'),
   title: DS.attr('string'),
   payload: DS.attr('string'),
-  // mc3Source: DS.attr('string'),
   objective_bank_id: DS.attr('string'),
-  // isMc3: DS.attr('boolean'),
+
   parsed_payload: function(){
     return $.parseJSON(this.get('payload') || '');
   }.property('payload'),
@@ -41,7 +40,9 @@ var Map = ModelBase.extend({
         _self._load_children(objective_bank_id, objectives, tree, node);
       }
       _self.dec_promises(_self, tree);
-    });
+    }, function(){
+        _self.dec_promises(_self, tree);
+      });
   },
 
   _extract_params: function(params) {
@@ -51,7 +52,7 @@ var Map = ModelBase.extend({
   load_from_mc3: function(objectiveBank){
     var _self = this;
     var tree = [];
-    var objective_bank_id = objectiveBank.get('id')
+    var objective_bank_id = objectiveBank.get('id');
     var objectives = [];
     _self.promises = 0;
 
@@ -59,7 +60,11 @@ var Map = ModelBase.extend({
 
       // get all of the objectives
       _self.inc_promises(_self);
-      App.Objective.findQuery({objective_bank_id: objective_bank_id}).then(function(all){
+      App.Objective.findQuery({objective_bank_id: objective_bank_id}).then(function(response){
+        var all = Em.A();
+        response.forEach(function (objective) {
+          all.pushObject(App.Objective.create(objective));
+        });
 
         // build a list of all objectives, indexed by their id
         for (var i=0; i<all.length; i++) {
@@ -69,7 +74,10 @@ var Map = ModelBase.extend({
 
         // get the root node ids
         _self.inc_promises(_self);
+
         App.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true}).then(function(data){
+          console.log("=== roots");
+          console.log(data);
           var rootids = data['ids'];
           // build the first layer of the tree
           for (var i=0; i<rootids.length; i++) {
@@ -78,7 +86,10 @@ var Map = ModelBase.extend({
             _self._load_children(objective_bank_id, objectives, tree, node);
           }
           _self.dec_promises(_self, tree);
+        }, function(){
+          _self.dec_promises(_self, tree);
         });
+
         _self.dec_promises(_self, tree);
       });
       resolve(_self);
@@ -87,12 +98,12 @@ var Map = ModelBase.extend({
 
   inc_promises: function(self) {
     self.promises++;
-    console.log("inc promises: " + self.promises);
+    console.log("=== inc promises: " + self.promises);
   },
 
   dec_promises: function(self, tree){
     self.promises--;
-    console.log("dec promises: " + self.promises);
+    console.log("=== dec promises: " + self.promises);
     if (self.promises == 0) {
       self._render_tree(self, tree, 0);
     }
@@ -107,8 +118,10 @@ var Map = ModelBase.extend({
   },
 
   _render_tree: function(self, tree, depth) {
+          console.log('==== render tree');
     for(var i=0; i<tree.length; i++){
       var node = tree[i];
+
       console.log(self._indent(depth) + node['displayName']['text']);
       self._render_tree(tree, depth+1);
     }
