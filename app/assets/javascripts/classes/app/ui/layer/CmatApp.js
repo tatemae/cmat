@@ -166,9 +166,12 @@ Kinetic.CmatApp = (function() {
           indent = indents / indentGuide;
         }
 
-        var title = nodeNames[i].trim();
-        var attrs = {title : title, x : x, y : y};
-
+        var values = nodeNames[i].split('|');
+        var title = values[0].trim();
+        var type = values[1].trim();
+        var info = values[2].trim();
+        var id = values[3].trim();
+        var attrs = {title : title, x : x, y : y, type: type, info: info, id: id };
         // check for indentation and if there is even
         // anything in the node
         if (indent > 0 && nodeNames[i].length > 0) {
@@ -197,7 +200,7 @@ Kinetic.CmatApp = (function() {
       if((!Em.isEmpty(CmatSettings.map.get('objective_bank_id'))) ) {
         var parentIds = Object.keys(node1._ownsConnection);
         //TODO: how to detect on new node
-        App.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node1.id, parentIds );
+        App.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node1.attrs.id, parentIds );
       }
     },
 
