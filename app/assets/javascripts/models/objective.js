@@ -39,8 +39,6 @@ Objective.reopenClass({
   saveParentRelationship: function(objectiveBankId, childId, parentIds) {
     var relationship = {ids: parentIds};
     var relationship_url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+objectiveBankId+'/objectives/'+childId+'/parentids';
-    //console.log({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'});
-    // There seems to be a bug in the api
     $.ajax({type: "PUT", url: relationship_url, data: JSON.stringify(relationship), contentType: "application/json", dataType: 'json'})
   },
   saveChanges: function(objective) {
