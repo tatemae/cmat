@@ -130,8 +130,8 @@ Kinetic.CmatApp = (function() {
       return this.getHeight();
     },
 
-    addNodes: function(nodesText){
-      var nodeNames = nodesText.split('\n');
+    addNodes: function(nodes){
+      var nodeNames = typeof nodes == "string" ? nodes.split('\n') : nodes;
 
       var workspaceWidth = this.canvasWidth();
       var workspaceHeight = this.canvasHeight();
