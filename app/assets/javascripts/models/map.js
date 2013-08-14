@@ -107,7 +107,6 @@ var Map = ModelBase.extend({
       UI.cmat_app.addNodes(nodes);
       self.set('objective_bank_id', self.obj_bank_id);
     }
-
   },
 
   _indent: function(spaces){
@@ -122,7 +121,7 @@ var Map = ModelBase.extend({
     for(var i=0; i<tree.length; i++){
       var node = tree[i];
 
-      nodes.push(self._indent(depth) + node['displayName']['text']);
+      nodes.push(self._indent(depth) + node['displayName']['text'] + '|' + this.cmat_types[node['genusTypeId']] + '|' + node['description']['text'] + '|' + node['id']);
       if(node.children)
       {
         self._render_tree(self, node.children, depth+1, nodes);
