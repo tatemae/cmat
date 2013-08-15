@@ -110,12 +110,17 @@ Kinetic.CmatApp = (function() {
         parent.connect(wholeNode);
       }
 
-      if((!Em.isEmpty(CmatSettings.map.get('objective_bank_id'))) && Em.isNone(attrs.id)){
-        var cmat_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'));
-        App.Objective.saveNew(cmat_node, parent).then(function(node){
-          wholeNode.id = node['id'];
-          wholeNode.attrs.id = node['id'];
-        });
+      if(!Em.isEmpty(CmatSettings.map.get('objective_bank_id'))){
+        if(Em.isNone(attrs.id)) {
+          var cmat_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'));
+          App.Objective.saveNew(cmat_node, parent).then(function(node){
+            wholeNode.id = node['id'];
+            wholeNode.attrs.id = node['id'];
+            if(!Em.isNone(parent)){
+               App.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node['id'], [parent.attrs.id]);
+            }
+          });
+        }
       }
 
       if (adjustLayout) {
@@ -265,11 +270,6 @@ Kinetic.CmatApp = (function() {
     addConnection: function(attrs, markerRadius, node1, node2){
       var conn = new Kinetic.Connection(attrs, markerRadius, node1, node2);
       this.connections.add(conn);
-      if((!Em.isEmpty(CmatSettings.map.get('objective_bank_id'))) ) {
-        var parentIds = Object.keys(node1._ownsConnection);
-        //TODO: how to detect on new node
-        App.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node1.attrs.id, parentIds );
-      }
     },
 
     getMarkerRadius: function() {
