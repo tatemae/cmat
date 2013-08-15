@@ -73,6 +73,12 @@ Kinetic.CmatApp = (function() {
      "activity": "mc3-activity%3Amc3.learning.activity.asset.based%40MIT-OEIT"
     },
 
+    mc3_types: {
+      "mc3-objective%3Amc3.learning.topic%40MIT-OEIT": "topic",
+      "mc3-objective%3Amc3.learning.outcome%40MIT-OEIT": "outcome",
+      "mc3-activity%3Amc3.learning.activity.asset.based%40MIT-OEIT": "activity"
+    },
+
     cmat_to_mc3: function(title, description, type, objectiveBankId) {
       return {
         displayName:{
@@ -94,7 +100,7 @@ Kinetic.CmatApp = (function() {
         draggable: true,
         title: attrs.title || '',
         info: attrs.info || '',
-        type: attrs.type || 'outcome'
+        type: attrs.type || 'topic'
       });
 
       this.wholeNodes.add(wholeNode);
@@ -131,24 +137,24 @@ Kinetic.CmatApp = (function() {
     },
 
     addNodes: function(nodes){
-      var nodeNames = typeof nodes == "string" ? nodes.split('\n') : nodes;
+      var nodes_array = typeof nodes == "string" ? nodes.split('\n') : nodes;
 
       var workspaceWidth = this.canvasWidth();
       var workspaceHeight = this.canvasHeight();
 
-      var deltaX = nodeNames.length > 10 ? (workspaceWidth / 11) : (workspaceWidth / (nodeNames.length + 1));
-      var deltaY = workspaceHeight / (Math.round(nodeNames.length/10) + 2);
+      var deltaX = nodes_array.length > 10 ? (workspaceWidth / 11) : (workspaceWidth / (nodes_array.length + 1));
+      var deltaY = workspaceHeight / (Math.round(nodes_array.length/10) + 2);
       var x = deltaX;
       var y = deltaY;
 
       var indentGuide = 0;
       var parents = [];
 
-      for (var i=0; i<nodeNames.length; i++) {
+      for (var i=0; i<nodes_array.length; i++) {
         var indents = 0;
 
         // Find the leading white space
-        var match = nodeNames[i].match(LEADING_WHITE_REGEX);
+        var match = nodes_array[i].match(LEADING_WHITE_REGEX);
         if (match) {
           // If the indentGuide hasn't been set yet, go ahead and set it
           // this will be the guide used for the rest of the node list
@@ -166,32 +172,94 @@ Kinetic.CmatApp = (function() {
           indent = indents / indentGuide;
         }
 
-        var values = nodeNames[i].split('|');
+        var values = nodes_array[i].split('|');
         var title = values[0].trim();
         var type = values[1].trim();
         var info = values[2].trim();
         var id = values[3].trim();
-        var attrs = {title : title, x : x, y : y, type: type, info: info, id: id };
-        // check for indentation and if there is even
-        // anything in the node
-        if (indent > 0 && nodeNames[i].length > 0) {
-          // the node has a parent, so send that parent in
-          parents[indent] = this.addNode(attrs, parents[indent-1]);
-        } else if (nodeNames[i].length > 0) {
-          // the node does not have a parent, just create that single node
-          parents[indent] = this.addNode(attrs);
-        }
+
         x += deltaX;
         if (x > workspaceWidth) {
-          var remainingNodes = nodeNames.length - i;
+          var remainingNodes = nodes_array.length - i;
           if (remainingNodes < 10)
             x = (workspaceWidth - (remainingNodes-2)*deltaX) / 2;
           else
             x = deltaX;
           y += deltaY;
         }
+
+        var attrs = {title : title, x : x, y : y, type: type, info: info, id: id };
+
+        // check for indentation and if there is even
+        // anything in the node
+        if (indent > 0 && nodes_array[i].length > 0) {
+          // the node has a parent, so send that parent in
+          parents[indent] = this.addNode(attrs, parents[indent-1]);
+        } else if (nodes_array[i].length > 0) {
+          // the node does not have a parent, just create that single node
+          parents[indent] = this.addNode(attrs);
+        }
       }
       this.adjustLayout();
+    },
+
+    addNodesTree: function(children){
+      var root = {children: children};
+      root.x0 = this.canvasWidth() / 2;
+      root.y0 = 30;
+      var dim = this.calculateDimensions(root);
+      var d3tree = d3.layout.tree().size(dim);
+      var nodes = d3tree.nodes(root);
+      var offset = nodes[1].y - 100;
+      for (var i=1; i<nodes.length; i++) {
+        var node = nodes[i];
+        var attrs = {title : node['displayName']['text'], x : node.x, y : node.y-offset, type: this.mc3_types[node['genusTypeId']], info: node['description'].text, id: node.id };
+        this.addNode(attrs, this.wholeNodeFromId(node.parent.id));
+      }
+
+      UI.getStage().draw();
+    },
+
+    wholeNodeFromId: function(id){
+      var result = this.wholeNodes.get("#"+ id)[0];
+      return result ? result.parent : null;
+    },
+
+    calculateDimensions: function(tree) {
+      var rows = [0];
+      this.recalculateDepth(tree.children, rows, 0);
+      var max_cols = 0;
+      for(var i = 0; i < rows.length; i++)
+      {
+        if(rows[i] > max_cols)
+        {
+          max_cols = rows[i];
+        }
+
+      }
+      var node_height = 400;
+      var node_width = 300;
+      var width = this.canvasWidth() > (node_width*(max_cols+1)) ? this.canvasWidth() : (node_width*(max_cols+1));
+      var height = this.canvasHeight() > node_height*(rows.length+1) ? this.canvasHeight() : node_height*(rows.length+1);
+      return [width, height]
+    },
+
+    recalculateDepth: function(nodes, rows, depth){
+      if( depth >= rows.length )
+      {
+        rows[depth] = nodes.length;
+      }
+      else
+      {
+        rows[depth] = rows[depth]+nodes.length;
+      }
+
+      for(var i = 0; i < nodes.length; i++)
+      {
+        if(nodes[i].children){
+          this.recalculateDepth(nodes[i].children, rows, depth+1);
+        }
+      }
     },
 
     addConnection: function(attrs, markerRadius, node1, node2){
