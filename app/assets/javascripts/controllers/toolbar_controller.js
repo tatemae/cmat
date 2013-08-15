@@ -41,7 +41,9 @@ var ToolbarController = Ember.Controller.extend({
   }.observes('mapSearchQuery'),
 
   importObjectiveBank: function(objectiveBank){
+    UI.cmat_app.clearMap();
     var map = this.get('controllers.map').get('model');
+    map.set('objective_bank_id', null);
     UI.showLoading();
     map.set('title', objectiveBank.get('displayName')['text']);
     map.load_from_mc3(objectiveBank).then(function(value){
