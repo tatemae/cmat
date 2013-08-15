@@ -22,7 +22,8 @@ UI = (function() {
   var container;
   var toolbar_height;
 
-  function showLoading() {
+  function showLoading(already_init) {
+
     params = {
       container: Config.settings.canvas_element,
       toolbar: Config.settings.toolbar_element
@@ -31,11 +32,14 @@ UI = (function() {
     container = params.container;
     toolbar_height = $('#'+params.toolbar).innerHeight();
 
-    if (stage)
-      return;
+    if (!already_init) {
+      if (stage)
+        return;
 
-    initStage(params);
+      initStage(params);
+    }
 
+    canvas.add(layer.fading = new Kinetic.Fading($$$.copy($$$.clone(dims), { name: 'Fading' } )));
     canvas.add(loading = new Kinetic.Loading($$$.clone(dims))).draw();
   }
 
@@ -145,7 +149,6 @@ UI = (function() {
   function buildGroupLayers() {
     canvas.add(layer.bg = new Kinetic.Background($$$.copy($$$.clone(dims), { name: 'Background'} )));
     canvas.add(layer.cmat_app = new Kinetic.CmatApp($$$.copy($$$.clone(dims), { name: 'CmatApp'} )));
-    canvas.add(layer.fading = new Kinetic.Fading($$$.copy($$$.clone(dims), { name: 'Fading' } )));
 
     $$$.copy(publicAPI, layer);
   }

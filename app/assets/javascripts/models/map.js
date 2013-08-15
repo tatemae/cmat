@@ -104,6 +104,7 @@ var Map = ModelBase.extend({
     if (self.promises == 0) {
       UI.cmat_app.addNodesTree(tree);
       self.set('objective_bank_id', self.obj_bank_id);
+      UI.fading.fastFadeOut(function(){});
     }
   },
 
