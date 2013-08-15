@@ -42,7 +42,7 @@ var ToolbarController = Ember.Controller.extend({
 
   importObjectiveBank: function(objectiveBank){
     var map = this.get('controllers.map').get('model');
-    UI.showLoading(true);
+    UI.showLoading();
     map.set('title', objectiveBank.get('displayName')['text']);
     map.load_from_mc3(objectiveBank).then(function(value){
     }, function(error){

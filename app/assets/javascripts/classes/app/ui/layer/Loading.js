@@ -78,7 +78,7 @@ Kinetic.Loading = (function() {
 
     destroy: function() {
       Kinetic.Group.prototype.destroy.call(this);
-      delete Image.text.loading;
+      // delete Image.text.loading;
     }
   });
 

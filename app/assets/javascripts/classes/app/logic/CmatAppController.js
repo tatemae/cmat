@@ -8,9 +8,10 @@ AppController = $$$.Class({
   },
 
   cmatApp: function() {
-    UI.fading.fastFadeOut(function() {
-      this.newApp();
-    }.bind(this));
+    // UI.fading.fastFadeOut(function() {
+    //   this.newApp();
+    // }.bind(this));
+    UI.hideLoading();
   },
 
   newApp: function() {

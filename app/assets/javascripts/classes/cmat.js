@@ -32,7 +32,7 @@ var Cmat = {
 
     Event.allFired({
       events: [ loaders.splash.loaded ],
-      callback: UI.showLoading
+      callback: UI.initUI
     });
 
     Event.allFired({

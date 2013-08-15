@@ -13,6 +13,7 @@ UI = (function() {
   var zoomFactor = 1.1;
   var origin = { x: 0, y: 0 };
   var loading;
+  var fading;
 
   var screenWidth, screenHeight;
 
@@ -22,7 +23,7 @@ UI = (function() {
   var container;
   var toolbar_height;
 
-  function showLoading(already_init) {
+  function initUI() {
 
     params = {
       container: Config.settings.canvas_element,
@@ -32,15 +33,12 @@ UI = (function() {
     container = params.container;
     toolbar_height = $('#'+params.toolbar).innerHeight();
 
-    if (!already_init) {
-      if (stage)
-        return;
+    if (stage)
+      return;
 
-      initStage(params);
-    }
+    initStage(params);
 
-    canvas.add(layer.fading = new Kinetic.Fading($$$.copy($$$.clone(dims), { name: 'Fading' } )));
-    canvas.add(loading = new Kinetic.Loading($$$.clone(dims))).draw();
+    showLoading();
   }
 
   function trackLoading(p) {
@@ -215,8 +213,26 @@ UI = (function() {
     return node_over;
   }
 
+  function showLoading() {
+    fade();
+    canvas.add(loading = new Kinetic.Loading($$$.clone(dims))).draw();
+  }
+
+  function fade() {
+    canvas.add(fading = new Kinetic.Fading($$$.copy($$$.clone(dims), { name: 'Fading' } )));
+    fading.fastFadeOut();
+  }
+
+  function hideLoading() {
+    fade();
+    if (loading) {
+      loading.destroy();
+      loading = null;
+    }
+  }
+
   publicAPI.build = build;
-  publicAPI.showLoading = showLoading;
+  publicAPI.initUI = initUI;
   publicAPI.trackLoading = trackLoading;
   publicAPI.getPos = getPos;
   publicAPI.getStage = getStage;
@@ -228,6 +244,8 @@ UI = (function() {
   publicAPI.offsetX = offsetX;
   publicAPI.offsetY = offsetY;
   publicAPI.findIntersection = findIntersection;
+  publicAPI.showLoading = showLoading;
+  publicAPI.hideLoading = hideLoading;
 
   return publicAPI;
 })();

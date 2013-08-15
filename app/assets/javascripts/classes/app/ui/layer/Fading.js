@@ -44,7 +44,7 @@ Kinetic.Fading = (function() {
         easing: 'EaseIn',
         duration: dur,
         callback: function() {
-          this.destroy();
+          // this.destroy();
           if (callback) callback();
         }
       });
