@@ -10,6 +10,8 @@ require('../vendor/bootstrap');
 require('../vendor/bootstrap-switch');
 
 window.Kinetic = require('../vendor/kinetic-v4.5.4');
+require('../vendor/d3/d3');
+require('../vendor/d3/d3.layout');
 require('../vendor/addon/kineticjs_addon');
 require('../classes/conf/conf');
 require('../classes/common/jslang/Array');
