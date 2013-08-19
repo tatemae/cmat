@@ -361,7 +361,7 @@ Kinetic.CmatApp = (function() {
     },
 
     loadKineticMap: function() {
-      this.clearMap();
+//      this.clearMap();
       var map = JSON.parse(CmatSettings.map.get('payload'));
       if (map !== null){
         map.children[0].children.forEach(function(a) {
