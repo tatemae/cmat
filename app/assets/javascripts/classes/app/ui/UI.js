@@ -134,6 +134,13 @@ UI = (function() {
     stage.add(canvas);
   }
 
+  function resetStage() {
+    var stage = canvas.getStage();
+    stage.setOffset(-1000,-10000);
+    stage.setScale(1);
+    stage.draw();
+  }
+
   function calcGameDimensions() {
     dims = {
       width: stage.getWidth(),
@@ -246,6 +253,7 @@ UI = (function() {
   publicAPI.findIntersection = findIntersection;
   publicAPI.showLoading = showLoading;
   publicAPI.hideLoading = hideLoading;
+  publicAPI.resetStage = resetStage;
 
   return publicAPI;
 })();

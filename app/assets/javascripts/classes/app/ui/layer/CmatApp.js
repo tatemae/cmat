@@ -17,8 +17,8 @@ Kinetic.CmatApp = (function() {
       this.attrs.nextNodeID = 1;
       this.rescaleWorkspace();
       this.observeSettings();
-      this.loadMap();
-      CmatSettings.map.addObserver('content', this, 'loadMap');
+      this.loadKineticMap();
+      CmatSettings.map.addObserver('content', this, 'loadKineticMap');
     },
 
     _createPressCatcher: function() {
@@ -67,13 +67,13 @@ Kinetic.CmatApp = (function() {
       node.set('state', 'edit');
     },
 
-    cmat_types: {
+    mc3_type: {
      "topic": "mc3-objective%3Amc3.learning.topic%40MIT-OEIT",
      "outcome": "mc3-objective%3Amc3.learning.outcome%40MIT-OEIT",
      "activity": "mc3-activity%3Amc3.learning.activity.asset.based%40MIT-OEIT"
     },
 
-    mc3_types: {
+    cmat_type: {
       "mc3-objective%3Amc3.learning.topic%40MIT-OEIT": "topic",
       "mc3-objective%3Amc3.learning.outcome%40MIT-OEIT": "outcome",
       "mc3-activity%3Amc3.learning.activity.asset.based%40MIT-OEIT": "activity"
@@ -87,7 +87,7 @@ Kinetic.CmatApp = (function() {
         description: {
           text: description || ''
         },
-        genusTypeId: this.cmat_types[type] || 'mc3-objective%3Amc3.learning.outcome%40MIT-OEIT',
+        genusTypeId: this.mc3_type[type] || 'mc3-objective%3Amc3.learning.outcome%40MIT-OEIT',
         objectiveBankId: objectiveBankId
       };
     },
@@ -133,19 +133,19 @@ Kinetic.CmatApp = (function() {
       this.wholeNodes.fire('nodeAdded', this);
     },
 
-    canvasWidth: function() {
+    visibleWidth: function() {
       return this.getWidth();
     },
 
-    canvasHeight: function() {
+    visibleHeight: function() {
       return this.getHeight();
     },
 
     addNodes: function(nodes){
       var nodes_array = typeof nodes == "string" ? nodes.split('\n') : nodes;
 
-      var workspaceWidth = this.canvasWidth();
-      var workspaceHeight = this.canvasHeight();
+      var workspaceWidth = this.visibleWidth();
+      var workspaceHeight = this.visibleHeight();
 
       var deltaX = nodes_array.length > 10 ? (workspaceWidth / 11) : (workspaceWidth / (nodes_array.length + 1));
       var deltaY = workspaceHeight / (Math.round(nodes_array.length/10) + 2);
@@ -209,16 +209,37 @@ Kinetic.CmatApp = (function() {
     },
 
     addNodesTree: function(children){
-      var root = {children: children};
-      root.x0 = this.canvasWidth() / 2;
-      root.y0 = 30;
-      var dim = this.calculateDimensions(root);
+
+      // add a bogus first node so we have a single parent
+      var visibleWidth = this.visibleWidth();
+      var root = {children: children, x0: visibleWidth / 2, y0: 30, id: 'root'};
+
+      var dim = this.calcMapSize(root);
       var d3tree = d3.layout.tree().size(dim);
       var nodes = d3tree.nodes(root);
-      var offset = nodes[1].y - 100;
+      root = nodes[0];
+
+      var offset_x = root.x - visibleWidth/2; // center the tree
+//      var offset_y = nodes[1].y - 100; // move nodes up the difference between the parent and first nodes
+      var offset_y = 0; // move nodes up the difference between the parent and first nodes
+
+      // var node = root;
+      // this.addNode({title : 'root', 
+      //                 x : node.x-offset_x, 
+      //                 y : node.y-offset_y, 
+      //                 type: 'topic', 
+      //                 info: null,
+      //                 id: node.id });
+
+      // d3 returns all nodes as a flat array, loop through and add them to the canvas
       for (var i=1; i<nodes.length; i++) {
         var node = nodes[i];
-        var attrs = {title : node['displayName']['text'], x : node.x, y : node.y-offset, type: this.mc3_types[node['genusTypeId']], info: node['description'].text, id: node.id };
+        var attrs = {title : node['displayName']['text'], 
+                      x : node.x-offset_x, 
+                      y : node.y-offset_y, 
+                      type: this.cmat_type[node['genusTypeId']], 
+                      info: node['description'].text, 
+                      id: node.id };
         this.addNode(attrs, this.wholeNodeFromId(node.parent.id));
       }
 
@@ -230,39 +251,35 @@ Kinetic.CmatApp = (function() {
       return result ? result.parent : null;
     },
 
-    calculateDimensions: function(tree) {
+    calcMapSize: function(tree) {
+      // each row counts the number of columns in it
       var rows = [0];
-      this.recalculateDepth(tree.children, rows, 0);
+      this.countChildren(tree.children, rows, 0);
+
+      // see what the max number of columns any of the rows have
       var max_cols = 0;
-      for(var i = 0; i < rows.length; i++)
-      {
-        if(rows[i] > max_cols)
-        {
+      for(var i = 0; i < rows.length; i++) {
+        if(rows[i] > max_cols) {
           max_cols = rows[i];
         }
-
       }
       var node_height = 400;
       var node_width = 300;
-      var width = this.canvasWidth() > (node_width*(max_cols+1)) ? this.canvasWidth() : (node_width*(max_cols+1));
-      var height = this.canvasHeight() > node_height*(rows.length+1) ? this.canvasHeight() : node_height*(rows.length+1);
+      var width = this.visibleWidth() > (node_width*(max_cols+1)) ? this.visibleWidth() : (node_width*(max_cols+1));
+      var height = this.visibleHeight() > node_height*(rows.length+1) ? this.visibleHeight() : node_height*(rows.length+1);
       return [width, height]
     },
 
-    recalculateDepth: function(nodes, rows, depth){
-      if( depth >= rows.length )
-      {
+    countChildren: function(nodes, rows, depth){
+      if( depth >= rows.length ){
         rows[depth] = nodes.length;
-      }
-      else
-      {
+      } else {
         rows[depth] = rows[depth]+nodes.length;
       }
-
-      for(var i = 0; i < nodes.length; i++)
-      {
+      // recurse down into the children's children
+      for(var i = 0; i < nodes.length; i++) {
         if(nodes[i].children){
-          this.recalculateDepth(nodes[i].children, rows, depth+1);
+          this.countChildren(nodes[i].children, rows, depth+1);
         }
       }
     },
@@ -340,25 +357,11 @@ Kinetic.CmatApp = (function() {
     clearMap: function() {
       this.connections.removeChildren();
       this.wholeNodes.removeChildren();
-      UI.getStage().draw();
-    },
-
-    loadMap: function() {
-      this.clearMap();
-      // TODO: set objective id
-      // if(CmatSettings.map.get('isMc3')) {
-      //   this.loadMc3Map();
-      // } else {
-        this.loadKineticMap();
-      // }
-    },
-
-    loadMc3Map: function() {
-      // var source = CmatSettings.map.get('mc3Source');
-      // TODO parse the mc3 source and add nodes
+      UI.resetStage();
     },
 
     loadKineticMap: function() {
+      this.clearMap();
       var map = JSON.parse(CmatSettings.map.get('payload'));
       if (map !== null){
         map.children[0].children.forEach(function(a) {
