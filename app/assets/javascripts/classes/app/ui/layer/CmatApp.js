@@ -212,7 +212,8 @@ Kinetic.CmatApp = (function() {
 
       // add a bogus first node so we have a single parent
       var visibleWidth = this.visibleWidth();
-      var root = {children: children, x0: visibleWidth / 2, y0: 30, id: 'root'};
+      var visibleHeight = this.visibleHeight();
+      var root = {children: children, x0: visibleWidth / 2, y0: visibleHeight / 2, id: 'root'};
 
       var dim = this.calcMapSize(root);
       var d3tree = d3.layout.tree().size(dim);
@@ -220,8 +221,7 @@ Kinetic.CmatApp = (function() {
       root = nodes[0];
 
       var offset_x = root.x - visibleWidth/2; // center the tree
-//      var offset_y = nodes[1].y - 100; // move nodes up the difference between the parent and first nodes
-      var offset_y = 0; // move nodes up the difference between the parent and first nodes
+      var offset_y = nodes[1].y - visibleHeight/2 + 100; // move nodes up the difference between the parent and first nodes
 
       // var node = root;
       // this.addNode({title : 'root', 
@@ -361,7 +361,7 @@ Kinetic.CmatApp = (function() {
     },
 
     loadKineticMap: function() {
-//      this.clearMap();
+      this.clearMap();
       var map = JSON.parse(CmatSettings.map.get('payload'));
       if (map !== null){
         map.children[0].children.forEach(function(a) {

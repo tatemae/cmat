@@ -96,16 +96,15 @@ UI = (function() {
     canvas.setDraggable("draggable");
     //a large transparent background to make everything draggable
     panZoomBackground = new Kinetic.Rect({
-      x: -10000,
-      y: -10000,
-      width: 20000,
-      height: 20000,
-      fill: "#000000",
+      x: -100000,
+      y: -100000,
+      width: 200000,
+      height: 200000,
+      fill: "#000",
       opacity: 0
     });
 
     canvas.add(panZoomBackground);
-
 
     var zoom = function(e) {
 
@@ -136,8 +135,13 @@ UI = (function() {
 
   function resetStage() {
     var stage = canvas.getStage();
-    stage.setOffset(-1000,-10000);
     stage.setScale(1);
+    stage.setOffset(0);
+    canvas.setOffset(0);
+    canvas.setX(0);
+    canvas.setY(0);
+    origin = {x:0,y:0};
+    scale = 1;
     stage.draw();
   }
 
@@ -152,7 +156,6 @@ UI = (function() {
   }
 
   function buildGroupLayers() {
-    canvas.add(layer.bg = new Kinetic.Background($$$.copy($$$.clone(dims), { name: 'Background'} )));
     canvas.add(layer.cmat_app = new Kinetic.CmatApp($$$.copy($$$.clone(dims), { name: 'CmatApp'} )));
 
     $$$.copy(publicAPI, layer);
