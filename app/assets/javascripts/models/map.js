@@ -23,7 +23,7 @@ Cmat.Map = Cmat.ModelBase.extend({
 
       // get all of the objectives
       _self.inc_promises(_self);
-      App.Objective.findQuery({objective_bank_id: objective_bank_id}).then(function(all){
+      Cmat.Objective.findQuery({objective_bank_id: objective_bank_id}).then(function(all){
 
         // build a list of all objectives, indexed by their id
         for (var i=0; i<all.length; i++) {
@@ -33,7 +33,7 @@ Cmat.Map = Cmat.ModelBase.extend({
 
         // get the root node ids
         _self.inc_promises(_self);
-        App.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true}).then(function(data){
+        Cmat.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true}).then(function(data){
           var rootids = data['ids'];
 
           // build the first layer of the tree
@@ -60,7 +60,7 @@ Cmat.Map = Cmat.ModelBase.extend({
 
     // retrieve the node's children
     _self.inc_promises(_self);
-    App.Objective.findQuery({objective_bank_id: objective_bank_id, objective: parent['id'], children: true}).then(function(children){
+    Cmat.Objective.findQuery({objective_bank_id: objective_bank_id, objective: parent['id'], children: true}).then(function(children){
       var childrenids = children['ids'];
       if(childrenids.length == 0) {
         _self.dec_promises(_self, tree);

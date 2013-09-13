@@ -18,7 +18,7 @@ Cmat.Activity.reopenClass({
       resolve($.getJSON(url).then(function(response){
         var activities = Em.A();
         response.forEach(function (activity) {
-          activities.pushObject(App.Activity.create(activity));
+          activities.pushObject(Cmat.Activity.create(activity));
         });
         return [activities, query['parent']];
       }));

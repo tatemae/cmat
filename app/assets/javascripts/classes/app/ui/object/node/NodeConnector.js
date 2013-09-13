@@ -138,7 +138,7 @@ Kinetic.NodeConnector = (function() {
       if (node_over) {
         this.current_node_over.connect(node_over);
         if(!Em.isEmpty(CmatSettings.map.get('objective_bank_id'))){
-          App.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), this.current_node_over.attrs.id, [node_over.attrs.id]);
+          Cmat.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), this.current_node_over.attrs.id, [node_over.attrs.id]);
         }
       }
       this.hideConnection();

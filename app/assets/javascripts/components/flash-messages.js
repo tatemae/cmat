@@ -16,9 +16,9 @@ Cmat.flashQueue = Ember.ArrayProxy.create({
   content: [],
   contentChanged: function() {
     var current;
-    current = App.FlashController.get("content");
+    current = Cmat.FlashController.get("content");
     if (current !== this.objectAt(0)) {
-      return App.FlashController.set("content", this.objectAt(0));
+      return Cmat.FlashController.set("content", this.objectAt(0));
     }
   }
 });
@@ -28,7 +28,7 @@ Cmat.FlashMessages = Ember.Component.extend({
   current: null,
   queue: Ember.ArrayProxy.create({}),
 
-  // contentBinding: "App.FlashController.content",
+  // contentBinding: "Cmat.FlashController.content",
   // classNameBindings: ["isNotice", "isWarning", "isError"],
   // isNoticeBinding: "content.isNotice",
   // isWarningBinding: "content.isWarning",
@@ -73,26 +73,26 @@ Cmat.FlashMessages = Ember.Component.extend({
 
 
 
-// App.FlashController = Ember.Object.create({
+// Cmat.FlashController = Ember.Object.create({
 //   content: null,
 //   clearContent: function(content, view) {
 //     return view.hide(function() {
-//       return App.FlashQueue.removeObject(content);
+//       return Cmat.FlashQueue.removeObject(content);
 //     });
 //   }
 // });
 
-// App.FlashController.addObserver('content', function() {
+// Cmat.FlashController.addObserver('content', function() {
 //   if (this.get("content")) {
 //     if (this.get("view")) {
 //       this.get("view").show();
 //       return setTimeout(this.clearContent, 2500, this.get("content"), this.get("view"));
 //     }
 //   } else {
-//     return App.FlashQueue.contentChanged();
+//     return Cmat.FlashQueue.contentChanged();
 //   }
 // });
 
-// App.FlashQueue.addObserver('length', function() {
+// Cmat.FlashQueue.addObserver('length', function() {
 //   return this.contentChanged();
 // });
