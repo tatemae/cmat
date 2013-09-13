@@ -35,7 +35,7 @@ end
 
 # Ember stuff
 gem 'ember-rails'
-gem 'ember-source', '1.0.0.rc6.2'
+gem 'ember-source', '1.0.0'
 
 gem 'active_model_serializers' # Make Rails generate json that ember likes.
 
