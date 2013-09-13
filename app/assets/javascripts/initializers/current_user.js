@@ -7,8 +7,7 @@ Ember.Application.initializer({
     if(attributes){
       var object = store.load(Cmat.User, JSON.parse(attributes));
       var user = Cmat.User.find(object.id);
-      container.lookup('controller:currentUser').set('content', user);
-      container.typeInjection('controller', 'currentUser', 'controller:currentUser'); // Add currentUser to all controllers
+      container.lookup('controller:current_user').set('content', user);
     }
   }
 });

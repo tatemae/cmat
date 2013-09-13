@@ -1,9 +1,9 @@
 Cmat.UserMapsController = Ember.ArrayController.extend({
 
-  needs: ['map', 'currentUser'],
+  needs: ['map', 'current_user'],
 
   maps: function(){
-    var currentUser = this.get('controllers.currentUser');
+    var currentUser = this.get('controllers.current_user');
     if(!Ember.isNone(currentUser)){
       var user_id = currentUser.get('id');
       if(!Ember.isNone(user_id)){
@@ -13,7 +13,7 @@ Cmat.UserMapsController = Ember.ArrayController.extend({
     }
     //return Cmat.Map.find({});
     this.set('content', Cmat.Map.find({}));
-  }.observes('controllers.currentUser.isSignedIn', 'controllers.map.content.persisted'),
+  }.observes('controllers.current_user.isSignedIn', 'controllers.map.content.persisted'),
 
 
   selectMap: function(map){

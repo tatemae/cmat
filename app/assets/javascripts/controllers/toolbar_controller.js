@@ -1,6 +1,6 @@
 Cmat.ToolbarController = Ember.Controller.extend({
 
-  needs: ['map', 'currentUser'],
+  needs: ['map', 'current_user'],
 
   mapSearchQuery: null,
   objectiveBanks: null,
@@ -14,7 +14,7 @@ Cmat.ToolbarController = Ember.Controller.extend({
   },
 
   userMaps: function(){
-    var currentUser = this.get('controllers.currentUser');
+    var currentUser = this.get('controllers.current_user');
     if(!Ember.isNone(currentUser)){
       var user_id = currentUser.get('id');
       if(!Ember.isNone(user_id)){
@@ -22,7 +22,7 @@ Cmat.ToolbarController = Ember.Controller.extend({
       }
     }
     return Cmat.Map.find({});
-  }.property('controllers.currentUser.content', 'controllers.map.content'),
+  }.property('controllers.current_user.content', 'controllers.map.content'),
 
   addToMap: function(){
     this.transitionToRoute('map.add');

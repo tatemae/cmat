@@ -1,6 +1,6 @@
 Cmat.MapController = Ember.ObjectController.extend(Cmat.AutoSave, {
 
-  needs: ['toolbar', 'node', 'currentUser'],
+  needs: ['toolbar', 'node', 'current_user'],
   toolbar: null,
   toolbarBinding: "controllers.toolbar",
   node: null,
@@ -10,11 +10,14 @@ Cmat.MapController = Ember.ObjectController.extend(Cmat.AutoSave, {
   instaSaveFields: ['payload'],
 
   userLogin: function(){
-    var user_id = this.get('controllers.currentUser').get('id');
-    if(user_id){
-      this.get('content').set('user_id', user_id);
-      this.content.save();
+    var user_id = this.get('controllers.current_user').get('id');
+    var map = this.get('content');
+    if(user_id && map){
+      Ember.run(function(){
+        map.set('user_id', user_id);
+        map.save();
+      });
     }
-  }.observes('controllers.currentUser.isSignedIn')
+  }.observes('controllers.current_user.isSignedIn')
 
 });

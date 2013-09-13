@@ -2,7 +2,7 @@ Cmat.TransitionMap = Ember.Mixin.create({
 
   transitionToTransitionMap: function(){
     var _self = this;
-    var current_user = this.controllerFor('currentUser');
+    var current_user = this.controllerFor('current_user');
     if(!Ember.isEmpty(current_user)){
       var user_id = current_user.get('id');
       if(!Ember.isEmpty(user_id)){

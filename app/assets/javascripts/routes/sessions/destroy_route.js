@@ -1,6 +1,6 @@
 Cmat.SessionsDestroyRoute = Ember.Route.extend({
   enter: function() {
-    var controller = this.controllerFor('currentUser');
+    var controller = this.controllerFor('current_user');
     controller.set('content', undefined);
 
     // Odd HACK but we preload a session with the id 'current' so that when we call find

@@ -1,18 +1,18 @@
 Cmat.SessionsNewController = Ember.ObjectController.extend(Cmat.TransitionBack, {
-  needs: ['map', 'currentUser'],
+
+  needs: ['map', 'current_user'], // Map is required by Cmat.TransitionBack
 
   save: function(){
-    var _self = this;
     this.set('errorMessage', null);
-    this.content.save().then(function(){
-      //_self.set('errorMessage', response.message);
-      _self.get('controllers.currentUser').loadUser(_self.content);
-      _self.transitionBack();
-    });
+    this.get('content').save().then(function(){
+      //this.set('errorMessage', response.message);
+      this.get('controllers.current_user').loadUser(this.get('content'));
+      this.transitionBack();
+    }.bind(this));
   },
 
   cancel: function() {
-    this.content.deleteRecord();
+    this.get('content').deleteRecord();
     this.transitionBack();
   }
 
