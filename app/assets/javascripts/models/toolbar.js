@@ -1,4 +1,4 @@
-var Toolbar = DS.Model.extend({
+Cmat.Toolbar = DS.Model.extend({
   isEditing: DS.attr('boolean', { defaultValue: true }),
   showRelationships: DS.attr('boolean', { defaultValue: true }),
   showRelationshipLabels: DS.attr('boolean', { defaultValue: true }),
@@ -6,6 +6,4 @@ var Toolbar = DS.Model.extend({
   showNodeDescriptions: DS.attr('boolean', { defaultValue: true })
 });
 
-App.Store.registerAdapter('App.Toolbar', DS.LSAdapter.create());
-
-module.exports = Toolbar;
+Cmat.Store.registerAdapter('Cmat.Toolbar', DS.LSAdapter.create());

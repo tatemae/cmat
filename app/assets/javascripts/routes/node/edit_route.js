@@ -1,4 +1,4 @@
-var NodeEditRoute = Ember.Route.extend({
+Cmat.NodeEditRoute = Ember.Route.extend({
 
   controllerName: 'node',
 
@@ -28,5 +28,3 @@ var NodeEditRoute = Ember.Route.extend({
   }
 
 });
-
-module.exports = NodeEditRoute;

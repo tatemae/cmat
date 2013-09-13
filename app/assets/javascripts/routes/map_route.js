@@ -1,5 +1,4 @@
-var MapModel = require('../models/map');
-var MapRoute = Ember.Route.extend({
+Cmat.MapRoute = Ember.Route.extend({
 
   model: function(params){
     var map = MapModel.find(params.map_id);
@@ -10,6 +9,3 @@ var MapRoute = Ember.Route.extend({
   }
 
 });
-
-module.exports = MapRoute;
-

@@ -1,6 +1,4 @@
-var TransitionMap = require('../../mixins/transition_map');
-
-var MapDestroyRoute = Ember.Route.extend(TransitionMap, {
+Cmat.MapDestroyRoute = Ember.Route.extend(Cmat.TransitionMap, {
   activate: function(){
     var map = this.controllerFor('map').get('content');
     if(!Ember.isEmpty(map)){
@@ -10,5 +8,3 @@ var MapDestroyRoute = Ember.Route.extend(TransitionMap, {
     this.transitionToTransitionMap();
   }
 });
-
-module.exports = MapDestroyRoute;

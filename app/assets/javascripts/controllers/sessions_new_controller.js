@@ -1,6 +1,4 @@
-var TransitionBack = require('../mixins/transition_back');
-
-var SessionsNewController = Ember.ObjectController.extend(TransitionBack, {
+Cmat.SessionsNewController = Ember.ObjectController.extend(Cmat.TransitionBack, {
   needs: ['map', 'currentUser'],
 
   save: function(){
@@ -19,5 +17,3 @@ var SessionsNewController = Ember.ObjectController.extend(TransitionBack, {
   }
 
 });
-
-module.exports = SessionsNewController;

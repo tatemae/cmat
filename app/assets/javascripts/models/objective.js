@@ -1,8 +1,8 @@
-var Objective = Ember.Object.extend({
+Cmat.Objective = Ember.Object.extend({
 
 });
 
-Objective.reopenClass({
+Cmat.Objective.reopenClass({
   findQuery: function(query){
       var params = query['params'];
       var objective_bank_id = query['objective_bank_id'];
@@ -58,4 +58,3 @@ Objective.reopenClass({
   }
 });
 
-module.exports = Objective;

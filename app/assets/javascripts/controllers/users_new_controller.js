@@ -1,6 +1,4 @@
-var TransitionBack = require('../mixins/transition_back');
-
-var UsersNewController = Ember.ObjectController.extend(TransitionBack, {
+Cmat.UsersNewController = Ember.ObjectController.extend(Cmat.TransitionBack, {
   save: function() {
     var self = this;
     this.content.save().then(function(){
@@ -14,5 +12,3 @@ var UsersNewController = Ember.ObjectController.extend(TransitionBack, {
   }
 
 });
-
-module.exports = UsersNewController;

@@ -1,13 +1,7 @@
-var User = require('../../models/user');
-var TransitionSignedIn = require('../../mixins/transition_signed_in');
-
-var UsersNewRoute = Ember.Route.extend(TransitionSignedIn, {
+Cmat.UsersNewRoute = Ember.Route.extend(Cmat.TransitionSignedIn, {
 
   model: function(){
-    return User.createRecord();
+    return Cmat.User.createRecord();
   }
 
 });
-
-
-module.exports = UsersNewRoute;

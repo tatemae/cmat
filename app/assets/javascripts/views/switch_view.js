@@ -1,4 +1,4 @@
-var SwitchView = Ember.View.extend({
+Cmat.SwitchView = Ember.View.extend({
   tagName: 'div',
   classNames: ['switch', 'btn-group'],
   attributeBindings: ['onLabel:data-on-label', 'offLabel:data-off-label'],
@@ -10,6 +10,4 @@ var SwitchView = Ember.View.extend({
   }
 });
 
-Ember.Handlebars.helper('switch', SwitchView);
-
-module.exports = SwitchView;
+Ember.Handlebars.helper('switch', Cmat.SwitchView);

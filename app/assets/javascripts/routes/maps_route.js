@@ -1,6 +1,4 @@
-var TransitionMap = require('../mixins/transition_map');
-
-MapsRoute = Ember.Route.extend(TransitionMap, {
+Cmat.MapsRoute = Ember.Route.extend(Cmat.TransitionMap, {
 
   afterModel: function(model, transition){
     if(transition.targetName == "maps.index"){
@@ -10,5 +8,3 @@ MapsRoute = Ember.Route.extend(TransitionMap, {
   }
 
 });
-
-module.exports = MapsRoute;

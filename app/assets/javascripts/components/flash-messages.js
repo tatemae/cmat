@@ -1,4 +1,4 @@
-var FlashMessage = Ember.Object.extend({
+Cmat.FlashMessage = Ember.Object.extend({
   type: "notice",
   message: null,
   isNotice: (function() {
@@ -12,7 +12,7 @@ var FlashMessage = Ember.Object.extend({
   }).property("type").cacheable()
 });
 
-var flashQueue = Ember.ArrayProxy.create({
+Cmat.flashQueue = Ember.ArrayProxy.create({
   content: [],
   contentChanged: function() {
     var current;
@@ -23,7 +23,7 @@ var flashQueue = Ember.ArrayProxy.create({
   }
 });
 
-var FlashMessages = Ember.Component.extend({
+Cmat.FlashMessages = Ember.Component.extend({
 
   current: null,
   queue: Ember.ArrayProxy.create({}),
@@ -70,8 +70,6 @@ var FlashMessages = Ember.Component.extend({
   }
 
 });
-
-module.exports = FlashMessages;
 
 
 

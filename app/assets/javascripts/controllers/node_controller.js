@@ -1,4 +1,4 @@
-var NodeController = Ember.ObjectController.extend({
+Cmat.NodeController = Ember.ObjectController.extend({
 
   types: ['topic', 'outcome', 'activity'],
 
@@ -12,5 +12,3 @@ var NodeController = Ember.ObjectController.extend({
   }.observes('state')
 
 });
-
-module.exports = NodeController;

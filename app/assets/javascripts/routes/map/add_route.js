@@ -1,5 +1,4 @@
-var MapModel = require('../../models/map');
-var MapAddRoute = Ember.Route.extend({
+Cmat.MapAddRoute = Ember.Route.extend({
 
   events: {
     modal_close: function(){
@@ -22,5 +21,3 @@ var MapAddRoute = Ember.Route.extend({
   }
 
 });
-
-module.exports = MapAddRoute;

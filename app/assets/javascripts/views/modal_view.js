@@ -1,4 +1,4 @@
-var ModalView = Ember.View.extend({
+Cmat.ModalView = Ember.View.extend({
   layoutName: 'modal_layout',
   saveLabel: 'Save',
 
@@ -34,6 +34,4 @@ var ModalView = Ember.View.extend({
 
 });
 
-Ember.Handlebars.helper('modal', ModalView);
-
-module.exports = ModalView;
+Ember.Handlebars.helper('modal', Cmat.ModalView);

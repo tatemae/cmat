@@ -1,7 +1,4 @@
-var ObjectiveBank = require('../models/objective_bank');
-var MapModel = require('../models/map');
-
-var ToolbarController = Ember.Controller.extend({
+Cmat.ToolbarController = Ember.Controller.extend({
 
   needs: ['map', 'currentUser'],
 
@@ -13,7 +10,7 @@ var ToolbarController = Ember.Controller.extend({
 
   init: function() {
     this._super();
-    this.set('objectiveBanks', App.ObjectiveBank.findAll());
+    this.set('objectiveBanks', Cmat.ObjectiveBank.findAll());
   },
 
   userMaps: function(){
@@ -21,10 +18,10 @@ var ToolbarController = Ember.Controller.extend({
     if(!Ember.isNone(currentUser)){
       var user_id = currentUser.get('id');
       if(!Ember.isNone(user_id)){
-        return MapModel.find({user_id: user_id});
+        return Cmat.MapModel.find({user_id: user_id});
       }
     }
-    return MapModel.find({});
+    return Cmat.MapModel.find({});
   }.property('controllers.currentUser.content', 'controllers.map.content'),
 
   addToMap: function(){
@@ -62,5 +59,3 @@ var ToolbarController = Ember.Controller.extend({
 
 
 });
-
-module.exports = ToolbarController;

@@ -1,5 +1,4 @@
-var Cmat = require('../classes/cmat');
-var MapView = Ember.View.extend({
+Cmat.MapView = Ember.View.extend({
   tagName: 'div',
   templateName: 'map_view',
   map: null,
@@ -15,6 +14,4 @@ var MapView = Ember.View.extend({
 
 });
 
-Ember.Handlebars.helper('map', MapView);
-
-module.exports = MapView;
+Ember.Handlebars.helper('map', Cmat.MapView);

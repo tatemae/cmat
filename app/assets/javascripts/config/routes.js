@@ -1,6 +1,4 @@
-var App = require('./app');
-
-App.Router.map(function() {
+Cmat.Router.map(function() {
 
   this.resource('maps', function(){
     this.route('new');

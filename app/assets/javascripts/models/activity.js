@@ -1,8 +1,8 @@
-var Activity = Ember.Object.extend({
+Cmat.Activity = Ember.Object.extend({
 
 });
 
-Activity.reopenClass({
+Cmat.Activity.reopenClass({
   findQuery: function(query){
     return new Ember.RSVP.Promise(function(resolve, reject){
 
@@ -26,5 +26,3 @@ Activity.reopenClass({
     });
   }
 });
-
-module.exports = Activity;

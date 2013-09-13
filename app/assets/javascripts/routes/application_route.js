@@ -1,6 +1,4 @@
-var Toolbar = require('../models/toolbar');
-var Node = require('../models/node');
-var ApplicationRoute = Ember.Route.extend({
+Cmat.ApplicationRoute = Ember.Route.extend({
 
   events: {
     error: function(error, transition) {
@@ -14,11 +12,8 @@ var ApplicationRoute = Ember.Route.extend({
   },
 
   setupController: function(controller, model){
-    this.controllerFor('node').set('content', Node.createRecord()); //find('current'));
-    this.controllerFor('toolbar').set('content', Toolbar.find('current'));
+    this.controllerFor('node').set('content', Cmat.Node.createRecord()); //find('current'));
+    this.controllerFor('toolbar').set('content', Cmat.Toolbar.find('current'));
   }
 
 });
-
-module.exports = ApplicationRoute;
-

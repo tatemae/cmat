@@ -11,4 +11,4 @@ var Adapter = DS.RESTAdapter.extend({
   }
 });
 
-module.exports = DS.Store.extend({ adapter: Adapter.create() });
+Cmat.Store = DS.Store.extend({ adapter: Adapter.create() });

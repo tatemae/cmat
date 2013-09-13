@@ -1,4 +1,4 @@
-var ListBoxComponent = Ember.Component.extend({
+Cmat.ListBoxComponent = Ember.Component.extend({
 
   attributeBindings: ['items'],
 
@@ -21,5 +21,3 @@ var ListBoxComponent = Ember.Component.extend({
   }
 
 });
-
-module.exports = ListBoxComponent;

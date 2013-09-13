@@ -1,8 +1,6 @@
-var Debounce = require('../utils/debounce');
-
 var BUFFER_DELAY = 1000;
 
-var AutoSave = Ember.Mixin.create({
+Cmat.AutoSave = Ember.Mixin.create({
   _buffers: Ember.Map.create(),
   bufferedFields: [],
   instaSaveFields: [],
@@ -45,7 +43,7 @@ var AutoSave = Ember.Mixin.create({
     }
   },
 
-  _debouncedSave: Debounce((function() {
+  _debouncedSave: Cmat.Debounce((function() {
     return this._autoSave();
   }), BUFFER_DELAY),
 
@@ -59,5 +57,3 @@ var AutoSave = Ember.Mixin.create({
     return this.set('_buffers', Ember.Map.create());
   }).observesBefore('content')
 });
-
-module.exports = AutoSave;

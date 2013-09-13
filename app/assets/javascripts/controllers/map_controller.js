@@ -1,6 +1,4 @@
-var AutoSave = require('../mixins/auto_save');
-
-var MapController = Ember.ObjectController.extend(AutoSave, {
+Cmat.MapController = Ember.ObjectController.extend(Cmat.AutoSave, {
 
   needs: ['toolbar', 'node', 'currentUser'],
   toolbar: null,
@@ -20,5 +18,3 @@ var MapController = Ember.ObjectController.extend(AutoSave, {
   }.observes('controllers.currentUser.isSignedIn')
 
 });
-
-module.exports = MapController;

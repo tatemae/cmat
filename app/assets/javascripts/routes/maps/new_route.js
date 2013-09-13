@@ -1,8 +1,7 @@
-var MapModel = require('../../models/map');
-var MapsNewRoute = Ember.Route.extend({
+Cmat.MapsNewRoute = Ember.Route.extend({
 
   model: function(){
-    return MapModel.createRecord({
+    return Cmat.MapModel.createRecord({
       title: 'New Map'
     });
   },
@@ -14,5 +13,3 @@ var MapsNewRoute = Ember.Route.extend({
   }
 
 });
-
-module.exports = MapsNewRoute;

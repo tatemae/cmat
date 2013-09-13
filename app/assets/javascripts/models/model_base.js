@@ -1,8 +1,6 @@
-var ModelBase = DS.Model.extend({
+Cmat.ModelBase = DS.Model.extend({
 });
 
-ModelBase.reopenClass({
+Cmat.ModelBase.reopenClass({
 
 });
-
-module.exports = ModelBase;

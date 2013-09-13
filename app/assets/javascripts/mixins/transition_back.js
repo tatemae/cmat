@@ -1,5 +1,4 @@
-
-var TransitionBack = Ember.Mixin.create({
+Cmat.TransitionBack = Ember.Mixin.create({
 
   transitionBack: function(){
     var map = this.get('controllers.map').get('content');
@@ -11,5 +10,3 @@ var TransitionBack = Ember.Mixin.create({
   }
 
 });
-
-module.exports = TransitionBack;

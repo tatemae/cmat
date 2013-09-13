@@ -1,4 +1,4 @@
-var NodeNewRoute = Ember.Route.extend({
+Cmat.NodeNewRoute = Ember.Route.extend({
 
   controllerName: 'node',
 
@@ -23,5 +23,3 @@ var NodeNewRoute = Ember.Route.extend({
   }
 
 });
-
-module.exports = NodeNewRoute;

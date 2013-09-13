@@ -21,5 +21,3 @@ var Debounce = function(func, wait) {
     }
   };
 };
-
-module.exports = Debounce;

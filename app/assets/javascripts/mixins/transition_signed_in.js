@@ -1,5 +1,4 @@
-
-var TransitionSignedIn = Ember.Mixin.create({
+Cmat.TransitionSignedIn = Ember.Mixin.create({
 
   beforeModel: function(){
     if(this.controllerFor('currentUser').get('isSignedIn')){
@@ -8,5 +7,3 @@ var TransitionSignedIn = Ember.Mixin.create({
   }
 
 });
-
-module.exports = TransitionSignedIn;

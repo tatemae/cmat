@@ -1,6 +1,4 @@
-var ModelBase = require('./model_base');
-
-var Map = ModelBase.extend({
+Cmat.Map = ModelBase.extend({
 
   promises: 0,
 
@@ -96,5 +94,3 @@ var Map = ModelBase.extend({
   },
 
 });
-
-module.exports = Map;
