@@ -34,7 +34,7 @@ Cmat.Map = Cmat.ModelBase.extend({
 
         // build a list of all assets, indexed by their id
         _self.inc_promises(_self);
-        App.Asset.findQuery({objective_bank_id: objective_bank_id}).then(function(asset_list){
+        Cmat.Asset.findQuery({objective_bank_id: objective_bank_id}).then(function(asset_list){
 
           for (var i=0; i<asset_list.length; i++) {
             var node = asset_list[i];
@@ -47,7 +47,7 @@ Cmat.Map = Cmat.ModelBase.extend({
 
         // get all activities for the objective bank
         _self.inc_promises(_self);
-        App.Activity.findQuery({objective_bank_id: objective_bank_id}).then(function(activities){
+        Cmat.Activity.findQuery({objective_bank_id: objective_bank_id}).then(function(activities){
 
           // attach the activities to their parent objectives
           for (var i=0; i<activities.length; i++) {
