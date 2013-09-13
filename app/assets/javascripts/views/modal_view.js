@@ -18,7 +18,7 @@ Cmat.ModalView = Ember.View.extend({
       'backdrop': 'static'
     });
     this.$('.modal').find('.name-input').focus();
-    this.$('.modal-body').find('.map_adder').focus()
+    this.$('.modal-body').find('.map_adder').focus();
   },
 
   do_action: function(action){
@@ -29,7 +29,7 @@ Cmat.ModalView = Ember.View.extend({
     var view = this;
     this.$('.modal').one("hidden", function(ev){
       view.get('controller').send(event);
-      // TODO the modal works, but it still leaves junk in the DOM. Would like to find a way to clean it up
+      view.$('.modal-backdrop').remove();
     });
     this.$('.modal').modal('hide');
   }
