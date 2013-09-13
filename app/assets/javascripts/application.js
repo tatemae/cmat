@@ -65,9 +65,7 @@
 //= require_tree ./routes
 
 
-
 var CmatSettings = {};
-window.Kinetic = Kinetic;
 
 var Cmat = Ember.Application.create({
 
