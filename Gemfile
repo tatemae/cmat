@@ -39,7 +39,7 @@ gem 'ember-source', '1.0.0'
 
 gem 'active_model_serializers' # Make Rails generate json that ember likes.
 
-gem 'bootstrap-sass-rails', '>= 2.3.1.2'
+gem 'bootstrap-sass-rails', '~> 2.3.1.2'
 gem 'font-awesome-sass-rails'
 
 group :development, :test do

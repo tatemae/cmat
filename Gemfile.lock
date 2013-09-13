@@ -34,7 +34,7 @@ GEM
       execjs
       handlebars-source
     bcrypt-ruby (3.1.2)
-    bootstrap-sass-rails (3.0.0.2)
+    bootstrap-sass-rails (2.3.1.2)
       railties (>= 3.1.0)
       sass-rails (>= 3.1.0)
     builder (3.1.4)
@@ -192,7 +192,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
-  bootstrap-sass-rails (>= 2.3.1.2)
+  bootstrap-sass-rails (~> 2.3.1.2)
   debugger
   devise (>= 3.0.0)
   ember-rails
