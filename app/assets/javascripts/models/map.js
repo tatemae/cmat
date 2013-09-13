@@ -16,7 +16,8 @@ Cmat.Map = Cmat.ModelBase.extend({
     var tree = [];
     var objective_bank_id = objectiveBank.get('id');
     _self.obj_bank_id = objective_bank_id;
-    var objectives = [];
+    var objectives = {};
+    var assets = {};
     _self.promises = 0;
 
     return new Ember.RSVP.Promise(function(resolve, reject){
@@ -30,6 +31,44 @@ Cmat.Map = Cmat.ModelBase.extend({
           var node = all[i];
           objectives[node['id']] = node;
         }
+
+        // build a list of all assets, indexed by their id
+        _self.inc_promises(_self);
+        App.Asset.findQuery({objective_bank_id: objective_bank_id}).then(function(asset_list){
+
+          for (var i=0; i<asset_list.length; i++) {
+            var node = asset_list[i];
+            assets[node['id']] = node;
+          }
+          _self.dec_promises(_self, tree);
+        }, function(){
+          _self.dec_promises(_self, tree);
+        });
+
+        // get all activities for the objective bank
+        _self.inc_promises(_self);
+        App.Activity.findQuery({objective_bank_id: objective_bank_id}).then(function(activities){
+
+          // attach the activities to their parent objectives
+          for (var i=0; i<activities.length; i++) {
+            var activity = activities[i];
+            var parent = objectives[activity['objectiveId']];
+            if (!parent.children) parent.children = [];
+            parent.children.push(activity);
+
+            // attach the activity's assets to it
+            var asset_ids = activity['assetIds'];
+            for (var j=0; j<asset_ids.length; j++) {
+              var asset_id = asset_ids[j];
+              var asset = assets[asset_id];
+              if (!activity.children) activity.children = [];
+              activity.children.push(asset);
+            }
+          }
+          _self.dec_promises(_self, tree);
+        }, function(){
+          _self.dec_promises(_self, tree);
+        });
 
         // get the root node ids
         _self.inc_promises(_self);

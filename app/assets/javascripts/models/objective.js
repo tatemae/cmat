@@ -4,7 +4,6 @@ Cmat.Objective = Ember.Object.extend({
 
 Cmat.Objective.reopenClass({
   findQuery: function(query){
-      var params = query['params'];
       var objective_bank_id = query['objective_bank_id'];
 
       var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+objective_bank_id+'/objectives'
