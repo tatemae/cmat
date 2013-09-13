@@ -1,5 +1,3 @@
-CmatSettings = require('../../../cmat_settings');
-
 Kinetic.CmatApp = (function() {
   var CIRCLE_AREA_TO_SCREEN_REL = 0.005;
   var LEADING_WHITE_REGEX = /^[ \t]+/;

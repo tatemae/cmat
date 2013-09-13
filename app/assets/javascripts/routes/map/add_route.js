@@ -1,6 +1,6 @@
 Cmat.MapAddRoute = Ember.Route.extend({
 
-  events: {
+  actions: {
     modal_close: function(){
       this.unrender();
     },

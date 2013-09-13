@@ -1,6 +1,4 @@
-var CmatSettings = require('./cmat_settings');
-
-var Cmat = {
+var CmatLoader = {
 
   boot: function(map, toolbar, node, relationship){
 
@@ -62,5 +60,3 @@ var Cmat = {
   }
 
 };
-
-module.exports = Cmat;

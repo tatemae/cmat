@@ -1,4 +1,4 @@
-Cmat.Map = ModelBase.extend({
+Cmat.Map = Cmat.ModelBase.extend({
 
   promises: 0,
 

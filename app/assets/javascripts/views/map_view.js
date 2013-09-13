@@ -9,7 +9,7 @@ Cmat.MapView = Ember.View.extend({
     if (UI.cmat_app){
       UI.cmat_app.cleanUp();
     }
-    Cmat.boot(map, map.toolbar, map.node);
+    CmatLoader.boot(map, map.toolbar, map.node);
   }
 
 });

@@ -1,4 +1,4 @@
-var Debounce = function(func, wait) {
+Cmat.Debounce = function(func, wait) {
   var timeout;
   timeout = null;
   return function() {

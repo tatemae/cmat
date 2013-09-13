@@ -18,10 +18,10 @@ Cmat.ToolbarController = Ember.Controller.extend({
     if(!Ember.isNone(currentUser)){
       var user_id = currentUser.get('id');
       if(!Ember.isNone(user_id)){
-        return Cmat.MapModel.find({user_id: user_id});
+        return Cmat.Map.find({user_id: user_id});
       }
     }
-    return Cmat.MapModel.find({});
+    return Cmat.Map.find({});
   }.property('controllers.currentUser.content', 'controllers.map.content'),
 
   addToMap: function(){

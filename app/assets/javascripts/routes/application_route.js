@@ -1,6 +1,6 @@
 Cmat.ApplicationRoute = Ember.Route.extend({
 
-  events: {
+  actions: {
     error: function(error, transition) {
       console.log('**** Error:' + error.message);
     }

@@ -1,6 +1,4 @@
-var MapModel = require('../models/map');
-
-var UserMapsController = Ember.ArrayController.extend({
+Cmat.UserMapsController = Ember.ArrayController.extend({
 
   needs: ['map', 'currentUser'],
 
@@ -9,12 +7,12 @@ var UserMapsController = Ember.ArrayController.extend({
     if(!Ember.isNone(currentUser)){
       var user_id = currentUser.get('id');
       if(!Ember.isNone(user_id)){
-        this.set('content', MapModel.find({user_id: user_id}));
-        //return MapModel.find({user_id: user_id});
+        this.set('content', Cmat.Map.find({user_id: user_id}));
+        //return Cmat.Map.find({user_id: user_id});
       }
     }
-    //return MapModel.find({});
-    this.set('content', MapModel.find({}));
+    //return Cmat.Map.find({});
+    this.set('content', Cmat.Map.find({}));
   }.observes('controllers.currentUser.isSignedIn', 'controllers.map.content.persisted'),
 
 
@@ -23,5 +21,3 @@ var UserMapsController = Ember.ArrayController.extend({
   }
 
 });
-
-module.exports = UserMapsController;

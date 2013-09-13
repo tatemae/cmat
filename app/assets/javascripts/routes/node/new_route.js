@@ -2,7 +2,7 @@ Cmat.NodeNewRoute = Ember.Route.extend({
 
   controllerName: 'node',
 
-  events: {
+  actions: {
     modal_close: function(){
       this.controller.set('state', 'cancel');
       this.unroute();

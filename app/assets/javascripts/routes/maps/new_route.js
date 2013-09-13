@@ -1,7 +1,7 @@
 Cmat.MapsNewRoute = Ember.Route.extend({
 
   model: function(){
-    return Cmat.MapModel.createRecord({
+    return Cmat.Map.createRecord({
       title: 'New Map'
     });
   },
