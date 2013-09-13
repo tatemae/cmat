@@ -112,10 +112,10 @@ Kinetic.CmatApp = (function() {
         if(Em.isNone(attrs.id)) {
           var cmat_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'));
           Cmat.Objective.saveNew(cmat_node, parent).then(function(node){
-            wholeNode.id = node['id'];
             wholeNode.attrs.id = node['id'];
+            wholeNode.children[0].setId(node['id']);
             if(!Em.isNone(parent)){
-               Cmat.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node['id'], [parent.attrs.id]);
+              Cmat.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node['id'], [parent.attrs.id]);
             }
           });
         }
@@ -222,21 +222,21 @@ Kinetic.CmatApp = (function() {
       var offset_y = nodes[1].y - visibleHeight/2 + 100; // move nodes up the difference between the parent and first nodes
 
       // var node = root;
-      // this.addNode({title : 'root', 
-      //                 x : node.x-offset_x, 
-      //                 y : node.y-offset_y, 
-      //                 type: 'topic', 
+      // this.addNode({title : 'root',
+      //                 x : node.x-offset_x,
+      //                 y : node.y-offset_y,
+      //                 type: 'topic',
       //                 info: null,
       //                 id: node.id });
 
       // d3 returns all nodes as a flat array, loop through and add them to the canvas
       for (var i=1; i<nodes.length; i++) {
         var node = nodes[i];
-        var attrs = {title : node['displayName']['text'], 
-                      x : node.x-offset_x, 
-                      y : node.y-offset_y, 
-                      type: this.cmat_type[node['genusTypeId']], 
-                      info: node['description'].text, 
+        var attrs = {title : node['displayName']['text'],
+                      x : node.x-offset_x,
+                      y : node.y-offset_y,
+                      type: this.cmat_type[node['genusTypeId']],
+                      info: node['description'].text,
                       id: node.id };
         this.addNode(attrs, this.wholeNodeFromId(node.parent.id));
       }
@@ -319,7 +319,7 @@ Kinetic.CmatApp = (function() {
           wholeNode.node._updateImage();
           if((!Em.isEmpty(CmatSettings.map.get('objective_bank_id')))) {
             var cmat_node = this.cmat_to_mc3(wholeNode.attrs.title, wholeNode.attrs.info, wholeNode.attrs.type, CmatSettings.map.get('objective_bank_id'));
-            cmat_node['id'] = wholeNode.attrs.id
+            cmat_node['id'] = wholeNode.attrs.id;
             Cmat.Objective.saveChanges(cmat_node).then(function(node){});
           }
           console.log('type: ' + node.get('type'));

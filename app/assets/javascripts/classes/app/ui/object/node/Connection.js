@@ -2,13 +2,13 @@
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met: 
+// modification, are permitted provided that the following conditions are met:
 
 // 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer. 
+//    list of conditions and the following disclaimer.
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
-//    and/or other materials provided with the distribution. 
+//    and/or other materials provided with the distribution.
 
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 // ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -22,7 +22,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // The views and conclusions contained in the software and documentation are those
-// of the authors and should not be interpreted as representing official policies, 
+// of the authors and should not be interpreted as representing official policies,
 // either expressed or implied, of the FreeBSD Project.
 //
 //
@@ -69,13 +69,31 @@ Kinetic.Connection = (function() {
           this.destroy(); // cleanup left over connection objects after a connection has already been destroyed by a node being deleted
           return;
         }
+
         if (tmp1 === undefined && nodes[0] === "NodeConnector") {
           c1 = UI.cmat_app.node_connector;
+        } else if (tmp1 === undefined) {
+          $.each(UI.cmat_app.wholeNodes.children, function(index, wholeNode) {
+            if (wholeNode.attrs.id === nodes[0]) {
+              c1 = wholeNode;
+              wholeNode.children[0].setId(nodes[0]);
+              return false;
+            }
+          });
         } else {
           c1 = tmp1.getParent();
         }
+
         if (tmp2 === undefined && nodes[1] === "NodeConnector") {
           c2 = UI.cmat_app.node_connector;
+        } else if (tmp2 === undefined) {
+          $.each(UI.cmat_app.wholeNodes.children, function(index, wholeNode) {
+            if (wholeNode.attrs.id === nodes[1]) {
+              c2 = wholeNode;
+              wholeNode.children[0].setId(nodes[1]);
+              return false;
+            }
+          });
         } else {
           c2 = tmp2.getParent();
         }
