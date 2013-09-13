@@ -1,8 +1,8 @@
-var Asset = Ember.Object.extend({
+Cmat.Asset = Ember.Object.extend({
 
 });
 
-Asset.reopenClass({
+Cmat.Asset.reopenClass({
   findQuery: function(query){
       var objective_bank_id = query['objective_bank_id'];
 
@@ -11,5 +11,3 @@ Asset.reopenClass({
       return $.getJSON(url);
   }
 });
-
-module.exports = Asset;
