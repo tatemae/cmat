@@ -53,16 +53,20 @@ Cmat.Map = Cmat.ModelBase.extend({
           for (var i=0; i<activities.length; i++) {
             var activity = activities[i];
             var parent = objectives[activity['objectiveId']];
-            if (!parent.children) parent.children = [];
-            parent.children.push(activity);
+            if (parent) {
+              if (!parent.children) parent.children = [];
+              parent.children.push(activity);
 
-            // attach the activity's assets to it
-            var asset_ids = activity['assetIds'];
-            for (var j=0; j<asset_ids.length; j++) {
-              var asset_id = asset_ids[j];
-              var asset = assets[asset_id];
-              if (!activity.children) activity.children = [];
-              activity.children.push(asset);
+              // attach the activity's assets to it
+              var asset_ids = activity['assetIds'];
+              for (var j=0; j<asset_ids.length; j++) {
+                var asset_id = asset_ids[j];
+                var asset = assets[asset_id];
+                if (asset) {
+                  if (!activity.children) activity.children = [];
+                  activity.children.push(asset);
+                }
+              }
             }
           }
           _self.dec_promises(_self, tree);
