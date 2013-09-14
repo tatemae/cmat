@@ -141,7 +141,7 @@ Kinetic.CmatApp = (function() {
             node_model.saveNew(cmat_node, parent).then(function(node){
               wholeNode.id = node['id'];
               wholeNode.attrs.id = node['id'];
-              if(!Em.isNone(parent)){
+              if(!Em.isNone(parent) && (attrs.type === 'topic' || attrs.type === 'outcome') ){
                  node_model.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node['id'], [parent.attrs.id]);
               }
             });
