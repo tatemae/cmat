@@ -137,7 +137,7 @@ Kinetic.CmatApp = (function() {
       if (node_model) {
         if(!Em.isEmpty(CmatSettings.map.get('objective_bank_id'))){
           if(Em.isNone(attrs.id)) {
-            var cmat_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'), parent.id);
+            var cmat_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'), parent.attrs.id);
             node_model.saveNew(cmat_node, parent).then(function(node){
               wholeNode.id = node['id'];
               wholeNode.attrs.id = node['id'];
