@@ -1,19 +1,17 @@
 Cmat.SessionsDestroyRoute = Ember.Route.extend({
   enter: function() {
-    var controller = this.controllerFor('current_user');
-    controller.set('content', undefined);
 
-    // Odd HACK but we preload a session with the id 'current' so that when we call find
-    // the record will be available so we can destroy it.
-    controller.store.load(Cmat.Session, {
-      id: 'current',
+    $.ajax({
+      url: "/api/sessions/current",
+      type: "post",
+      dataType: "json",
+      data: {
+        "_method":"delete"
+      }
     });
-
-    Cmat.Session.find('current').then(function(session) {
-      session.deleteRecord();
-      controller.store.commit();
-    });
-
+    $('meta[name="authentication-token"]').attr('content', '');
+    $('meta[name="current-user"]').attr('content', '');
+    this.controllerFor('current_user').set('content', undefined);
     this.transitionTo('index');
   }
 });

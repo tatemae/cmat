@@ -1,10 +1,12 @@
 Cmat.CurrentUserController = Ember.ObjectController.extend({
 
-  loadUser: function(session){
-    var userJSON = session.toJSON();
-    userJSON.id = session.get('id');
+  loadUserFromModel: function(user){
+    this.set('content', user);
+  },
+
+  loadUser: function(userJSON){
     var object = this.store.load(Cmat.User, userJSON);
-    var user = Cmat.User.find(userJSON.id);
+    var user = Cmat.User.find(userJSON.user.id);
     this.set('content', user);
   },
 

@@ -5,7 +5,7 @@ Cmat.UsersNewController = Ember.ObjectController.extend(Cmat.TransitionBack, {
   actions: {
     save: function() {
       this.get('content').save().then(function(){
-        this.get('controllers.current_user').loadUser(this.get('content'));
+        this.get('controllers.current_user').loadUserFromModel(this.get('content'));
         this.transitionBack();
       }.bind(this));
     },
