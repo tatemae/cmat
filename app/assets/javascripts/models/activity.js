@@ -22,5 +22,23 @@ Cmat.Activity.reopenClass({
         return response;
       }));
     });
+  },
+  saveChanges: function(objective) {
+    return new Ember.RSVP.Promise(function(resolve, reject){
+      var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+objective['objectiveBankId']+'/activities';
+
+      resolve($.ajax({type: "PUT", url: url, data: JSON.stringify(objective), contentType: "application/json", dataType: 'json'}).then(function(response){
+        return response;
+      }));
+    });
+  },
+  deleteNode: function(query){
+    return new Ember.RSVP.Promise(function(resolve, reject){
+      var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+query['objectiveBankId']+'/objectives/'+query['id'];
+
+      resolve($.ajax({type: "DELETE", url: url, contentType: "application/json", dataType: 'json'}).then(function(response){
+        return response;
+      }));
+    });
   }
 });
