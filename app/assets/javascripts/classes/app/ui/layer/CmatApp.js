@@ -371,8 +371,22 @@ Kinetic.CmatApp = (function() {
         }
       }
       wholeNode.destroy();
-      var query = {objectiveBankId: CmatSettings.map.get('objective_bank_id'), objectiveId: wholeNode.attrs.id};
-      Cmat.Objective.deleteNode(query);
+
+      var node_model_types = {
+        'topic' : Cmat.Objective, 'outcome' : Cmat.Objective, 'activity' : Cmat.Activity, 'asset - url' : Cmat.Asset, 'asset - unknown' : Cmat.Asset
+      };
+      if((!Em.isEmpty(CmatSettings.map.get('objective_bank_id')))) {
+        if(wholeNode.attrs.type === 'topic' || wholeNode.attrs.type === 'outcome'){
+          var query = {objectiveBankId: CmatSettings.map.get('objective_bank_id'), objectiveId: wholeNode.attrs.id};
+          Cmat.Objective.deleteNode(query);
+        }
+        else
+        {
+          var node_model = node_model_types[wholeNode.attrs.type];
+          var query = {objectiveBankId: CmatSettings.map.get('objective_bank_id'), id: wholeNode.attrs.id};
+          node_model.deleteNode(query);
+        }
+      }
       this.parent.draw();
     },
 
