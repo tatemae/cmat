@@ -13,7 +13,8 @@ Kinetic.WholeNode = (function() {
       // this.attrs._connections = [];
       // this.attrs.neighbours = [];
       // this.attrs.ownNeighbours = [];
-      this._ownsConnection = {};
+      this.neighbors = {};
+      this.parent_connectors = [];
 
       this.attrs.title = config.title || '';
       this.attrs.info = config.info || '';
@@ -94,20 +95,20 @@ Kinetic.WholeNode = (function() {
     //   return this.attrs.ownNeighbours;
     // },
 
-    _addOwnNeighbour: function(node) {
-      this._ownsConnection[node.attrs.id] = true;
+    addConnection: function(node,relationship) {
+      this.neighbors[node.attrs.id] = relationship;
     },
 
-    _removeOwnNeighbour: function(node) {
-      this._ownsConnection[node.attrs.id] = false;
-    },
+    // _removeOwnNeighbour: function(node) {
+    //   this._ownsConnection[node.attrs.id] = false;
+    // },
 
     // connections: function() {
     //   return this.getConnections().length;
     // },
 
     numberConnections: function() {
-      return Object.size(this._ownsConnection);
+      return Object.size(this.neighbors);
     },
 
     connect: function(node) {
@@ -121,6 +122,10 @@ Kinetic.WholeNode = (function() {
           UI.cmat_app.wholeNodes.get('#'+this.node.attrs.id)[0].getParent(),
           node);
       }
+    },
+
+    addParentConnector: function(conn) {
+      this.parent_connectors.push(conn);
     },
 
     // disconnect: function(node) {
@@ -149,7 +154,24 @@ Kinetic.WholeNode = (function() {
     // },
 
     ownsConnectionWith: function(node) {
-      return this._ownsConnection[node.attrs.id];
+      return this.neighbors[node.attrs.id] != null;
+    },
+
+    parentNodeIds: function() {
+      var parent_ids = [];
+      var _self = this;
+      for (node_id in this.neighbors) {
+        if (_self.neighbors[node_id] == 'parent')
+          parent_ids.push(node_id);
+      }
+      return parent_ids;
+    },
+
+    destroyParentConnections: function(){
+      for (var i=0; i<this.parent_connectors.length; i++) {
+        connector = this.parent_connectors[i];
+        connector.destroy();
+      }
     },
 
     isConnected: function(node) {

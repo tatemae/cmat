@@ -134,11 +134,14 @@ Kinetic.NodeConnector = (function() {
 
     _dragEnd: function(e) {
       var xy = {x: this.attrs.x, y: this.attrs.y};
-      var node_over = UI.findIntersection(xy);
-      if (node_over) {
-        this.current_node_over.connect(node_over);
-        if(!Em.isEmpty(CmatSettings.map.get('objective_bank_id'))){
-          Cmat.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), this.current_node_over.attrs.id, [node_over.attrs.id]);
+      var new_child = UI.findIntersection(xy);
+      if (new_child) {
+        new_child.destroyParentConnections();
+        this.current_node_over.connect(new_child);
+        if(UI.cmat_app.isMapSynchronizedWithMc3()){
+//          Cmat.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), new_child.attrs.id, new_child.parentNodeIds());
+          // bad stuff happens when you give a node more than one parent
+          Cmat.Objective.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), new_child.attrs.id, [this.current_node_over.attrs['id']]);
         }
       }
       this.hideConnection();

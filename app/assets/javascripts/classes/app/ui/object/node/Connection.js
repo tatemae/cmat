@@ -41,8 +41,9 @@ Kinetic.Connection = (function() {
       c2.on('xChange yChange radiusChange', this.refresh.bind(this));
 
       if (c1.attrs.id !== "NodeConnector" && c2.attrs.id !== "NodeConnector") {
-        c1._addOwnNeighbour(c2);
-        c2._addOwnNeighbour(c1);
+        c1.addConnection(c2,"child");
+        c2.addConnection(c1,"parent");
+        c2.addParentConnector(this);
       }
 
       this.markerDiameter = markerRadius * 2;
