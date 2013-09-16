@@ -1,98 +1,31 @@
+// Add a new flash message like this:
+// Cmat.Flash.push('error', 'Please review the errors below:');
+// Can use 'error', 'success', 'info' or 'notice'
+
 Cmat.FlashMessage = Ember.Object.extend({
-  type: "notice",
-  message: null,
-  isNotice: (function() {
-    return this.get("type") === "notice";
-  }).property("type").cacheable(),
-  isWarning: (function() {
-    return this.get("type") === "warning";
-  }).property("type").cacheable(),
-  isError: (function() {
-    return this.get("type") === "error";
-  }).property("type").cacheable()
+  alertType: function(){
+    return 'alert-' + this.get('type');
+  }.property('type')
+
 });
 
-Cmat.flashQueue = Ember.ArrayProxy.create({
+Cmat.Flash = Ember.ArrayProxy.create({
   content: [],
-  contentChanged: function() {
-    var current;
-    current = Cmat.FlashController.get("content");
-    if (current !== this.objectAt(0)) {
-      return Cmat.FlashController.set("content", this.objectAt(0));
-    }
+  push: function(type, message){
+    this.addObject(Cmat.FlashMessage.create({ message: message, type: type }));
   }
 });
 
-Cmat.FlashMessages = Ember.Component.extend({
-
-  current: null,
-  queue: Ember.ArrayProxy.create({}),
-
-  // contentBinding: "Cmat.FlashController.content",
-  // classNameBindings: ["isNotice", "isWarning", "isError"],
-  // isNoticeBinding: "content.isNotice",
-  // isWarningBinding: "content.isWarning",
-  // isErrorBinding: "content.isError",
-
-  didInsertElement: function(){
-    this.$("#message").hide();
-    this.queue.addObserver('content', this.queueChange);
-  },
+Cmat.FlashMessagesComponent = Ember.Component.extend({
 
   queueChange: function(){
-    this.show();
-    setTimeout(this.hide, 2500);
-  },
-
-  pushFlash: function(type, message) {
-    return flashQueue.pushObject(FlashMessage.create({
-      message: message,
-      type: type
-    }));
-  },
-
-  show: function(callback) {
-    return this.$("#message").css({
-      top: "-40px"
-    }).animate({
-      top: "+=40",
-      opacity: "toggle"
-    }, 500, callback);
-  },
-
-  hide: function(callback) {
-    return this.$("#message").css({
-      top: "0px"
-    }).animate({
-      top: "-39px",
-      opacity: "toggle"
-    }, 500, callback);
-  }
+    var toRemove = Ember.A();
+    Cmat.Flash.get('content').every(function(m){ toRemove.push(m); });
+    Ember.run.later(this, function(){
+      toRemove.every(function(m){
+        Cmat.Flash.removeObject(m);
+      });
+    }, 3000);
+  }.observes('Cmat.Flash.content.@each')
 
 });
-
-
-
-// Cmat.FlashController = Ember.Object.create({
-//   content: null,
-//   clearContent: function(content, view) {
-//     return view.hide(function() {
-//       return Cmat.FlashQueue.removeObject(content);
-//     });
-//   }
-// });
-
-// Cmat.FlashController.addObserver('content', function() {
-//   if (this.get("content")) {
-//     if (this.get("view")) {
-//       this.get("view").show();
-//       return setTimeout(this.clearContent, 2500, this.get("content"), this.get("view"));
-//     }
-//   } else {
-//     return Cmat.FlashQueue.contentChanged();
-//   }
-// });
-
-// Cmat.FlashQueue.addObserver('length', function() {
-//   return this.contentChanged();
-// });

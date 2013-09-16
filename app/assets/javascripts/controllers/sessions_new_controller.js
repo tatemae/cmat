@@ -20,6 +20,7 @@ Cmat.SessionsNewController = Ember.ObjectController.extend(Cmat.TransitionBack, 
       }
     }).done(function(response){
       this.get('controllers.current_user').loadUser(response);
+      Cmat.Flash.push('success', 'Successfully Signed In!');
       this.transitionBack();
     }.bind(this)).fail(function(response){
       this.set('errors', $.parseJSON(response.responseText).errors);

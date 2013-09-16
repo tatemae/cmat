@@ -11,7 +11,7 @@ class Api::UsersController < ApplicationController
 
   def create
     @user = User.create(user_params)
-    sign_in @user
+    sign_in @user if @user.errors.blank?
     respond_with(:api, @user)
   end
 

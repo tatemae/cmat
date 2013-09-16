@@ -1,3 +1,5 @@
-<div id="message">
-  {{message}}
+<div id="messages">
+  {{#each msg in Cmat.Flash}}
+    <div {{bind-attr class=":alert msg.alertType"}}>{{msg.message}}</div>
+  {{/each}}
 </div>
