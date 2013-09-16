@@ -10,7 +10,7 @@ class Api::SessionsController < ApplicationController
     if user && user.valid_password?(session_params[:password])
       sign_in user
       render json: {
-        user: { id: user.id, email: user.email, name: user.name }
+        user: { id: user.id, email: user.email, name: user.name, authentication_token: user.authentication_token }
       }, status: :created
     else
       render json: {

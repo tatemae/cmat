@@ -11,6 +11,8 @@
 <%- if user_signed_in? %>
   <meta name="current-user" content="<%= json_for(current_user) %>" />
   <meta name="authentication-token" content="<%= current_user.authentication_token %>" />
+<% else -%>
+  <meta name="authentication-token" content="" />
 <% end %>
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/ico/apple-touch-icon-144-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/ico/apple-touch-icon-114-precomposed.png">
