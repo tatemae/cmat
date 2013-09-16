@@ -19,7 +19,9 @@ Cmat.ModalView = Ember.View.extend({
     });
     this.$('.modal').find('.name-input').focus();
     this.$('.modal-body').find('.map_adder').focus();
-    this.get('controller').showUrlField();
+    var controller = this.get('controller');
+    if (controller.showUrlField)
+      controller.showUrlField();
   },
 
   do_action: function(action){
