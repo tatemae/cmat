@@ -34,7 +34,7 @@ Cmat.Activity.reopenClass({
   },
   deleteNode: function(query){
     return new Ember.RSVP.Promise(function(resolve, reject){
-      var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+query['objectiveBankId']+'/actvities/'+query['id'];
+      var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+query['objectiveBankId']+'/activities/'+query['id'];
 
       resolve($.ajax({type: "DELETE", url: url, contentType: "application/json", dataType: 'json'}).then(function(response){
         return response;
