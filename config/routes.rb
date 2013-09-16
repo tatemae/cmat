@@ -2,7 +2,10 @@ Cmat::Application.routes.draw do
 
   root :to => "default#index"
 
-  devise_for :users
+  devise_for :users, :controllers => { :sessions => "sessions" }
+  as :user do
+    get     'sign_out'              => 'sessions#destroy'
+  end
 
   namespace :api do
     resources :maps, except: [:new, :edit]

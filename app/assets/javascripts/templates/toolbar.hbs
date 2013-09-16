@@ -83,7 +83,7 @@
           <div class="btn-group">
             {{#if controllers.current_user.isSignedIn}}
               <a href="#" class="btn btn-toolbar name_btn">{{controllers.current_user.name}}</a>
-              {{#linkTo 'sessions.destroy' class="btn btn-toolbar name_btn"}}Logout{{/linkTo}}
+              <a href="/sign_out" class="btn btn-toolbar name_btn">Logout</a>
             {{else}}
               {{#linkTo 'users.new' class="btn btn-toolbar name_btn"}}Sign Up{{/linkTo}} |
               {{#linkTo 'sessions.new' class="btn btn-toolbar name_btn"}}Login{{/linkTo}}
