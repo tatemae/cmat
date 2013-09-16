@@ -1,16 +1,21 @@
 Cmat.CurrentUserController = Ember.ObjectController.extend({
 
   loadUserFromModel: function(user){
+    this.setToken(user.get('authentication_token'));
     this.set('content', user);
   },
 
   loadUser: function(userJSON){
     var object = this.store.load(Cmat.User, userJSON);
     var user = Cmat.User.find(userJSON.user.id);
-    if(userJSON.user.authentication_token){
-      $('meta[name="authentication-token"]').attr('content', userJSON.user.authentication_token);
-    }
+    this.setToken(userJSON.user.authentication_token);
     this.set('content', user);
+  },
+
+  setToken: function(token){
+    if(token){
+      $('meta[name="authentication-token"]').attr('content', token);
+    }
   },
 
   isSignedIn: function(){
