@@ -129,23 +129,21 @@ Kinetic.CmatApp = (function() {
       //   }
       // }
 
-      var node_model_types = {
-        'topic' : Cmat.Objective, 'outcome' : Cmat.Objective, 'activity' : Cmat.Activity, 'asset - url' : Cmat.Asset, 'asset - unknown' : Cmat.Asset
-      };
-
-      var node_model = node_model_types[attrs.type];
-      if (node_model) {
-        if(!Em.isEmpty(CmatSettings.map.get('objective_bank_id'))){
-          if(Em.isNone(attrs.id)) {
-            var cmat_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'), parent.attrs.id);
-            node_model.saveNew(cmat_node, parent).then(function(node){
-              wholeNode.id = node['id'];
-              wholeNode.attrs.id = node['id'];
-              if(!Em.isNone(parent) && (attrs.type === 'topic' || attrs.type === 'outcome') ){
-                 node_model.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node['id'], [parent.attrs.id]);
-              }
-            });
-          }
+      if(this.isMapSynchronizedWithMc3()){
+        var node_model_types = {
+          'topic' : Cmat.Objective, 'outcome' : Cmat.Objective, 'activity' : Cmat.Activity, 'asset - url' : Cmat.Asset, 'asset - unknown' : Cmat.Asset
+        };
+        var node_model = node_model_types[attrs.type];
+        if (node_model && Em.isNone(attrs.id)) {
+          var parent_id = Em.isNone(parent) ? null : parent.attrs.id;
+          var mc3_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'), parent_id);
+          node_model.saveNew(mc3_node, parent).then(function(node){
+            wholeNode.id = node['id'];
+            wholeNode.attrs.id = node['id'];
+            if(parent_id && (attrs.type === 'topic' || attrs.type === 'outcome') ){
+               node_model.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node['id'], [parent_id]);
+            }
+          });
         }
       }
 
@@ -153,6 +151,10 @@ Kinetic.CmatApp = (function() {
         this.adjustLayout();
       }
       return wholeNode;
+    },
+
+    isMapSynchronizedWithMc3: function(){
+      return !Em.isEmpty(CmatSettings.map.get('objective_bank_id'));
     },
 
     adjustLayout: function(){
