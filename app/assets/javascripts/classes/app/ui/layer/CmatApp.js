@@ -345,10 +345,14 @@ Kinetic.CmatApp = (function() {
           wholeNode.attrs.type = node.get('type');
           wholeNode.node.attrs.type = node.get('type');
           wholeNode.node._updateImage();
+          var node_model_types = {
+            'topic' : Cmat.Objective, 'outcome' : Cmat.Objective, 'activity' : Cmat.Activity, 'asset - url' : Cmat.Asset, 'asset - unknown' : Cmat.Asset
+          };
           if((!Em.isEmpty(CmatSettings.map.get('objective_bank_id')))) {
             var cmat_node = this.cmat_to_mc3(wholeNode.attrs.title, wholeNode.attrs.info, wholeNode.attrs.type, CmatSettings.map.get('objective_bank_id'));
             cmat_node['id'] = wholeNode.attrs.id;
-            Cmat.Objective.saveChanges(cmat_node).then(function(node){});
+            var node_model = node_model_types[wholeNode.attrs.type];
+            node_model.saveChanges(cmat_node);
           }
           console.log('type: ' + node.get('type'));
           this.parent.draw();
