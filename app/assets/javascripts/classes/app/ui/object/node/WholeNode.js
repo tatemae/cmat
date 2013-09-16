@@ -11,8 +11,8 @@ Kinetic.WholeNode = (function() {
 
       // this.attrs.connections = [];
       // this.attrs._connections = [];
-      // this.attrs.neighbours = [];
-      // this.attrs.ownNeighbours = [];
+      // this.attrs.neighbors = [];
+      // this.attrs.ownNeighbors = [];
       this.neighbors = {};
       this.parent_connectors = [];
 
@@ -84,23 +84,23 @@ Kinetic.WholeNode = (function() {
     //   this.attrs.connections.remove(conn);
     // },
 
-    // getNeighbours: function() {
-    //   return this.attrs.neighbours;
+    // getNeighbors: function() {
+    //   return this.attrs.neighbors;
     // },
 
-    // _removeNeighbour: function(node) {
-    //   this.attrs.neighbours.remove(node);
+    // _removeNeighbor: function(node) {
+    //   this.attrs.neighbors.remove(node);
     // },
 
-    // getOwnNeighbours: function() {
-    //   return this.attrs.ownNeighbours;
+    // getOwnNeighbors: function() {
+    //   return this.attrs.ownNeighbors;
     // },
 
     addConnection: function(node,relationship) {
       this.neighbors[node.attrs.id] = relationship;
     },
 
-    // _removeOwnNeighbour: function(node) {
+    // _removeOwnNeighbor: function(node) {
     //   this._ownsConnection[node.attrs.id] = false;
     // },
 
@@ -141,13 +141,13 @@ Kinetic.WholeNode = (function() {
 
     //     this._removeConnection(delConn);
     //     node._removeConnection(delConn);
-    //     this._removeNeighbour(node);
-    //     node._removeNeighbour(this);
+    //     this._removeNeighbor(node);
+    //     node._removeNeighbor(this);
 
     //     if (this.ownsConnectionWith(node)) {
-    //       this._removeOwnNeighbour(node);
+    //       this._removeOwnNeighbor(node);
     //     } else {
-    //       node._removeOwnNeighbour(this);
+    //       node._removeOwnNeighbor(this);
     //     }
 
     //     delConn.destroy();
@@ -168,15 +168,28 @@ Kinetic.WholeNode = (function() {
       return parent_ids;
     },
 
+    removeNeighbor: function(id) {
+      delete this.neighbors[id];
+    },
+
     destroyParentConnections: function(){
       for (var i=0; i<this.parent_connectors.length; i++) {
         connector = this.parent_connectors[i];
+        var node1 = UI.cmat_app.wholeNodeFromId(connector.attrs.nodes[0]);
+        node1.removeNeighbor(connector.attrs.nodes[1]);
+        var node2 = UI.cmat_app.wholeNodeFromId(connector.attrs.nodes[1]);
+        node2.removeNeighbor(connector.attrs.nodes[0]);
         connector.destroy();
+      }
+      var _self = this;
+      for (node_id in this.neighbors) {
+        if (_self.neighbors[node_id] == 'parent')
+          delete _self.neighbors[node_id];
       }
     },
 
     isConnected: function(node) {
-      return this.getNeighbours().contains(node);
+      return this.getNeighbors().contains(node);
     },
 
     dragEnd: function(){
