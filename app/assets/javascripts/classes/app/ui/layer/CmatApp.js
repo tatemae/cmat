@@ -210,9 +210,9 @@ Kinetic.CmatApp = (function() {
 
         var values = nodes_array[i].split('|');
         var title = values[0].trim();
-        var type = values[1].trim();
-        var info = values[2].trim();
-        var id = values[3].trim();
+        var type = values.length > 1 ? values[1].trim() : 'outcome';
+        var info = values.length > 2 ? values[2].trim() : '';
+        var id = values.length > 3 ? values[3].trim() : null;
 
         x += deltaX;
         if (x > workspaceWidth) {
