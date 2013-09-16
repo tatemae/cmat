@@ -9,6 +9,20 @@ Cmat.NodeController = Ember.ObjectController.extend({
     if(this.get('state') == 'new'){
       this.transitionToRoute('node.new');
     }
-  }.observes('state')
+  }.observes('state'),
+
+  didInsertElement: function(){
+    this.showUrlField(this);
+  },
+
+  showUrlField: function(controller) {
+    var urlControls = $('#url_controls');
+    if (urlControls) {
+      if (this.get('type') == 'asset - url')
+        urlControls.removeClass('hide');  
+      else
+        urlControls.addClass('hide')
+    }
+  }.observes('type')
 
 });
