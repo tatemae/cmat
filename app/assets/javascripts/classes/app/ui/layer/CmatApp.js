@@ -63,7 +63,7 @@ Kinetic.CmatApp = (function() {
       node.set('title', wholeNode.attrs.title);
       node.set('info', wholeNode.attrs.info);
       node.set('type', wholeNode.attrs.type);
-      node.set('url', wholeNode.attrs.url)
+      node.set('url', wholeNode.attrs.url);
       node.set('state', 'edit');
     },
 
@@ -141,8 +141,8 @@ Kinetic.CmatApp = (function() {
           var parent_id = Em.isNone(parent) ? null : parent.attrs.id;
           var mc3_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'), parent_id);
           node_model.saveNew(mc3_node, parent).then(function(node){
-            wholeNode.id = node['id'];
             wholeNode.attrs.id = node['id'];
+            wholeNode.children[0].setId(node['id']);
             if(parent_id && (attrs.type === 'topic' || attrs.type === 'outcome') ){
                node_model.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node['id'], [parent_id]);
             }
@@ -240,7 +240,7 @@ Kinetic.CmatApp = (function() {
     },
 
     addNodesTree: function(children){
-      if (children.length == 0) return;
+      if (children.length === 0) return;
 
       // add a bogus first node so we have a single parent
       var visibleWidth = this.visibleWidth();
@@ -299,7 +299,7 @@ Kinetic.CmatApp = (function() {
       var node_width = 300;
       var width = this.visibleWidth() > (node_width*(max_cols+1)) ? this.visibleWidth() : (node_width*(max_cols+1));
       var height = this.visibleHeight() > node_height*(rows.length+1) ? this.visibleHeight() : node_height*(rows.length+1);
-      return [width, height]
+      return [width, height];
     },
 
     countChildren: function(nodes, rows, depth){
@@ -377,6 +377,7 @@ Kinetic.CmatApp = (function() {
     },
 
     deleteNode: function(wholeNode) {
+      var query;
       for (var i = 0; i < this.connections.children.length; i++) {
         if (this.connections.children[i].hasNode(wholeNode)) {
           this.connections.children[i].destroy();
@@ -390,13 +391,13 @@ Kinetic.CmatApp = (function() {
       };
       if((!Em.isEmpty(CmatSettings.map.get('objective_bank_id')))) {
         if(wholeNode.attrs.type === 'topic' || wholeNode.attrs.type === 'outcome'){
-          var query = {objectiveBankId: CmatSettings.map.get('objective_bank_id'), objectiveId: wholeNode.attrs.id};
+          query = {objectiveBankId: CmatSettings.map.get('objective_bank_id'), objectiveId: wholeNode.attrs.id};
           Cmat.Objective.deleteNode(query);
         }
         else
         {
           var node_model = node_model_types[wholeNode.attrs.type];
-          var query = {objectiveBankId: CmatSettings.map.get('objective_bank_id'), id: wholeNode.attrs.id};
+          query = {objectiveBankId: CmatSettings.map.get('objective_bank_id'), id: wholeNode.attrs.id};
           node_model.deleteNode(query);
         }
       }
