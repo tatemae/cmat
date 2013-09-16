@@ -19,6 +19,7 @@ Kinetic.WholeNode = (function() {
       this.attrs.title = config.title || '';
       this.attrs.info = config.info || '';
       this.attrs.type = config.type || 'outcome';
+      this.attrs.url = config.url || '';
 
       this.addNode(config);
     },
@@ -67,7 +68,7 @@ Kinetic.WholeNode = (function() {
       });
 
       this.on('dragend', function(){
-        this._animateMouseover();
+        this.dragEnd();
       });
 
       this.add(this.mouseOverCatcher = this._createMouseOverCatcher());
@@ -176,6 +177,11 @@ Kinetic.WholeNode = (function() {
 
     isConnected: function(node) {
       return this.getNeighbours().contains(node);
+    },
+
+    dragEnd: function(){
+      this._animateMouseover();
+      UI.cmat_app.saveMap();
     },
 
     _animateMouseover: function() {

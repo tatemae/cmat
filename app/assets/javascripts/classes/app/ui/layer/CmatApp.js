@@ -50,6 +50,7 @@ Kinetic.CmatApp = (function() {
       node.set('title', '');
       node.set('info', '');
       node.set('type', '');
+      node.set('url', '');
       node.set('x', xy.x);
       node.set('y', xy.y);
       node.set('parent', parent);
@@ -62,6 +63,7 @@ Kinetic.CmatApp = (function() {
       node.set('title', wholeNode.attrs.title);
       node.set('info', wholeNode.attrs.info);
       node.set('type', wholeNode.attrs.type);
+      node.set('url', wholeNode.attrs.url)
       node.set('state', 'edit');
     },
 
@@ -106,7 +108,8 @@ Kinetic.CmatApp = (function() {
         draggable: true,
         title: attrs.title || '',
         info: attrs.info || '',
-        type: attrs.type || 'topic'
+        type: attrs.type || 'topic',
+        url: attrs.url || ''
       });
 
       this.wholeNodes.add(wholeNode);
@@ -334,7 +337,8 @@ Kinetic.CmatApp = (function() {
           y: node.get('y'),
           title: node.get('title'),
           info: node.get('info'),
-          type: node.get('type')
+          type: node.get('type'),
+          url: node.get('url'),
         }, node.get('parent'), true);
       } else {
         var child = this.wholeNodes.get('#'+node.get('id'))[0];
@@ -346,6 +350,7 @@ Kinetic.CmatApp = (function() {
           wholeNode.title.setAttr('text', wholeNode.attrs.title);
           wholeNode.attrs.info = node.get('info');
           wholeNode.attrs.type = node.get('type');
+          wholeNode.attrs.url = node.get('url');
           wholeNode.node.attrs.type = node.get('type');
           wholeNode.node._updateImage();
           var node_model_types = {
@@ -357,8 +362,8 @@ Kinetic.CmatApp = (function() {
             var node_model = node_model_types[wholeNode.attrs.type];
             node_model.saveChanges(cmat_node);
           }
-          console.log('type: ' + node.get('type'));
           this.parent.draw();
+          this.saveMap();
         } else if ( CmatSettings.node.get('state') == "cancel" ){
           // revert those attributes
           node.set('title', wholeNode.attrs.title);
@@ -395,6 +400,15 @@ Kinetic.CmatApp = (function() {
         }
       }
       this.parent.draw();
+      this.saveMap();
+    },
+
+    saveMap: function() {
+      var map = CmatSettings.map;
+      var map_model = map.get('content');
+      var map_json = UI.getStage().toJSON();
+      map_model.set('payload', map_json);
+      map_model.save();
     },
 
     cleanUp: function() {
