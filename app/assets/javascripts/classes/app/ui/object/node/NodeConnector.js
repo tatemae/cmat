@@ -109,7 +109,7 @@ Kinetic.NodeConnector = (function() {
     _mouseout: function(e) {
       this._animateMouseout();
     },
-    
+
     simulatePress: function() {
       this._pressed({});
     },
@@ -148,7 +148,8 @@ Kinetic.NodeConnector = (function() {
     },
 
     showConnector: function() {
-      this.node_connector_connection.attrs.nodes = [this.attrs.id, this.current_node_over.attrs.id]
+      this.node_connector_connection.node1 = this;
+      this.node_connector_connection.node2 = this.current_node_over;
       this.show();
       UI.getStage().draw();
     },

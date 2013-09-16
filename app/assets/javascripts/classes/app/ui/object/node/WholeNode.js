@@ -41,7 +41,6 @@ Kinetic.WholeNode = (function() {
     addNode: function(config) {
 
       this.add(this.node = new Kinetic.AppNode({
-        id: config.id,
         x: 0,
         y: 0,
         draggable: false,
@@ -118,9 +117,9 @@ Kinetic.WholeNode = (function() {
         attrs.strokeStyle = '#34495E';
         attrs.lineJoin = 'round';
         attrs.lineWidth = 1;
-        attrs.nodes = [ this.node.attrs.id, node.attrs.id ];
+        attrs.nodes = [ this.attrs.id, node.attrs.id ];
         UI.cmat_app.addConnection(attrs, UI.cmat_app.getMarkerRadius(),
-          UI.cmat_app.wholeNodes.get('#'+this.node.attrs.id)[0].getParent(),
+          this,
           node);
       }
     },

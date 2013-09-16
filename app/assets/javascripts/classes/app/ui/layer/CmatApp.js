@@ -142,7 +142,6 @@ Kinetic.CmatApp = (function() {
           var mc3_node = this.cmat_to_mc3(attrs.title, attrs.info, attrs.type, CmatSettings.map.get('objective_bank_id'), parent_id);
           node_model.saveNew(mc3_node, parent).then(function(node){
             wholeNode.attrs.id = node['id'];
-            wholeNode.children[0].setId(node['id']);
             if(parent_id && (attrs.type === 'topic' || attrs.type === 'outcome') ){
                node_model.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node['id'], [parent_id]);
             }
@@ -279,8 +278,7 @@ Kinetic.CmatApp = (function() {
     },
 
     wholeNodeFromId: function(id){
-      var result = this.wholeNodes.get("#"+ id)[0];
-      return result ? result.parent : null;
+      return this.wholeNodes.get("#"+ id)[0];
     },
 
     calcMapSize: function(tree) {
@@ -341,10 +339,9 @@ Kinetic.CmatApp = (function() {
           type: node.get('type'),
           url: node.get('url'),
         }, node.get('parent'), true);
-      } else {
-        var child = this.wholeNodes.get('#'+node.get('id'))[0];
-        if(!child){ return; }
-        var wholeNode = child.getParent();
+      } else { // updating settings for a node
+        var wholeNode = this.wholeNodes.get('#'+node.get('id'))[0];
+        if(!wholeNode){ return; }
         if (CmatSettings.node.get('state') == "save") {
           // save those attributes
           wholeNode.attrs.title = node.get('title');
@@ -444,8 +441,8 @@ Kinetic.CmatApp = (function() {
             a.children.forEach(function(b) {
                if (b.attrs.name === 'connections') {
                 b.children.forEach(function(c) {
-                  var node1 = this.wholeNodes.get('#'+c.attrs.nodes[0])[0].getParent();
-                  var node2 = this.wholeNodes.get('#'+c.attrs.nodes[1])[0].getParent();
+                  var node1 = this.wholeNodes.get('#'+c.attrs.nodes[0])[0];
+                  var node2 = this.wholeNodes.get('#'+c.attrs.nodes[1])[0];
                   this.addConnection(c.attrs, markerRadius, node1, node2);
                 }.bind(this));
               }

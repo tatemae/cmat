@@ -40,35 +40,36 @@ Cmat.Map = Cmat.ModelBase.extend({
             var node = asset_list[i];
             assets[node['id']] = node;
           }
-          _self.dec_promises(_self, tree);
-        }, function(){
-          _self.dec_promises(_self, tree);
-        });
 
-        // get all activities for the objective bank
-        _self.inc_promises(_self);
-        Cmat.Activity.findQuery({objective_bank_id: objective_bank_id}).then(function(activities){
 
-          // attach the activities to their parent objectives
-          for (var i=0; i<activities.length; i++) {
-            var activity = activities[i];
-            var parent = objectives[activity['objectiveId']];
-            if (parent) {
-              if (!parent.children) parent.children = [];
-              parent.children.push(activity);
+          // get all activities for the objective bank
+          _self.inc_promises(_self);
+          Cmat.Activity.findQuery({objective_bank_id: objective_bank_id}).then(function(activities){
 
-              // attach the activity's assets to it
-              var asset_ids = activity['assetIds'];
-              for (var j=0; j<asset_ids.length; j++) {
-                var asset_id = asset_ids[j];
-                var asset = assets[asset_id];
-                if (asset) {
-                  if (!activity.children) activity.children = [];
-                  activity.children.push(asset);
+            // attach the activities to their parent objectives
+            for (var i=0; i<activities.length; i++) {
+              var activity = activities[i];
+              var parent = objectives[activity['objectiveId']];
+              if (parent) {
+                if (!parent.children) parent.children = [];
+                parent.children.push(activity);
+
+                // attach the activity's assets to it
+                var asset_ids = activity['assetIds'];
+                for (var j=0; j<asset_ids.length; j++) {
+                  var asset_id = asset_ids[j];
+                  var asset = assets[asset_id];
+                  if (asset) {
+                    if (!activity.children) activity.children = [];
+                    activity.children.push(asset);
+                  }
                 }
               }
             }
-          }
+            _self.dec_promises(_self, tree);
+          }, function(){
+            _self.dec_promises(_self, tree);
+          });
           _self.dec_promises(_self, tree);
         }, function(){
           _self.dec_promises(_self, tree);
@@ -105,7 +106,7 @@ Cmat.Map = Cmat.ModelBase.extend({
     _self.inc_promises(_self);
     Cmat.Objective.findQuery({objective_bank_id: objective_bank_id, objective: parent['id'], children: true}).then(function(children){
       var childrenids = children['ids'];
-      if(childrenids.length == 0) {
+      if(childrenids.length === 0) {
         _self.dec_promises(_self, tree);
         return;
       }
@@ -129,7 +130,7 @@ Cmat.Map = Cmat.ModelBase.extend({
 
   dec_promises: function(self, tree){
     self.promises--;
-    if (self.promises == 0) {
+    if (self.promises === 0) {
       UI.cmat_app.addNodesTree(tree);
       self.set('objective_bank_id', self.obj_bank_id);
       UI.hideLoading();

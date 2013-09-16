@@ -37,95 +37,28 @@ Kinetic.Connection = (function() {
 
       Kinetic.Shape.call(this, config);
 
-      c1.on('xChange yChange radiusChange', this.refresh.bind(this));
-      c2.on('xChange yChange radiusChange', this.refresh.bind(this));
+      this.node1 = c1;
+      this.node2 = c2;
 
-      if (c1.attrs.id !== "NodeConnector" && c2.attrs.id !== "NodeConnector") {
-        c1.addConnection(c2,"child");
-        c2.addConnection(c1,"parent");
-        c2.addParentConnector(this);
+      if (this.node1.attrs.id !== "NodeConnector" && this.node2.attrs.id !== "NodeConnector") {
+        this.node1.addConnection(this.node2,"child");
+        this.node2.addConnection(this.node1,"parent");
+        this.node2.addParentConnector(this);
       }
-
-      this.markerDiameter = markerRadius * 2;
-      this._markers = [];
-
-      this.drawn = true;
-      this.refresh(null, c1, c2);
-    },
-
-    refresh: function(values, node1, node2) {
-      if (!this.drawn) return;
-
-      var c1, c2;
-
-      this.drawn = false;
-      this._markers = [];
-
-      var nodes = this.getNodes();
-      if (node1 === undefined && node2 === undefined) {
-        var tmp1, tmp2;
-        tmp1 = UI.cmat_app.wholeNodes.get('#'+nodes[0])[0];
-        tmp2 = UI.cmat_app.wholeNodes.get('#'+nodes[1])[0];
-        if ((tmp1 === undefined || tmp2 === undefined) && nodes[0] !== "NodeConnector"){
-          this.destroy(); // cleanup left over connection objects after a connection has already been destroyed by a node being deleted
-          return;
-        }
-
-        if (tmp1 === undefined && nodes[0] === "NodeConnector") {
-          c1 = UI.cmat_app.node_connector;
-        } else if (tmp1 === undefined) {
-          $.each(UI.cmat_app.wholeNodes.children, function(index, wholeNode) {
-            if (wholeNode.attrs.id === nodes[0]) {
-              c1 = wholeNode;
-              wholeNode.children[0].setId(nodes[0]);
-              return false;
-            }
-          });
-        } else {
-          c1 = tmp1.getParent();
-        }
-
-        if (tmp2 === undefined && nodes[1] === "NodeConnector") {
-          c2 = UI.cmat_app.node_connector;
-        } else if (tmp2 === undefined) {
-          $.each(UI.cmat_app.wholeNodes.children, function(index, wholeNode) {
-            if (wholeNode.attrs.id === nodes[1]) {
-              c2 = wholeNode;
-              wholeNode.children[0].setId(nodes[1]);
-              return false;
-            }
-          });
-        } else {
-          c2 = tmp2.getParent();
-        }
-      } else {
-        c1 = node1;
-        c2 = node2;
-      }
-
-      var x1 = c1.getX(), y1 = c1.getY(), x2 = c2.getX(), y2 = c2.getY();
-
-      this._markers.push([x1, y1]);
-      this._markers.push([x2, y2]);
-
     },
 
     drawFunc: function(canvas) {
       var context = canvas.getContext();
 
-      if (this._markers.length > 1) {
-        context.beginPath();
-        context.moveTo(this._markers[0][0], this._markers[0][1]);
-        context.lineTo(this._markers[this._markers.length-1][0], this._markers[this._markers.length-1][1]);
-        context.closePath();
-        context.strokeStyle = this.attrs.strokeStyle;
+      context.beginPath();
+      context.moveTo(this.node1.getX(), this.node1.getY());
+      context.lineTo(this.node2.getX(), this.node2.getY());
+      context.closePath();
+      context.strokeStyle = this.attrs.strokeStyle;
 
-        context.lineJoin = this.attrs.lineJoin;
-        context.lineWidth = this.attrs.lineWidth;
-        context.stroke();
-      }
-
-      this.drawn = true;
+      context.lineJoin = this.attrs.lineJoin;
+      context.lineWidth = this.attrs.lineWidth;
+      context.stroke();
     },
 
     getNodes: function() {
