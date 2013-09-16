@@ -52,8 +52,12 @@ Kinetic.AppNode = (function() {
     _updateImage: function() {
       if (this.attrs.type === "topic") {
         this.setImage(Image.node.node_square);
+      } else if (this.attrs.type === "outcome") {
+        this.setImage(Image.node.node_circle);
       } else if (this.attrs.type === "activity") {
         this.setImage(Image.node.node_triangle);
+      } else if (this.attrs.type === "asset - url" || this.attrs.type === "asset - unknown") {
+        this.setImage(Image.node.node_hexagon);
       } else {
         this.setImage(Image.node.node_circle);
       }

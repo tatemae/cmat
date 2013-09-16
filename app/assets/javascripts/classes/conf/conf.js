@@ -19,7 +19,7 @@ Config = {
             bg: [ 'normal', 'trans' ],
             node: {
               connection: [ 'marker' ],
-              _: [ 'node_adder', 'node_connector', 'node_circle', 'node_square', 'node_triangle' ]
+              _: [ 'node_adder', 'node_connector', 'node_circle', 'node_square', 'node_triangle', 'node_hexagon' ]
             }
           }
         }
