@@ -139,6 +139,10 @@ Kinetic.CmatApp = (function() {
             if(parent_id && (attrs.type === 'topic' || attrs.type === 'outcome') ){
                node_model.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node['id'], [parent_id]);
             }
+            if(parent_id && (attrs.type == 'asset - url' || attrs.type == 'asset - unknown'))
+            {
+              //Cmat.Activity.saveChanges
+            }
           });
         }
       }
