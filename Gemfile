@@ -9,7 +9,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.0'
 
 # Use postgresql as the database for Active Record
-gem 'pg'
+gem 'pg', :group => :production
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
@@ -48,4 +48,5 @@ group :development, :test do
   gem 'rspec-rails', '~> 2.0'
   gem 'guard'
   gem 'guard-shell'
+  gem 'mysql2'
 end
