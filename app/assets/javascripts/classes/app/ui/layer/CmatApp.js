@@ -237,6 +237,7 @@ Kinetic.CmatApp = (function() {
     },
 
     addNodesTree: function(children){
+      if (children.length == 0) return;
 
       // add a bogus first node so we have a single parent
       var visibleWidth = this.visibleWidth();
