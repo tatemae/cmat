@@ -290,11 +290,13 @@ Kinetic.CmatApp = (function() {
     wholeNodeFromId: function(id){
       var wholeNode;
       // wholeNode = this.wholeNodes.get("#"+ id)[0]; // Wish this would work in all cases. But it won't work on a newly added node on a map loaded from MC3 for some reason.
-      this.wholeNodes.children.each(function(node){
-        if(node.attrs.id === id){
+      $.each(this.wholeNodes.children, function(index, node){
+        if (node.attrs.id === id){
           wholeNode = node;
+          return false;
         }
       });
+
       return wholeNode;
     },
 
