@@ -154,7 +154,8 @@ Kinetic.CmatApp = (function() {
               activity_node['id'] = parent.attrs.id;
               Cmat.Activity.saveChanges(activity_node);
             }
-          });
+            this.saveMap();
+          }.bind(this));
         }
       }
 
@@ -287,7 +288,14 @@ Kinetic.CmatApp = (function() {
     },
 
     wholeNodeFromId: function(id){
-      return this.wholeNodes.get("#"+ id)[0];
+      var wholeNode;
+      // wholeNode = this.wholeNodes.get("#"+ id)[0]; // Wish this would work in all cases. But it won't work on a newly added node on a map loaded from MC3 for some reason.
+      this.wholeNodes.children.each(function(node){
+        if(node.attrs.id === id){
+          wholeNode = node;
+        }
+      });
+      return wholeNode;
     },
 
     calcMapSize: function(tree) {
@@ -340,7 +348,7 @@ Kinetic.CmatApp = (function() {
     updateSettings: function() {
       var node = CmatSettings.node;
       if (node.get('state') === 'add') {
-        this.addNode({
+        return this.addNode({
           x: node.get('x'),
           y: node.get('y'),
           title: node.get('title'),
@@ -349,7 +357,7 @@ Kinetic.CmatApp = (function() {
           url: node.get('url'),
         }, node.get('parent'), true);
       } else { // updating settings for a node
-        var wholeNode = this.wholeNodes.get('#'+node.get('id'))[0];
+        var wholeNode = this.wholeNodeFromId(node.get('id'));
         if(!wholeNode){ return; }
         if (CmatSettings.node.get('state') == "save") {
           // save those attributes
@@ -450,8 +458,8 @@ Kinetic.CmatApp = (function() {
             a.children.forEach(function(b) {
                if (b.attrs.name === 'connections') {
                 b.children.forEach(function(c) {
-                  var node1 = this.wholeNodes.get('#'+c.attrs.nodes[0])[0];
-                  var node2 = this.wholeNodes.get('#'+c.attrs.nodes[1])[0];
+                  var node1 = this.wholeNodeFromId(c.attrs.nodes[0]);
+                  var node2 = this.wholeNodeFromId(c.attrs.nodes[1]);
                   this.addConnection(c.attrs, markerRadius, node1, node2);
                 }.bind(this));
               }
