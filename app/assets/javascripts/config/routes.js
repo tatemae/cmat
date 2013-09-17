@@ -20,6 +20,7 @@ Cmat.Router.map(function() {
   this.resource('sessions', function() {
     this.route('new');
     this.route('destroy');
+    this.route('recover');
   });
 
 });

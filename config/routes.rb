@@ -10,6 +10,7 @@ Cmat::Application.routes.draw do
   namespace :api do
     resources :maps, except: [:new, :edit]
     resources :sessions, only: [:create, :destroy]
+    resources :passwords, only: [:create]
     resources :users, only: [:show, :create, :update] do
       resources :maps, except: [:new, :edit]
     end

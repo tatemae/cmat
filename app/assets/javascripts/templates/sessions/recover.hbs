@@ -1,0 +1,15 @@
+<div class="recover_password_container">
+  <h1>Recover Password</h1>
+  <form class="form-horizontal user-form">
+    <fieldset>
+      {{#if errors}}
+        <div class="alert alert-error">{{errors.message}}</div>
+      {{/if}}
+      <div class="control-group" {{bindAttr class="errors.email:error"}}>
+        {{view Ember.TextField valueBinding='email' name='email' placeholder='Email'}}
+      </div>
+      <a href='#' {{action cancel}} class='btn'>Cancel</a>
+      <button type="submit" {{action recover}} class='btn btn-large btn-primary'>Recover Password</button>
+    </fieldset>
+  </form>
+</div>
