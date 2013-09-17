@@ -33,7 +33,6 @@ Kinetic.CmatApp = (function() {
 
     rescaleWorkspace: function() {
       this.area = this.getWidth() * this.getHeight();
-      this.maxRadius = Math.floor(Math.sqrt(this.area * CIRCLE_AREA_TO_SCREEN_REL / Math.PI)) - 1;
     },
 
     _newNode: function(e, parent) {
@@ -339,10 +338,6 @@ Kinetic.CmatApp = (function() {
       // this.saveMap();
     },
 
-    getMarkerRadius: function() {
-      return this.maxRadius;
-    },
-
     observeSettings: function() {
       return CmatSettings.node.addObserver('state', this, 'updateSettings');
     },
@@ -456,13 +451,12 @@ Kinetic.CmatApp = (function() {
               }
             }.bind(this));
 
-            var markerRadius = this.getMarkerRadius();
             a.children.forEach(function(b) {
                if (b.attrs.name === 'connections') {
                 b.children.forEach(function(c) {
                   var node1 = this.wholeNodeFromId(c.attrs.nodes[0]);
                   var node2 = this.wholeNodeFromId(c.attrs.nodes[1]);
-                  this.addConnection(c.attrs, markerRadius, node1, node2);
+                  this.addConnection(c.attrs, node1, node2);
                 }.bind(this));
               }
             }.bind(this));
