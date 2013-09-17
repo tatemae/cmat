@@ -121,7 +121,7 @@ Kinetic.NodeConnector = (function() {
         attrs.lineJoin = 'round';
         attrs.strokeWidth = 1;
         attrs.nodes = [ this.attrs.id, this.current_node_over.attrs.id ];
-        UI.cmat_app.add(this.node_connector_connection = new Kinetic.Connection(attrs, UI.cmat_app.getMarkerRadius(), this, this.current_node_over));
+        UI.cmat_app.add(this.node_connector_connection = new Kinetic.Connection(attrs, this, this.current_node_over));
         this.node_connector_connection.moveDown();
         this.node_connector_connection.hide();
       }
