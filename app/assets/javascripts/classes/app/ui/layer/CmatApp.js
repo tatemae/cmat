@@ -134,7 +134,10 @@ Kinetic.CmatApp = (function() {
           var mc3_node = this.cmat_to_mc3(attrs, CmatSettings.map.get('objective_bank_id'), parent_id);
           _self = this;
           node_model.saveNew(mc3_node, parent).then(function(node){
-            wholeNode.attrs.id = node['id'];
+            if (parent_id){
+              this.updateNodeConnection({parent_id: parent_id, old_node_id: wholeNode.getId(), new_node_id: node['id'], new_node: wholeNode});
+            }
+            wholeNode.setId(node['id']);
             if(parent_id && (attrs.type === 'topic' || attrs.type === 'outcome') ){
                node_model.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node['id'], [parent_id]);
             }
@@ -162,6 +165,14 @@ Kinetic.CmatApp = (function() {
         this.adjustLayout();
       }
       return wholeNode;
+    },
+
+    updateNodeConnection: function(params){
+      var conn = this.connections.children.last();
+      if (conn.attrs.nodes[0] === params.parent_id && conn.attrs.nodes[1] === params.old_node_id){
+        conn.attrs.nodes[1] = params.new_node_id;
+        conn.node2 = params.new_node;
+      }
     },
 
     isMapSynchronizedWithMc3: function(){
