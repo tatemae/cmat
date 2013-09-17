@@ -161,7 +161,7 @@ Kinetic.NodeConnector = (function() {
     hideConnection: function() {
       this.hide();
       this.node_connector_connection.hide();
-      this.node_connector_connection.attrs.nodes = [this.attrs.id, this.attrs.id]
+      this.node_connector_connection.attrs.nodes = [this.attrs.id, this.attrs.id];
       UI.getStage().draw();
     }
   });

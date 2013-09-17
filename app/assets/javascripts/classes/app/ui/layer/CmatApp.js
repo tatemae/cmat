@@ -356,7 +356,7 @@ Kinetic.CmatApp = (function() {
           title: node.get('title'),
           info: node.get('info'),
           type: node.get('type'),
-          url: node.get('url'),
+          url: node.get('url')
         }, node.get('parent'), true);
       } else { // updating settings for a node
         var wholeNode = this.wholeNodeFromId(node.get('id'));
