@@ -37,28 +37,72 @@ Kinetic.Connection = (function() {
 
       Kinetic.Shape.call(this, config);
 
-      this.node1 = c1;
-      this.node2 = c2;
+      // this.node1 = c1;
+      // this.node2 = c2;
 
-      if (this.node1.attrs.id !== "NodeConnector" && this.node2.attrs.id !== "NodeConnector") {
-        this.node1.addConnection(this.node2,"child");
-        this.node2.addConnection(this.node1,"parent");
-        this.node2.addParentConnector(this);
+      c1.on('xChange yChange radiusChange', this.refresh.bind(this));
+      c2.on('xChange yChange radiusChange', this.refresh.bind(this));
+
+      if (c1.attrs.id !== "NodeConnector" && c2.attrs.id !== "NodeConnector") {
+        c1.addConnection(c2,"child");
+        c2.addConnection(c1,"parent");
+        c2.addParentConnector(this);
       }
+      this._markers = [];
+
+      this.drawn = true;
+      this.refresh(null, c1, c2);
     },
 
+    refresh: function(values, node1, node2) {
+      if (!this.drawn) return;
+
+      var c1, c2;
+
+      this.drawn = false;
+      this._markers = [];
+
+      var nodes = this.getNodes();
+      if (node1 === undefined && node2 === undefined) {
+        c1 = UI.cmat_app.wholeNodeFromId(nodes[0]);
+        c2 = UI.cmat_app.wholeNodeFromId(nodes[1]);
+        if ((c1 === undefined || c2 === undefined) && nodes[0] !== "NodeConnector"){
+          this.destroy(); // cleanup left over connection objects after a connection has already been destroyed by a node being deleted
+          return;
+        }
+
+        if (c1 === undefined && nodes[0] === "NodeConnector") {
+          c1 = UI.cmat_app.node_connector;
+        }
+
+        if (c2 === undefined && nodes[1] === "NodeConnector") {
+          c2 = UI.cmat_app.node_connector;
+        }
+      } else {
+        c1 = node1;
+        c2 = node2;
+      }
+
+      this._markers.push([c1.getX(), c1.getY()]);
+      this._markers.push([c2.getX(), c2.getY()]);
+
+    },
+
+
     drawFunc: function(canvas) {
-      var context = canvas.getContext();
+      if (this._markers.length > 1) {
+        var context = canvas.getContext();
+        context.beginPath();
+        context.moveTo(this._markers[0][0], this._markers[0][1]);
+        context.lineTo(this._markers[this._markers.length-1][0], this._markers[this._markers.length-1][1]);
+        context.closePath();
+        context.strokeStyle = this.attrs.strokeStyle;
 
-      context.beginPath();
-      context.moveTo(this.node1.getX(), this.node1.getY());
-      context.lineTo(this.node2.getX(), this.node2.getY());
-      context.closePath();
-      context.strokeStyle = this.attrs.strokeStyle;
-
-      context.lineJoin = this.attrs.lineJoin;
-      context.lineWidth = this.attrs.lineWidth;
-      context.stroke();
+        context.lineJoin = this.attrs.lineJoin;
+        context.lineWidth = this.attrs.lineWidth;
+        context.stroke();
+      }
+      this.drawn = true;
     },
 
     getNodes: function() {
