@@ -118,9 +118,7 @@ Kinetic.WholeNode = (function() {
         attrs.lineJoin = 'round';
         attrs.strokeWidth = 1;
         attrs.nodes = [ this.attrs.id, node.attrs.id ];
-        UI.cmat_app.addConnection(attrs, UI.cmat_app.getMarkerRadius(),
-          this,
-          node);
+        UI.cmat_app.addConnection(attrs, this, node);
       }
     },
 

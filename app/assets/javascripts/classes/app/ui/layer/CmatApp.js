@@ -333,7 +333,7 @@ Kinetic.CmatApp = (function() {
       }
     },
 
-    addConnection: function(attrs, markerRadius, node1, node2){
+    addConnection: function(attrs, node1, node2){
       var conn = new Kinetic.Connection(attrs, node1, node2);
       this.connections.add(conn);
       this.saveMap();
