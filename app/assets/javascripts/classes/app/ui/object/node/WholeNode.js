@@ -114,9 +114,9 @@ Kinetic.WholeNode = (function() {
     connect: function(node) {
       if (node != this && !this.ownsConnectionWith(node)) {
         var attrs = {};
-        attrs.strokeStyle = '#34495E';
+        attrs.stroke = '#34495E';
         attrs.lineJoin = 'round';
-        attrs.lineWidth = 1;
+        attrs.strokeWidth = 1;
         attrs.nodes = [ this.attrs.id, node.attrs.id ];
         UI.cmat_app.addConnection(attrs, UI.cmat_app.getMarkerRadius(),
           this,

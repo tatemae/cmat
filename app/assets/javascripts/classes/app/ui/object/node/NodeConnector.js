@@ -117,9 +117,9 @@ Kinetic.NodeConnector = (function() {
     updateConnection: function() {
       if (this.node_connector_connection === undefined) {
         var attrs = {};
-        attrs.strokeStyle = 'red';
+        attrs.stroke = 'red';
         attrs.lineJoin = 'round';
-        attrs.lineWidth = 1;
+        attrs.strokeWidth = 1;
         attrs.nodes = [ this.attrs.id, this.current_node_over.attrs.id ];
         UI.cmat_app.add(this.node_connector_connection = new Kinetic.Connection(attrs, UI.cmat_app.getMarkerRadius(), this, this.current_node_over));
         this.node_connector_connection.moveDown();

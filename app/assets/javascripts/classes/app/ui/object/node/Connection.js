@@ -28,17 +28,17 @@
 //
 // based on: https://raw.github.com/mihhail-lapushkin/Ancient-Riddle/ad6930a07059e5d403681754480432fcb21cec30/src/classes/game/ui/object/circle/Connection.js
 Kinetic.Connection = (function() {
-  var MIN_COUNT = 4;
-  var MAX_STRETCH = 1.5;
-
   var Class = $$$.Class({
-    _init: function(config, markerRadius, c1, c2) {
+    _init: function(config, c1, c2) {
       config.drawFunc = this.drawFunc;
-
-      Kinetic.Shape.call(this, config);
-
       this.node1 = c1;
       this.node2 = c2;
+      config.points = [this.node1.getX(), this.node1.getY(), this.node2.getX(), this.node2.getY()];
+
+      Kinetic.Line.call(this, config);
+
+      this.node1.on('xChange yChange radiusChange', this.refresh.bind(this));
+      this.node2.on('xChange yChange radiusChange', this.refresh.bind(this));
 
       if (this.node1.attrs.id !== "NodeConnector" && this.node2.attrs.id !== "NodeConnector") {
         this.node1.addConnection(this.node2,"child");
@@ -47,18 +47,8 @@ Kinetic.Connection = (function() {
       }
     },
 
-    drawFunc: function(canvas) {
-      var context = canvas.getContext();
-
-      context.beginPath();
-      context.moveTo(this.node1.getX(), this.node1.getY());
-      context.lineTo(this.node2.getX(), this.node2.getY());
-      context.closePath();
-      context.strokeStyle = this.attrs.strokeStyle;
-
-      context.lineJoin = this.attrs.lineJoin;
-      context.lineWidth = this.attrs.lineWidth;
-      context.stroke();
+    refresh: function() {
+      this.setPoints([this.node1.getX(), this.node1.getY(), this.node2.getX(), this.node2.getY()]);
     },
 
     getNodes: function() {
@@ -72,7 +62,7 @@ Kinetic.Connection = (function() {
     }
   });
 
-  Kinetic.Util.extend(Class, Kinetic.Shape);
+  Kinetic.Util.extend(Class, Kinetic.Line);
 
   return Class;
 })();
