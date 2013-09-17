@@ -94,10 +94,10 @@ Kinetic.CmatApp = (function() {
         genusTypeId: this.mc3_type[attrs.type] || 'mc3-objective%3Amc3.learning.outcome%40MIT-OEIT',
         objectiveBankId: objectiveBankId
       };
-      if (attrs.type == 'activity') {
+      if (attrs.type == 'activity' && objectiveId) {
         mc3_node['objectiveId'] = objectiveId;
       }
-      if (attrs.type == 'asset - url' || type == 'asset - unknown') {
+      if (attrs.type == 'asset - url' || attrs.type == 'asset - unknown') {
         var clone = jQuery.extend({}, mc3_node);
         clone['url'] = attrs.url;
         clone['genusTypeId'] = 'mc3-asset-content%3Amc3.learning.asset.content.unknown%40MIT-OEIT';
@@ -133,7 +133,7 @@ Kinetic.CmatApp = (function() {
         if (node_model && Em.isNone(attrs.id)) {
           var parent_id = Em.isNone(parent) ? null : parent.attrs.id;
           var mc3_node = this.cmat_to_mc3(attrs, CmatSettings.map.get('objective_bank_id'), parent_id);
-
+          _self = this;
           node_model.saveNew(mc3_node, parent).then(function(node){
             wholeNode.attrs.id = node['id'];
             if(parent_id && (attrs.type === 'topic' || attrs.type === 'outcome') ){
@@ -141,7 +141,18 @@ Kinetic.CmatApp = (function() {
             }
             if(parent_id && (attrs.type == 'asset - url' || attrs.type == 'asset - unknown'))
             {
-              //Cmat.Activity.saveChanges
+              //TODO: prevent assets being added to outcome or topic nodes
+              var activity_node = _self.cmat_to_mc3(parent.attrs, CmatSettings.map.get('objective_bank_id'));
+              if(activity_node['assetIds'])
+              {
+                activity_node['assetIds'] = activity_node['assetIds'].concat([node['id']]);
+              }
+              else
+              {
+                activity_node['assetIds'] = [node['id']];
+              }
+              activity_node['id'] = parent.attrs.id;
+              Cmat.Activity.saveChanges(activity_node);
             }
           });
         }
