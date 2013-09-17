@@ -59,7 +59,6 @@ Kinetic.Connection = (function() {
       context.lineJoin = this.attrs.lineJoin;
       context.lineWidth = this.attrs.lineWidth;
       context.stroke();
-      this.drawn = true;
     },
 
     getNodes: function() {
