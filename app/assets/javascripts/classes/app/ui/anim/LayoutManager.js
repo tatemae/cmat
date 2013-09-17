@@ -50,7 +50,6 @@ Kinetic.LayoutManager = (function() {
 
     _onAdjustStep: function() {
       this._algorithm.runOnce();
-      this._conns.forEach(function(c) { c.refresh(); });
       this._wholeNodes.forEach(function(c) { c.cachedTransform = undefined; });
     },
 
