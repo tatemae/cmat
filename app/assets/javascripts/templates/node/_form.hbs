@@ -3,7 +3,10 @@
     <div class="control-group">
       <label class="control-label" for="type">Type</label>
       <div class="controls">
-        {{list-box selected=type items=types}}
+        {{view Ember.Select
+         contentBinding="types"
+         disabledBinding="isDisabled"
+         selectionBinding="type"}}
       </div>
     </div>
     <div class="control-group">
