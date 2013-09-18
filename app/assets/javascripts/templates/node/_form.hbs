@@ -1,6 +1,12 @@
 <div class="modal-body">
   <form {{action save on="submit" target="view"}} class="form-horizontal">
     <div class="control-group">
+      <label class="control-label" for="type">Type</label>
+      <div class="controls">
+        {{list-box selected=type items=types}}
+      </div>
+    </div>
+    <div class="control-group">
       <label class="control-label" for="title">Name</label>
       <div class="controls">
         {{input type="text" value=title placeholder="Name" class="input-xlarge name-input"}}
@@ -10,12 +16,6 @@
       <label class="control-label" for="info">Info</label>
       <div class="controls">
         {{textarea value=info placeholder="Info" class="input-xlarge" rows="10"}}
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="type">Type</label>
-      <div class="controls">
-        {{list-box selected=type items=types}}
       </div>
     </div>
     <div class="control-group" id="url_controls">
