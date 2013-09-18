@@ -19,9 +19,9 @@ Cmat.NodeController = Ember.ObjectController.extend({
     var urlControls = $('#url_controls');
     if (urlControls) {
       if (this.get('type') == 'asset - url')
-        urlControls.removeClass('hide');  
+        urlControls.removeClass('hide');
       else
-        urlControls.addClass('hide')
+        urlControls.addClass('hide');
     }
   }.observes('type')
 

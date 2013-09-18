@@ -2,6 +2,13 @@ Cmat.ModalView = Ember.View.extend({
   layoutName: 'modal_layout',
   saveLabel: 'Save',
 
+  keyDown: function(e) {
+    if (e.keyCode === 27){
+      e.preventDefault();
+      this.do_close('modal_close');
+    }
+  },
+
   actions: {
     close: function(){
       this.do_close('modal_close');
@@ -9,7 +16,7 @@ Cmat.ModalView = Ember.View.extend({
 
     save: function(){
       this.do_close('modal_save');
-    },
+    }
   },
 
   didInsertElement: function(){
