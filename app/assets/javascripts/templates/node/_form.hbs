@@ -1,5 +1,5 @@
-<div class="modal-body">
-  <form {{action save on="submit" target="view"}} class="form-horizontal">
+<form {{action save on="submit" target="view"}} class="form-horizontal">
+  <div class="modal-body">
     <div class="control-group">
       <label class="control-label" for="type">Type</label>
       <div class="controls">
@@ -21,11 +21,30 @@
         {{textarea value=info placeholder="Info" class="input-xlarge" rows="10"}}
       </div>
     </div>
-    <div class="control-group" id="url_controls">
-      <label class="control-label" for="url">Url</label>
-      <div class="controls">
-        {{input type="text" value=url placeholder="Web address of the asset" class="input-xlarge"}}
+    <div class="well" id="asset_controls">
+      <h4>Asset</h4>
+      <div class="control-group">
+        <label class="control-label" for="asset_title">Name</label>
+        <div class="controls">
+          {{input type="text" value=asset_title placeholder="Name" class="input-xlarge"}}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="asset_info">Info</label>
+        <div class="controls">
+          {{textarea value=asset_info placeholder="Info" class="input-xlarge" rows="10"}}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="asset_url">Url</label>
+        <div class="controls">
+          {{input type="text" value=asset_url placeholder="Web address of the asset" class="input-xlarge"}}
+        </div>
       </div>
     </div>
-  </form>
-</div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" {{action close target="view"}}>Cancel</a>
+    {{input type="submit" class="btn btn-primary" value=view.saveLabel}}
+  </div>
+</form>

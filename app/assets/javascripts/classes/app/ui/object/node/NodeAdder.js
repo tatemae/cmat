@@ -108,7 +108,7 @@ Kinetic.NodeAdder = (function() {
     _mouseout: function(e) {
       this._animateMouseout();
     },
-    
+
     simulatePress: function() {
       this._pressed({});
     }

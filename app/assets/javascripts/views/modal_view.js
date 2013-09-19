@@ -2,13 +2,6 @@ Cmat.ModalView = Ember.View.extend({
   layoutName: 'modal_layout',
   saveLabel: 'Save',
 
-  keyDown: function(e) {
-    if (e.keyCode === 27){
-      e.preventDefault();
-      this.do_close('modal_close');
-    }
-  },
-
   actions: {
     close: function(){
       this.do_close('modal_close');
@@ -27,8 +20,24 @@ Cmat.ModalView = Ember.View.extend({
     this.$('.modal').find('.name-input').focus();
     this.$('.modal-body').find('.map_adder').focus();
     var controller = this.get('controller');
-    if (controller.showUrlField)
+    if (controller.showUrlField){
       controller.showUrlField();
+    }
+    $(document).on('keyup', { _self: this }, this.esc_close);
+  },
+
+  esc_close: function(e){
+    if(e.which == 27){
+      e.data._self.close();
+    }
+  },
+
+  close: function(controller){
+    this.do_close('modal_close');
+  },
+
+  willDestroyElement: function(){
+    $(document).off('keyup', this.esc_close);
   },
 
   do_action: function(action){

@@ -49,7 +49,9 @@ Kinetic.CmatApp = (function() {
       node.set('title', '');
       node.set('info', '');
       node.set('type', '');
-      node.set('url', '');
+      node.set('asset_title', '');
+      node.set('asset_info', '');
+      node.set('asset_url', '');
       node.set('x', xy.x);
       node.set('y', xy.y);
       node.set('parent', parent);
@@ -62,7 +64,9 @@ Kinetic.CmatApp = (function() {
       node.set('title', wholeNode.attrs.title);
       node.set('info', wholeNode.attrs.info);
       node.set('type', wholeNode.attrs.type);
-      node.set('url', wholeNode.attrs.url);
+      node.set('asset_title', wholeNode.attrs.asset_title);
+      node.set('asset_info', wholeNode.attrs.asset_info);
+      node.set('asset_url', wholeNode.attrs.asset_url);
       node.set('state', 'edit');
     },
 
@@ -114,7 +118,9 @@ Kinetic.CmatApp = (function() {
         title: attrs.title || '',
         info: attrs.info || '',
         type: attrs.type || 'topic',
-        url: attrs.url || ''
+        asset_title: attrs.asset_title || '',
+        asset_info: attrs.asset_info || '',
+        asset_url: attrs.asset_url || ''
       });
 
       this.wholeNodes.add(wholeNode);
@@ -274,14 +280,6 @@ Kinetic.CmatApp = (function() {
       var offset_x = root.x - visibleWidth/2; // center the tree
       var offset_y = nodes[1].y - visibleHeight/2 + 100; // move nodes up the difference between the parent and first nodes
 
-      // var node = root;
-      // this.addNode({title : 'root',
-      //                 x : node.x-offset_x,
-      //                 y : node.y-offset_y,
-      //                 type: 'topic',
-      //                 info: null,
-      //                 id: node.id });
-
       // d3 returns all nodes as a flat array, loop through and add them to the canvas
       for (var i=1; i<nodes.length; i++) {
         var node = nodes[i];
@@ -346,7 +344,6 @@ Kinetic.CmatApp = (function() {
     addConnection: function(attrs, node1, node2){
       var conn = new Kinetic.Connection(attrs, node1, node2);
       this.connections.add(conn);
-      // this.saveMap();
     },
 
     observeSettings: function() {
@@ -362,18 +359,22 @@ Kinetic.CmatApp = (function() {
           title: node.get('title'),
           info: node.get('info'),
           type: node.get('type'),
-          url: node.get('url')
+          asset_title: node.get('asset_title'),
+          asset_info: node.get('asset_info'),
+          asset_url: node.get('asset_url')
         }, node.get('parent'), true);
       } else { // updating settings for a node
         var wholeNode = this.wholeNodeFromId(node.get('id'));
         if(!wholeNode){ return; }
-        if (CmatSettings.node.get('state') == "save") {
+        if (node.get('state') == "save") {
           // save those attributes
           wholeNode.attrs.title = node.get('title');
           wholeNode.title.setAttr('text', wholeNode.attrs.title);
           wholeNode.attrs.info = node.get('info');
           wholeNode.attrs.type = node.get('type');
-          wholeNode.attrs.url = node.get('url');
+          wholeNode.attrs.asset_title = node.get('asset_title');
+          wholeNode.attrs.asset_info = node.get('asset_info');
+          wholeNode.attrs.asset_url = node.get('asset_url');
           wholeNode.node.attrs.type = node.get('type');
           wholeNode.node._updateImage();
           var node_model_types = {
@@ -387,11 +388,14 @@ Kinetic.CmatApp = (function() {
           }
           this.parent.draw();
           this.saveMap();
-        } else if ( CmatSettings.node.get('state') == "cancel" ){
+        } else if (node.get('state') == "cancel" ){
           // revert those attributes
           node.set('title', wholeNode.attrs.title);
           node.set('info', wholeNode.attrs.info);
           node.set('type', wholeNode.attrs.type);
+          node.set('asset_title', wholeNode.attrs.asset_title);
+          node.set('asset_info', wholeNode.attrs.asset_info);
+          node.set('asset_url', wholeNode.attrs.asset_url);
         } else if (node.get('state') === 'destroy') {
           this.deleteNode(wholeNode);
         }
