@@ -7,6 +7,7 @@ Cmat.ToolbarController = Ember.Controller.extend({
   isEditing: true,
   showRelationships: true,
   showNodeLabels: true,
+  hideNodeLabelsWhileDragging: false,
 
   init: function() {
     this._super();
@@ -55,7 +56,7 @@ Cmat.ToolbarController = Ember.Controller.extend({
 
   autoSave: function(){
     this.get('content').save();
-  }.observes('isEditing', 'showRelationships', 'showRelationshipLabels', 'showNodeLabels', 'showNodeDescriptions')
+  }.observes('isEditing', 'showRelationships', 'showRelationshipLabels', 'showNodeLabels', 'showNodeDescriptions', 'hideNodeLabelsWhileDragging')
 
 
 });

@@ -62,8 +62,7 @@ Kinetic.WholeNode = (function() {
       }));
 
       this.on('dragstart', function(){
-        UI.cmat_app.node_adder.attrs.opacity = 0;
-        UI.cmat_app.node_connector.hideConnection();
+        this.dragstart();
       });
 
       this.on('dragend', function(){
@@ -179,7 +178,7 @@ Kinetic.WholeNode = (function() {
         connector.destroy();
       }
       var _self = this;
-      for (node_id in this.neighbors) {
+      for (var node_id in this.neighbors) {
         if (_self.neighbors[node_id] == 'parent')
           delete _self.neighbors[node_id];
       }
@@ -189,7 +188,18 @@ Kinetic.WholeNode = (function() {
       return this.getNeighbors().contains(node);
     },
 
+    dragstart: function(){
+      if (UI.cmat_app._hideNodeLabelsWhileDragging()){
+        UI.cmat_app.toggleNodeLabels(false);
+      }
+      UI.cmat_app.node_adder.attrs.opacity = 0;
+      UI.cmat_app.node_connector.hideConnection();
+    },
+
     dragEnd: function(){
+      if (UI.cmat_app._hideNodeLabelsWhileDragging()){
+        UI.cmat_app.toggleNodeLabels(true);
+      }
       this._animateMouseover();
       UI.cmat_app.saveMap();
     },

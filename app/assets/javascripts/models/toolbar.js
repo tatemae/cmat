@@ -3,6 +3,7 @@ Cmat.Toolbar = DS.Model.extend({
   showRelationships: DS.attr('boolean', { defaultValue: true }),
   showRelationshipLabels: DS.attr('boolean', { defaultValue: true }),
   showNodeLabels: DS.attr('boolean', { defaultValue: true }),
+  hideNodeLabelsWhileDragging: DS.attr('boolean', { defaultValue: true }),
   showNodeDescriptions: DS.attr('boolean', { defaultValue: true })
 });
 

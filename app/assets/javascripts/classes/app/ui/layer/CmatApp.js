@@ -2,6 +2,7 @@ Kinetic.CmatApp = (function() {
   var CIRCLE_AREA_TO_SCREEN_REL = 0.005;
   var LEADING_WHITE_REGEX = /^[ \t]+/;
   var NODE_MODEL_TYPES;
+  var hideNodeLabelsWhileDragging;
 
   var Class = $$$.Class({
     _init: function(config) {
@@ -12,6 +13,7 @@ Kinetic.CmatApp = (function() {
         'asset - url': Cmat.Asset,
         'asset - unknown': Cmat.Asset
       };
+      hideNodeLabelsWhileDragging = false;
 
       Kinetic.Group.call(this, config);
       this.add(this.pressCatcher = this._createPressCatcher());
@@ -521,6 +523,14 @@ Kinetic.CmatApp = (function() {
         wholeNode.title.setVisible(show);
       });
       UI.getStage().draw();
+    },
+
+    _hideNodeLabelsWhileDragging: function(){
+      return hideNodeLabelsWhileDragging;
+    },
+
+    toggleNodeLabelsWhileDragging: function(show) {
+      hideNodeLabelsWhileDragging = show;
     },
 
     toggleEditing: function(isEditing) {

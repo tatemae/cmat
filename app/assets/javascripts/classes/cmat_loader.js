@@ -11,6 +11,7 @@ var CmatLoader = {
     toolbar.addObserver('showRelationships', this, 'toggleShowRelationships');
     toolbar.addObserver('showRelationshipLabels', this, 'toggleShowRelationshipLabels');
     toolbar.addObserver('showNodeLabels', this, 'toggleShowNodeLabels');
+    toolbar.addObserver('hideNodeLabelsWhileDragging', this, 'toggleHideNodeLabelsWhileDragging');
     toolbar.addObserver('showNodeDescriptions', this, 'toggleShowNodeDescriptions');
     toolbar.addObserver('isEditing', this, 'modeChange');
 
@@ -49,6 +50,10 @@ var CmatLoader = {
 
   toggleShowNodeLabels: function(toolbar) {
     UI.cmat_app.toggleNodeLabels(toolbar.get('showNodeLabels'));
+  },
+
+  toggleHideNodeLabelsWhileDragging: function(toolbar) {
+    UI.cmat_app.toggleNodeLabelsWhileDragging(toolbar.get('hideNodeLabelsWhileDragging'));
   },
 
   toggleShowRelationshipLabels: function(toolbar) {

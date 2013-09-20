@@ -41,7 +41,7 @@
                   <li>
                     <form class="stop-click-close">
                       <div class="input-append">
-                        {{view Ember.TextField valueBinding="mapSearchQuery" class="span2 toolbar-input" placeholder="Search Maps" 
+                        {{view Ember.TextField valueBinding="mapSearchQuery" class="span2 toolbar-input" placeholder="Search Maps"
                         <button {{action "search" class="btn"><i class="icon-search"></i></button>
                       </div>
                     </form>
@@ -73,6 +73,7 @@
                     <li><label class="checkbox">{{view Ember.Checkbox checkedBinding="showRelationships"}} Show Relationships</label></li>
                     {{! <li><label class="checkbox">view Ember.Checkbox checkedBinding="showRelationshipLabels" Show Relationship Labels</label></li> }}
                     <li><label class="checkbox">{{view Ember.Checkbox checkedBinding="showNodeLabels"}} Show Node Labels</label></li>
+                    <li><label class="checkbox">{{view Ember.Checkbox checkedBinding="hideNodeLabelsWhileDragging"}} Hide Node Labels While Dragging</label></li>
                     {{! <li><label class="checkbox">view Ember.Checkbox checkedBinding="showNodeDescriptions" Show Node Descriptions</label></li> }}
                   </ul>
                 </div>
