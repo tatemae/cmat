@@ -1,0 +1,23 @@
+# Global application values.  These are used to display the app name, send emails, and ::Settingsure where system emails go.
+application_name: 'CMAT'             # Common name for your application.  i.e. My App, Billy Bob, etc
+
+from_email:       'support@opentapestry.com'  # Emails will come from this address i.e. noreply@example.com, support@example.com, system@example.com, etc
+from_email_name:  'Open Tapestry'             # This will show up as the name on emails.  i.e. support@example.com <Example>
+support_email:    'support@opentapestry.com'  # Support email for your application.  This is used for contact us etc.
+admin_email:      'admin@opentapestry.com'    # Admin email for your application
+comments_email:   'commments@opentapestry.com'  # Emails that contain notifications of comments.
+
+email_server_address: "example.com"
+email_user_name: 'cmat'    # Email server username
+email_password: 'examplepassword'              # Email server password
+
+test:
+  email_server_address: "example.com"
+  email_user_name: 'cmat'    # Email server username
+  email_password: 'examplepassword'              # Email server password
+
+production:
+  email_server_address: "smtp.sendgrid.net"
+  email_user_name: 'cmat'    # Email server username
+  email_password: 'eS9X22UVSWDf'              # Email server password
+
