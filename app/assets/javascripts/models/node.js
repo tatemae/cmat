@@ -3,9 +3,7 @@ Cmat.Node = DS.Model.extend({
   title: DS.attr('string', { defaultValue: '' }),
   info: DS.attr('string', { defaultValue: '' }),
   type: DS.attr('string', { defaultValue: 'topic' }),
-  asset_title: DS.attr('string', { defaultValue: '' }),
-  asset_info: DS.attr('string', { defaultValue: '' }),
-  asset_url: DS.attr('string', { defaultValue: '' })
+  assets: DS.attr('string', { defaultValue: '' })
 });
 
 Cmat.Store.registerAdapter('Cmat.Node', DS.LSAdapter.create());

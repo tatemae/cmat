@@ -21,26 +21,11 @@
         {{textarea value=info placeholder="Info" class="input-xlarge" rows="10"}}
       </div>
     </div>
+    <h4>Assets</h4>
     <div class="well" id="asset_controls">
-      <h4>Asset</h4>
-      <div class="control-group">
-        <label class="control-label" for="asset_title">Name</label>
-        <div class="controls">
-          {{input type="text" value=asset_title placeholder="Name" class="input-xlarge"}}
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="asset_info">Info</label>
-        <div class="controls">
-          {{textarea value=asset_info placeholder="Info" class="input-xlarge" rows="10"}}
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="asset_url">Url</label>
-        <div class="controls">
-          {{input type="text" value=asset_url placeholder="Web address of the asset" class="input-xlarge"}}
-        </div>
-      </div>
+      {{#each asset in assets}}
+        {{partial 'node/asset'}}
+      {{/each}}
     </div>
   </div>
   <div class="modal-footer">

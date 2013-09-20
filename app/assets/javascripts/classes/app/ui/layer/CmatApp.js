@@ -49,9 +49,11 @@ Kinetic.CmatApp = (function() {
       node.set('title', '');
       node.set('info', '');
       node.set('type', '');
-      node.set('asset_title', '');
-      node.set('asset_info', '');
-      node.set('asset_url', '');
+      node.set('assets', [{
+        title: '',
+        info: '',
+        url: ''
+      }]);
       node.set('x', xy.x);
       node.set('y', xy.y);
       node.set('parent', parent);
@@ -64,9 +66,7 @@ Kinetic.CmatApp = (function() {
       node.set('title', wholeNode.attrs.title);
       node.set('info', wholeNode.attrs.info);
       node.set('type', wholeNode.attrs.type);
-      node.set('asset_title', wholeNode.attrs.asset_title);
-      node.set('asset_info', wholeNode.attrs.asset_info);
-      node.set('asset_url', wholeNode.attrs.asset_url);
+      node.set('assets', wholeNode.attrs.assets);
       node.set('state', 'edit');
     },
 
@@ -118,9 +118,7 @@ Kinetic.CmatApp = (function() {
         title: attrs.title || '',
         info: attrs.info || '',
         type: attrs.type || 'topic',
-        asset_title: attrs.asset_title || '',
-        asset_info: attrs.asset_info || '',
-        asset_url: attrs.asset_url || ''
+        assets: attrs.assets || [{title: '', info: '', url: '' }]
       });
 
       this.wholeNodes.add(wholeNode);
@@ -359,9 +357,7 @@ Kinetic.CmatApp = (function() {
           title: node.get('title'),
           info: node.get('info'),
           type: node.get('type'),
-          asset_title: node.get('asset_title'),
-          asset_info: node.get('asset_info'),
-          asset_url: node.get('asset_url')
+          assets: node.get('assets')
         }, node.get('parent'), true);
       } else { // updating settings for a node
         var wholeNode = this.wholeNodeFromId(node.get('id'));
@@ -372,9 +368,7 @@ Kinetic.CmatApp = (function() {
           wholeNode.title.setAttr('text', wholeNode.attrs.title);
           wholeNode.attrs.info = node.get('info');
           wholeNode.attrs.type = node.get('type');
-          wholeNode.attrs.asset_title = node.get('asset_title');
-          wholeNode.attrs.asset_info = node.get('asset_info');
-          wholeNode.attrs.asset_url = node.get('asset_url');
+          wholeNode.attrs.assets = node.get('assets');
           wholeNode.node.attrs.type = node.get('type');
           wholeNode.node._updateImage();
           var node_model_types = {
@@ -393,9 +387,7 @@ Kinetic.CmatApp = (function() {
           node.set('title', wholeNode.attrs.title);
           node.set('info', wholeNode.attrs.info);
           node.set('type', wholeNode.attrs.type);
-          node.set('asset_title', wholeNode.attrs.asset_title);
-          node.set('asset_info', wholeNode.attrs.asset_info);
-          node.set('asset_url', wholeNode.attrs.asset_url);
+          node.set('assets', wholeNode.attrs.assets);
         } else if (node.get('state') === 'destroy') {
           this.deleteNode(wholeNode);
         }
