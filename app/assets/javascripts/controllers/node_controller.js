@@ -32,10 +32,15 @@ Cmat.NodeController = Ember.ObjectController.extend({
   showUrlField: function(controller) {
     var urlControls = $('#asset_controls');
     if (urlControls) {
-      if (this.get('type') == 'activity')
-        urlControls.removeClass('hide');
-      else
-        urlControls.addClass('hide');
+      if (this.get('type') == 'activity'){
+        // urlControls.fadeIn();
+        urlControls.slideDown();
+        // urlControls.removeClass('hide');
+      }else{
+        // urlControls.fadeOut();
+        urlControls.slideUp();
+        // urlControls.addClass('hide');
+      }
     }
   }.observes('type')
 

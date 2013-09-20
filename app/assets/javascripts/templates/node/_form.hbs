@@ -1,4 +1,4 @@
-<form {{action save on="submit" target="view"}} class="form-horizontal">
+<form {{action save on="submit" target="view"}} class="form-horizontal modal-form">
   <div class="modal-body">
     <div class="control-group">
       <label class="control-label" for="type">Type</label>
@@ -18,12 +18,12 @@
     <div class="control-group">
       <label class="control-label" for="info">Info</label>
       <div class="controls">
-        {{textarea value=info placeholder="Info" class="input-xlarge" rows="10"}}
+        {{textarea value=info placeholder="Info" class="input-xlarge"}}
       </div>
     </div>
-    <div id="asset_controls">
+    <div id="asset_controls" class="hide">
       <h4>Assets</h4>
-      <div class="well">
+      <div class="well well-small">
         {{#each asset in assets}}
           {{partial 'node/asset'}}
         {{/each}}

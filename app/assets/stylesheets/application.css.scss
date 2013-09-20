@@ -11,6 +11,10 @@ body{
   overflow: hidden;
 }
 
+.modal-body{
+  max-height: 410px;
+}
+
 #add_map{
   $add_map_width: 70%;
   $add_map_text_height: 370px;
@@ -64,7 +68,7 @@ body{
 .modal_delete{
   position: absolute;
   left: 10px;
-  bottom: 35px;
+  bottom: 15px;
 }
 
 .user_form_container{
