@@ -173,8 +173,41 @@ ul.menu-list{
         background-size:19px 13px;
       }
       .name_btn{
-      padding:4px 8px;
-        background:$button_background_gray;
+        padding:4px 8px;
+        background:white;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+      }
+      .sign_in_or{
+        display:inline;
+        font-size:14px;
+        color: #999;
+        margin: 0 -6px;
+        font-weight: 500;
+      }
+      .stop-click-close{
+        margin-top:0;
+      }
+      .stop-click-close:before{
+        content:"";
+        position: absolute;
+        top:-16px;
+        left:11px;
+        border: 9px solid;
+        border-color: transparent transparent #aaa transparent;
+        display: block;
+        width: 0;
+      }
+      .stop-click-close:after{
+        content:"";
+        position: absolute;
+        top:-17px;
+        left:8px;
+        border: 11px solid;
+        border-color: transparent transparent white transparent;
+        display: block;
+        width: 0;
       }
     }
   }
