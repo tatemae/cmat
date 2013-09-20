@@ -21,11 +21,13 @@
         {{textarea value=info placeholder="Info" class="input-xlarge" rows="10"}}
       </div>
     </div>
-    <h4>Assets</h4>
-    <div class="well" id="asset_controls">
-      {{#each asset in assets}}
-        {{partial 'node/asset'}}
-      {{/each}}
+    <div id="asset_controls">
+      <h4>Assets</h4>
+      <div class="well">
+        {{#each asset in assets}}
+          {{partial 'node/asset'}}
+        {{/each}}
+      </div>
     </div>
   </div>
   <div class="modal-footer">

@@ -1,9 +1,18 @@
 Kinetic.CmatApp = (function() {
   var CIRCLE_AREA_TO_SCREEN_REL = 0.005;
   var LEADING_WHITE_REGEX = /^[ \t]+/;
+  var NODE_MODEL_TYPES;
 
   var Class = $$$.Class({
     _init: function(config) {
+      NODE_MODEL_TYPES = {
+        'topic': Cmat.Objective,
+        'outcome': Cmat.Objective,
+        'activity': Cmat.Activity,
+        'asset - url': Cmat.Asset,
+        'asset - unknown': Cmat.Asset
+      };
+
       Kinetic.Group.call(this, config);
       this.add(this.pressCatcher = this._createPressCatcher());
       this.add(this.wholeNodes = new Kinetic.Group({ name: 'wholeNodes', listening: true }));
@@ -50,6 +59,7 @@ Kinetic.CmatApp = (function() {
       node.set('info', '');
       node.set('type', '');
       node.set('assets', [{
+        type: 'asset - url',
         title: '',
         info: '',
         url: ''
@@ -92,7 +102,7 @@ Kinetic.CmatApp = (function() {
           text: attrs.title || ''
         },
         description: {
-          text: attrs.description || ''
+          text: attrs.info || ''
         },
         genusTypeId: this.mc3_type[attrs.type] || 'mc3-objective%3Amc3.learning.outcome%40MIT-OEIT',
         objectiveBankId: objectiveBankId
@@ -118,7 +128,7 @@ Kinetic.CmatApp = (function() {
         title: attrs.title || '',
         info: attrs.info || '',
         type: attrs.type || 'topic',
-        assets: attrs.assets || [{title: '', info: '', url: '' }]
+        assets: attrs.assets || [{type: 'asset - url', title: '', info: '', url: '' }]
       });
 
       this.wholeNodes.add(wholeNode);
@@ -129,10 +139,7 @@ Kinetic.CmatApp = (function() {
       }
 
       if(this.isMapSynchronizedWithMc3()){
-        var node_model_types = {
-          'topic' : Cmat.Objective, 'outcome' : Cmat.Objective, 'activity' : Cmat.Activity, 'asset - url' : Cmat.Asset, 'asset - unknown' : Cmat.Asset
-        };
-        var node_model = node_model_types[attrs.type];
+        var node_model = NODE_MODEL_TYPES[attrs.type];
         if (node_model && Em.isNone(attrs.id)) {
           var parent_id = Em.isNone(parent) ? null : parent.attrs.id;
           var mc3_node = this.cmat_to_mc3(attrs, CmatSettings.map.get('objective_bank_id'), parent_id);
@@ -145,20 +152,8 @@ Kinetic.CmatApp = (function() {
             if(parent_id && (attrs.type === 'topic' || attrs.type === 'outcome') ){
                node_model.saveParentRelationship(CmatSettings.map.get('objective_bank_id'), node['id'], [parent_id]);
             }
-            if(parent_id && (attrs.type == 'asset - url' || attrs.type == 'asset - unknown'))
-            {
-              //TODO: prevent assets being added to outcome or topic nodes
-              var activity_node = _self.cmat_to_mc3(parent.attrs, CmatSettings.map.get('objective_bank_id'));
-              if(activity_node['assetIds'])
-              {
-                activity_node['assetIds'] = activity_node['assetIds'].concat([node['id']]);
-              }
-              else
-              {
-                activity_node['assetIds'] = [node['id']];
-              }
-              activity_node['id'] = parent.attrs.id;
-              Cmat.Activity.saveChanges(activity_node);
+            if (wholeNode.attrs.type === 'activity'){
+              _self.saveActivityAsset(wholeNode);
             }
             this.saveMap();
           }.bind(this));
@@ -265,6 +260,8 @@ Kinetic.CmatApp = (function() {
     addNodesTree: function(children){
       if (children.length === 0) return;
 
+      var _self = this;
+
       // add a bogus first node so we have a single parent
       var visibleWidth = this.visibleWidth();
       var visibleHeight = this.visibleHeight();
@@ -281,13 +278,29 @@ Kinetic.CmatApp = (function() {
       // d3 returns all nodes as a flat array, loop through and add them to the canvas
       for (var i=1; i<nodes.length; i++) {
         var node = nodes[i];
-        var attrs = {title : node['displayName']['text'],
-                      x : node.x-offset_x,
-                      y : node.y-offset_y,
-                      type: this.cmat_type[node['genusTypeId']],
-                      info: node['description'].text,
-                      id: node.id };
-        this.addNode(attrs, this.wholeNodeFromId(node.parent.id));
+        var attrs = {
+          title: node['displayName']['text'],
+          x: node.x-offset_x,
+          y: node.y-offset_y,
+          type: this.cmat_type[node['genusTypeId']],
+          info: node['description'].text,
+          id: node.id
+        };
+        if (attrs.type === 'activity' && node.children){
+          attrs.assets = [];
+          node.children.forEach(function(asset){
+            attrs.assets.push({
+              type: _self.cmat_type[asset['genusTypeId']],
+              title: asset['displayName']['text'],
+              info: asset['description'].text,
+              url: asset['assetContents'][0]['url'],
+              id: asset.id
+            });
+          });
+        }
+        if (attrs.type !== 'asset - url' && attrs.type !== 'asset - unknown'){
+          this.addNode(attrs, this.wholeNodeFromId(node.parent.id));
+        }
       }
 
       UI.getStage().draw();
@@ -371,14 +384,17 @@ Kinetic.CmatApp = (function() {
           wholeNode.attrs.assets = node.get('assets');
           wholeNode.node.attrs.type = node.get('type');
           wholeNode.node._updateImage();
-          var node_model_types = {
-            'topic' : Cmat.Objective, 'outcome' : Cmat.Objective, 'activity' : Cmat.Activity, 'asset - url' : Cmat.Asset, 'asset - unknown' : Cmat.Asset
-          };
           if((!Em.isEmpty(CmatSettings.map.get('objective_bank_id')))) {
-            var cmat_node = this.cmat_to_mc3(wholeNode.attrs, CmatSettings.map.get('objective_bank_id'));
+            var _self = this;
+            var cmat_node = _self.cmat_to_mc3(wholeNode.attrs, CmatSettings.map.get('objective_bank_id'));
             cmat_node['id'] = wholeNode.attrs.id;
-            var node_model = node_model_types[wholeNode.attrs.type];
+            var node_model = NODE_MODEL_TYPES[wholeNode.attrs.type];
             node_model.saveChanges(cmat_node);
+
+            if (wholeNode.attrs.type === 'activity'){
+              _self.saveActivityAsset(wholeNode);
+            }
+
           }
           this.parent.draw();
           this.saveMap();
@@ -394,6 +410,31 @@ Kinetic.CmatApp = (function() {
       }
     },
 
+    saveActivityAsset: function(wholeNode){
+      var _self = this;
+      var asset_parent_id = wholeNode.getId();
+      wholeNode.attrs.assets.forEach(function(asset){
+        var asset_node_model = NODE_MODEL_TYPES[asset.type];
+        var mc3_asset_node = _self.cmat_to_mc3(asset, CmatSettings.map.get('objective_bank_id'), asset_parent_id);
+        asset_node_model.saveNew(mc3_asset_node, wholeNode).then(function(asset_node){
+          asset['id'] = asset_node['id'];
+
+          var activity_node = _self.cmat_to_mc3(wholeNode.attrs, CmatSettings.map.get('objective_bank_id'));
+          if(activity_node['assetIds'])
+          {
+            activity_node['assetIds'] = activity_node['assetIds'].concat([asset_node['id']]);
+          }
+          else
+          {
+            activity_node['assetIds'] = [asset_node['id']];
+          }
+          activity_node['id'] = wholeNode.getId();
+          Cmat.Activity.saveChanges(activity_node);
+
+        });
+      });
+    },
+
     deleteNode: function(wholeNode) {
       var query;
       for (var i = 0; i < this.connections.children.length; i++) {
@@ -404,9 +445,6 @@ Kinetic.CmatApp = (function() {
       }
       wholeNode.destroy();
 
-      var node_model_types = {
-        'topic' : Cmat.Objective, 'outcome' : Cmat.Objective, 'activity' : Cmat.Activity, 'asset - url' : Cmat.Asset, 'asset - unknown' : Cmat.Asset
-      };
       if((!Em.isEmpty(CmatSettings.map.get('objective_bank_id')))) {
         if(wholeNode.attrs.type === 'topic' || wholeNode.attrs.type === 'outcome'){
           query = {objectiveBankId: CmatSettings.map.get('objective_bank_id'), objectiveId: wholeNode.attrs.id};
@@ -414,7 +452,7 @@ Kinetic.CmatApp = (function() {
         }
         else
         {
-          var node_model = node_model_types[wholeNode.attrs.type];
+          var node_model = NODE_MODEL_TYPES[wholeNode.attrs.type];
           query = {objectiveBankId: CmatSettings.map.get('objective_bank_id'), id: wholeNode.attrs.id};
           node_model.deleteNode(query);
         }
