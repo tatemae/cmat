@@ -100,6 +100,15 @@ ul.menu-list{
   padding-right:5px;
 }
 .container{
+  #logo_area{
+    width: 15%;
+    float: left;
+    min-width: 86px;
+    .logo{
+      height: 33px;
+      margin-top: 5px;
+    }
+  }
   .pull-left{
     width:33%;
   }
