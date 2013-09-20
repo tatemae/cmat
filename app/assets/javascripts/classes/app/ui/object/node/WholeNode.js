@@ -53,7 +53,7 @@ Kinetic.WholeNode = (function() {
         y: this.node.getRadius(),
         text: this.attrs.title,
         fontSize: 18,
-        fontFamily: "Montserret, 'Arial Narrow', sans-serif",
+        fontFamily: "Sintony, 'Arial Narrow', sans-serif",
         fill: '#555',
         width: TEXT_WIDTH,
         padding: 10,

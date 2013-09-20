@@ -174,7 +174,7 @@ ul.menu-list{
       border-color:$dropdown_border_gray;
     }
     .dropdown-menu{
-      font-family: 'MavenPro', serif;
+      font-family: $baseFont, serif;
     }
   }
   .caret{
