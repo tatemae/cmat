@@ -85,6 +85,7 @@ ul.menu-list{
   }
 }
 .navbar-inner{
+  padding:0px !important;
   background:white;
   height:47px;
   webkit-box-shadow:none !important;
@@ -125,13 +126,23 @@ ul.menu-list{
   .toolbar-input{
     font-size:12px;
     color:$yellow;
-    font-family: 'Montserret', 'Arial Narrow' sans-serif;
-    height:16px;
+    font-family: $baseFont, 'Arial Narrow' sans-serif;
+    height:24px;
     webkit-box-shadow:none !important;
     box-shadow:none !important;
     moz-box-shadow:none !important;
     border-right:none;
     border-color:$dropdown_border_gray;
+    background: $button_background_gray;
+    padding: 0 5px;
+    width:30%;
+    max-width:206px;
+    min-width:160px;
+    margin-left:10px;
+  }
+  .toolbar-dropdown{
+    background:$button_background_gray !important;
+    height:25px !important;
   }
   .nav-collapse{
   line-height:42px;
@@ -164,6 +175,7 @@ ul.menu-list{
     }
   }
   .input-append{
+    margin-top: 10px;
     .btn{
       background:white;
       webkit-box-shadow:none !important;
@@ -195,9 +207,15 @@ ul.menu-list{
 }
 
 #toolbar{
-  .user_maps{
-    max-height: 500px;
-    overflow: auto;
+  .dropdown-view{
+    width:100%;
+    .user_maps{
+      max-height:500px;
+      overflow: auto;
+      margin:0;
+      width:94%;
+      margin-left:-80%;
+    }
   }
 }
 
