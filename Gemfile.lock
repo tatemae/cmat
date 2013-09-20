@@ -73,6 +73,9 @@ GEM
       factory_girl (~> 3.2.0)
       railties (>= 3.0.0)
     ffi (1.9.0)
+    figaro (0.7.0)
+      bundler (~> 1.0)
+      rails (>= 3, < 5)
     font-awesome-sass-rails (3.0.2.2)
       railties (>= 3.1.1)
       sass-rails (>= 3.1.1)
@@ -199,6 +202,7 @@ DEPENDENCIES
   ember-rails
   ember-source (= 1.0.0)
   factory_girl_rails (~> 3.2.0)
+  figaro
   font-awesome-sass-rails
   guard
   guard-shell
