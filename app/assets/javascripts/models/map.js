@@ -1,7 +1,5 @@
 Cmat.Map = Cmat.ModelBase.extend({
 
-  promises: 0,
-
   user_id: DS.attr('number'),
   title: DS.attr('string'),
   payload: DS.attr('string'),
@@ -11,6 +9,16 @@ Cmat.Map = Cmat.ModelBase.extend({
     return $.parseJSON(this.get('payload') || '');
   }.property('payload'),
 
+  build_tree: function(tree, activities, assets){
+    for (var i=0; i<tree.length; i++) {
+      if( tree['childNode'] ) {
+        tree['children'] = tree['childNode'];
+        delete tree['childNode'];
+        this.build_tree(tree['children'], activities, assets);
+      }
+    }
+  },
+
   load_from_mc3: function(objectiveBank){
     var _self = this;
     var tree = [];
@@ -18,123 +26,52 @@ Cmat.Map = Cmat.ModelBase.extend({
     _self.obj_bank_id = objective_bank_id;
     var objectives = {};
     var assets = {};
-    _self.promises = 0;
 
     return new Ember.RSVP.Promise(function(resolve, reject){
+      objectiveids_promise = Cmat.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true}).then(function(data){
+        var rootids = data['ids'];
+        var promises = [];
 
-      // get all of the objectives
-      _self.inc_promises(_self);
-      Cmat.Objective.findQuery({objective_bank_id: objective_bank_id}).then(function(all){
-
-        // build a list of all objectives, indexed by their id
-        for (var i=0; i<all.length; i++) {
-          var node = all[i];
-          objectives[node['id']] = node;
+        for (var i=0; i<rootids.length; i++) {
+          promises.push(Cmat.Objective.findQuery({objective_bank_id: objective_bank_id, objective: rootids[i], bulk: true}));
         }
 
-        // build a list of all assets, indexed by their id
-        _self.inc_promises(_self);
-        Cmat.Asset.findQuery({objective_bank_id: objective_bank_id}).then(function(asset_list){
+        promises.push(Cmat.Activity.findQuery({objective_bank_id: objective_bank_id}));
+
+        promises.push(Cmat.Asset.findQuery({objective_bank_id: objective_bank_id}));
+
+        Ember.RSVP.all(promises).then(function(mc3_objects) {
+          var tree = [];
+
+          var activities_list = mc3_objects[rootids.length];
+          var activities = {};
+
+          for (var i=0; i<activities_list.length; i++) {
+            var act_node = activities_list[i];
+            activities[act_node['id']] = act_node;
+          }
+
+          var asset_list = mc3_objects[rootids.length+1];
+          var assets = {};
 
           for (var i=0; i<asset_list.length; i++) {
-            var node = asset_list[i];
-            assets[node['id']] = node;
+            var asset_node = asset_list[i];
+            assets[asset_node['id']] = asset_node;
           }
 
-
-          // get all activities for the objective bank
-          _self.inc_promises(_self);
-          Cmat.Activity.findQuery({objective_bank_id: objective_bank_id}).then(function(activities){
-
-            // attach the activities to their parent objectives
-            for (var i=0; i<activities.length; i++) {
-              var activity = activities[i];
-              var parent = objectives[activity['objectiveId']];
-              if (parent) {
-                if (!parent.children) parent.children = [];
-                parent.children.push(activity);
-
-                // attach the activity's assets to it
-                var asset_ids = activity['assetIds'];
-                for (var j=0; j<asset_ids.length; j++) {
-                  var asset_id = asset_ids[j];
-                  var asset = assets[asset_id];
-                  if (asset) {
-                    if (!activity.children) activity.children = [];
-                    activity.children.push(asset);
-                  }
-                }
-              }
-            }
-            _self.dec_promises(_self, tree);
-          }, function(){
-            _self.dec_promises(_self, tree);
-          });
-          _self.dec_promises(_self, tree);
-        }, function(){
-          _self.dec_promises(_self, tree);
-        });
-
-        // get the root node ids
-        _self.inc_promises(_self);
-        Cmat.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true}).then(function(data){
-          var rootids = data['ids'];
-
-          // build the first layer of the tree
-          for (var i=0; i<rootids.length; i++) {
-            var node = objectives[rootids[i]];
-            tree.push(node);
-
-            // recurse down into the children
-            _self.load_children(objective_bank_id, objectives, tree, node);
+          for (var k=0; k<rootids.length; k++) {
+            tree.push(mc3_objects[k]);
           }
-          _self.dec_promises(_self, tree);
-        }, function(){
-          _self.dec_promises(_self, tree);
-        });
 
-        _self.dec_promises(_self, tree);
+          _self.build_tree(tree, activities, assets);
+
+          UI.cmat_app.addNodesTree(tree);
+          _self.set('objective_bank_id', self.obj_bank_id);
+          UI.hideLoading();
+          resolve(_self);
+        });
+      }, function(err_msg){
       });
-      resolve(_self);
     });
   },
-
-  load_children: function(objective_bank_id, objectives, tree, parent){
-    var _self = this;
-
-    // retrieve the node's children
-    _self.inc_promises(_self);
-    Cmat.Objective.findQuery({objective_bank_id: objective_bank_id, objective: parent['id'], children: true}).then(function(children){
-      var childrenids = children['ids'];
-      if(childrenids.length === 0) {
-        _self.dec_promises(_self, tree);
-        return;
-      }
-
-      // add the children
-      for (var i=0; i<childrenids.length; i++) {
-        var node = objectives[childrenids[i]];
-        if (!parent.children) parent.children = [];
-        parent.children.push(node);
-        _self.load_children(objective_bank_id, objectives, tree, node);
-      }
-      _self.dec_promises(_self, tree);
-    }, function(){
-        _self.dec_promises(_self, tree);
-      });
-  },
-
-  inc_promises: function(self) {
-    self.promises++;
-  },
-
-  dec_promises: function(self, tree){
-    self.promises--;
-    if (self.promises === 0) {
-      UI.cmat_app.addNodesTree(tree);
-      self.set('objective_bank_id', self.obj_bank_id);
-      UI.hideLoading();
-    }
-  },
-
 });

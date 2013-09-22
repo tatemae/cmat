@@ -16,6 +16,10 @@ Cmat.Objective.reopenClass({
       {
         url = url + '/rootids'
       }
+      else if(query['bulk'])
+      {
+        url = url + '/' + query['objective'] + '/children/bulk'
+      }
 
       return $.getJSON(url);
   },
