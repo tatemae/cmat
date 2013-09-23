@@ -48,7 +48,7 @@ Cmat.Map = Cmat.ModelBase.extend({
 
           for (var i=0; i<activities_list.length; i++) {
             var act_node = activities_list[i];
-            activities[act_node['id']] = act_node;
+            activities[act_node['objectiveId']] = act_node;
           }
 
           var asset_list = mc3_objects[rootids.length+1];
