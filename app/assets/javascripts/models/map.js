@@ -14,6 +14,9 @@ Cmat.Map = Cmat.ModelBase.extend({
       if( tree[i]['childNodes'] ) {
         tree[i]['children'] = tree[i]['childNodes'];
         delete tree[i]['childNodes'];
+        if(activities[tree[i]['id']]){
+          tree[i]['children'].push(activities[tree[i]['id']]);
+        }
         this.build_tree(tree[i]['children'], activities, assets);
       }
     }
