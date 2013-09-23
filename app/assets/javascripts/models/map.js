@@ -28,7 +28,7 @@ Cmat.Map = Cmat.ModelBase.extend({
     var assets = {};
 
     return new Ember.RSVP.Promise(function(resolve, reject){
-      objectiveids_promise = Cmat.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true}).then(function(data){
+      Cmat.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true}).then(function(data){
         var rootids = data['ids'];
         var promises = [];
 
