@@ -66,7 +66,7 @@ Cmat.Map = Cmat.ModelBase.extend({
           _self.build_tree(tree, activities, assets);
 
           UI.cmat_app.addNodesTree(tree);
-          _self.set('objective_bank_id', self.obj_bank_id);
+          _self.set('objective_bank_id', _self.obj_bank_id);
           UI.hideLoading();
           resolve(_self);
         });
