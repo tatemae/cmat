@@ -11,10 +11,10 @@ Cmat.Map = Cmat.ModelBase.extend({
 
   build_tree: function(tree, activities, assets){
     for (var i=0; i<tree.length; i++) {
-      if( tree['childNode'] ) {
-        tree['children'] = tree['childNode'];
-        delete tree['childNode'];
-        this.build_tree(tree['children'], activities, assets);
+      if( tree[i]['childNodes'] ) {
+        tree[i]['children'] = tree[i]['childNodes'];
+        delete tree[i]['childNodes'];
+        this.build_tree(tree[i]['children'], activities, assets);
       }
     }
   },
