@@ -24,11 +24,7 @@ Cmat.Map = Cmat.ModelBase.extend({
 
   load_from_mc3: function(objectiveBank){
     var _self = this;
-    var tree = [];
     var objective_bank_id = objectiveBank.get('id');
-    _self.obj_bank_id = objective_bank_id;
-    var objectives = {};
-    var assets = {};
 
     return new Ember.RSVP.Promise(function(resolve, reject){
       Cmat.Objective.findQuery({objective_bank_id: objective_bank_id, roots: true}).then(function(data){
@@ -39,27 +35,34 @@ Cmat.Map = Cmat.ModelBase.extend({
           promises.push(Cmat.Objective.findQuery({objective_bank_id: objective_bank_id, objective: rootids[i], bulk: true}));
         }
 
-        promises.push(Cmat.Activity.findQuery({objective_bank_id: objective_bank_id}));
-
         promises.push(Cmat.Asset.findQuery({objective_bank_id: objective_bank_id}));
+
+        promises.push(Cmat.Activity.findQuery({objective_bank_id: objective_bank_id}));
 
         Ember.RSVP.all(promises).then(function(mc3_objects) {
           var tree = [];
 
-          var activities_list = mc3_objects[rootids.length];
-          var activities = {};
-
-          for (var i=0; i<activities_list.length; i++) {
-            var act_node = activities_list[i];
-            activities[act_node['objectiveId']] = act_node;
-          }
-
-          var asset_list = mc3_objects[rootids.length+1];
+          var asset_list = mc3_objects[rootids.length];
           var assets = {};
 
           for (var i=0; i<asset_list.length; i++) {
             var asset_node = asset_list[i];
             assets[asset_node['id']] = asset_node;
+          }
+
+          var activities_list = mc3_objects[rootids.length+1];
+          var activities = {};
+
+          for (var j=0; j<activities_list.length; j++) {
+            var act_node = activities_list[j];
+            if(act_node['assetIds'].length > 0){
+              var asset_ids = act_node['assetIds'];
+              act_node['children'] = []
+              for (var q=0; q<asset_ids.length; q++) {
+                act_node['children'].push(assets[asset_ids[q]]);
+              }
+            }
+            activities[act_node['objectiveId']] = act_node;
           }
 
           for (var k=0; k<rootids.length; k++) {
@@ -69,7 +72,7 @@ Cmat.Map = Cmat.ModelBase.extend({
           _self.build_tree(tree, activities, assets);
 
           UI.cmat_app.addNodesTree(tree);
-          _self.set('objective_bank_id', _self.obj_bank_id);
+          _self.set('objective_bank_id', objective_bank_id);
           UI.hideLoading();
           resolve(_self);
         });
