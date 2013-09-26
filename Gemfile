@@ -30,6 +30,8 @@ gem 'unicorn'
 # User Auth
 gem 'devise', '>=3.0.0'
 
+gem 'newrelic_rpm'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
