@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [ -d keys ]
+then
+  rm -r keys
+fi
+
+cp -R "$HOME"/Dropbox/tatemae-dev-cmat/keys keys
+
+git add keys
+
+git commit -m "add keys"
+
+git push -f heroku master
+
+git reset --hard HEAD^
