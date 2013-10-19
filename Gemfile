@@ -3,7 +3,7 @@
 # If bundler hangs try this:
 # http://stackoverflow.com/questions/9467756/bundler-when-attempting-to-update-or-install-will-hang-forever
 
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
@@ -29,6 +29,8 @@ gem 'unicorn'
 
 # User Auth
 gem 'devise', '>=3.0.0'
+
+gem 'ruby-saml-mod'
 
 gem 'newrelic_rpm'
 

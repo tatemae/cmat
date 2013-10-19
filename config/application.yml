@@ -11,6 +11,17 @@ email_server_address: "example.com"
 email_user_name: 'cmat'    # Email server username
 email_password: 'examplepassword'              # Email server password
 
+assertion_consumer_service_url: 'https://cmat.herokuapp.com/saml/consume'
+issuer: 'https://cmat.herokuapp.com'
+idp_sso_target_url: 'https://idp.mit.edu/idp/Authn/MIT'
+idp_cert_fingerprint: ''
+name_identifier_format: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress'
+entity_id: "https://cmat.herokuapp.com/saml"
+tech_contact_name: "Administrator"
+tech_contact_email: "admin@opentapestry.com"
+saml_private_key: "keys/cmat.herokuapp.com.saml.key"
+saml_certificate: "keys/cmat.herokuapp.com.saml.crt"
+
 test:
   email_server_address: "example.com"
   email_user_name: 'cmat'    # Email server username
@@ -20,4 +31,14 @@ production:
   email_server_address: "smtp.sendgrid.net"
   email_user_name: 'cmat'    # Email server username
   email_password: 'eS9X22UVSWDf'              # Email server password
+  assertion_consumer_service_url: 'https://cmat.herokuapp.com/saml/consume'
+  issuer: 'https://cmat.herokuapp.com/saml'
+  idp_sso_target_url: 'https://idp.mit.edu/idp/Authn/MIT'
+  idp_cert_fingerprint: ''
+  name_identifier_format: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress'
+  entity_id: "https://cmat.herokuapp.com/saml"
+  tech_contact_name: "Administrator"
+  tech_contact_email: "admin@opentapestry.com"
+  saml_private_key: "keys/cmat.herokuapp.com.saml.key"
+  saml_certificate: "keys/cmat.herokuapp.com.saml.crt"
 

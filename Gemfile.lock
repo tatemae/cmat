@@ -1,5 +1,5 @@
 GEM
-  remote: https://rubygems.org/
+  remote: http://rubygems.org/
   specs:
     actionmailer (4.0.0)
       actionpack (= 4.0.0)
@@ -99,6 +99,7 @@ GEM
       thor (>= 0.14, < 2.0)
     json (1.8.0)
     kgio (2.8.1)
+    libxml-ruby (2.7.0)
     listen (1.3.1)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -156,6 +157,9 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
+    ruby-saml-mod (0.1.22)
+      ffi
+      libxml-ruby (>= 2.3.0)
     sass (3.2.10)
     sass-rails (4.0.0)
       railties (>= 4.0.0.beta, < 5.0)
@@ -214,6 +218,7 @@ DEPENDENCIES
   pg
   rails (= 4.0.0)
   rspec-rails (~> 2.0)
+  ruby-saml-mod
   sass-rails (~> 4.0.0)
   sdoc
   uglifier (>= 1.3.0)
