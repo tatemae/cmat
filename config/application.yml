@@ -39,6 +39,6 @@ production:
   entity_id: "https://cmat.herokuapp.com/saml"
   tech_contact_name: "Administrator"
   tech_contact_email: "admin@opentapestry.com"
-  saml_private_key: "keys/cmat.herokuapp.com.saml.key"
-  saml_certificate: "keys/cmat.herokuapp.com.saml.crt"
+  saml_private_key: "/app/keys/cmat.herokuapp.com.saml.key"
+  saml_certificate: "/app/keys/cmat.herokuapp.com.saml.crt"
 
