@@ -9,7 +9,9 @@ cp -R "$HOME"/Dropbox/tatemae-dev-cmat/keys keys
 
 git add keys
 
-git commit -m "add keys"
+git add config/application.yml
+
+git commit -m "add keys and secrets"
 
 git push -f heroku master
 
