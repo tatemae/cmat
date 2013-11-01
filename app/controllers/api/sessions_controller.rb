@@ -25,6 +25,7 @@ class Api::SessionsController < ApplicationController
   end
 
   def destroy
+    cookies.delete :handcar_api_key
     sign_out
     render json: {}, status: :accepted
   end
