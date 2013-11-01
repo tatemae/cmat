@@ -12,8 +12,7 @@ describe Api::SessionsController do
       end
       it "puts a users handcar api key in the session" do
         post :create, {session: {email: user.email, password: user.password}, format: :json}
-        expect(Handcar.fetch_new_user_key).to_not eq(nil)
-        # expect(session[:handcar_api_key]).to_not eq(nil)
+        expect(cookies[:handcar_api_key][0..8]).to eq("AGENT_KEY")
       end
     end
     describe "with invalid params" do
