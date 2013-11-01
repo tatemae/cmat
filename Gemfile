@@ -43,6 +43,8 @@ end
 gem 'ember-rails'
 gem 'ember-source', '1.0.0'
 
+gem "jquery-cookie-rails", "~> 1.3.1.1"
+
 gem 'active_model_serializers' # Make Rails generate json that ember likes.
 
 gem 'bootstrap-sass-rails', '~> 2.3.1.2'
