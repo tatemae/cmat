@@ -21,5 +21,15 @@ describe Api::SessionsController do
         expect(response.status).to eq(422)
       end
     end
+    describe "DELETE destroy" do
+      let(:user) {FactoryGirl.create(:user)}
+      it "removes the handcar api cookie" do
+        expect(cookies[:handcar_api_key]).to eq(nil)
+        post :create, {session: {email: user.email, password: user.password}, format: :json}
+        expect(cookies[:handcar_api_key][0..8]).to eq("AGENT_KEY")
+        delete :destroy, id: 'foo'
+        expect(cookies[:handcar_api_key]).to eq(nil)
+      end
+    end
   end
 end
