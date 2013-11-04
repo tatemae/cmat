@@ -8,11 +8,21 @@ Cmat.Activity.reopenClass({
 
       var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+objective_bank_id+'/activities'
 
+      if( Config.settings.user_auth_token() )
+      {
+        url = url + '?proxyname=' + Config.settings.user_auth_token()
+      }
+
       return $.getJSON(url);
   },
   saveNew: function(activity, parent) {
     return new Ember.RSVP.Promise(function(resolve, reject){
       var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+activity['objectiveBankId']+'/activities';
+
+      if( Config.settings.user_auth_token() )
+      {
+        url = url + '?proxyname=' + Config.settings.user_auth_token()
+      }
       // An activity requires the following fields:
       // description.text
       // displayName.text
@@ -27,6 +37,11 @@ Cmat.Activity.reopenClass({
     return new Ember.RSVP.Promise(function(resolve, reject){
       var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+objective['objectiveBankId']+'/activities';
 
+      if( Config.settings.user_auth_token() )
+      {
+        url = url + '?proxyname=' + Config.settings.user_auth_token()
+      }
+
       resolve($.ajax({type: "PUT", url: url, data: JSON.stringify(objective), contentType: "application/json", dataType: 'json'}).then(function(response){
         return response;
       }));
@@ -35,6 +50,11 @@ Cmat.Activity.reopenClass({
   deleteNode: function(query){
     return new Ember.RSVP.Promise(function(resolve, reject){
       var url = Config.settings.cmat_base_url + '/services/learning/objectivebanks/'+query['objectiveBankId']+'/activities/'+query['id'];
+
+      if( Config.settings.user_auth_token() )
+      {
+        url = url + '?proxyname=' + Config.settings.user_auth_token()
+      }
 
       resolve($.ajax({type: "DELETE", url: url, contentType: "application/json", dataType: 'json'}).then(function(response){
         return response;

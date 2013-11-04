@@ -2,7 +2,10 @@ Config = {
   settings: {
     canvas_element: 'map_canvas',
     toolbar_element: 'toolbar',
-    cmat_base_url: 'https://mc3-demo.mit.edu/handcar'
+    cmat_base_url: 'https://mc3-demo.mit.edu/handcar',
+    user_auth_token: function () {
+      return $.cookie('handcar_api_key');
+    }
   },
   resources: {
     images: {
