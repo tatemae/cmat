@@ -27,7 +27,7 @@ describe Api::SessionsController do
         expect(cookies[:handcar_api_key]).to eq(nil)
         post :create, {session: {email: user.email, password: user.password}, format: :json}
         expect(cookies[:handcar_api_key][0..8]).to eq("AGENT_KEY")
-        delete :destroy, id: 'foo'
+        delete :destroy, id: 'current'
         expect(cookies[:handcar_api_key]).to eq(nil)
       end
     end

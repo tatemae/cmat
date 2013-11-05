@@ -11,6 +11,7 @@ Cmat.SessionsDestroyRoute = Ember.Route.extend({
     });
     $('meta[name="authentication-token"]').attr('content', '');
     $('meta[name="current-user"]').attr('content', '');
+    $.removeCookie('handcar_api_key');
     this.controllerFor('current_user').set('content', undefined);
     this.transitionTo('index');
   }
